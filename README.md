@@ -19,6 +19,6 @@ hydroecolstm.interface.show_gui()
 
 ```
 
-
-
-![](.\examples\gui.gif)
+<p align="center">
+  <img src="examples/gui.gif" width=100% title="hover text">
+</p>
