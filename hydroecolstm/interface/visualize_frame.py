@@ -18,26 +18,31 @@ class VisualizeFrame(ctk.CTkFrame):
         # setup the grid layout manager
         self.config = config
         self.globalData = globalData
-        self.columnconfigure((0,1), weight=1)
+        self.columnconfigure((0), weight=1)
         self.rowconfigure((0,1), weight=1)
         self.__create_widgets() 
         
     # create widgets for sidebar frame
     def __create_widgets(self): 
         # ---------------------------------------------content of load data tab
-        self.right_frame = ctk.CTkCanvas(master=self, width=400, height=400)
-        self.right_frame.grid(row=0, column=1, sticky="e", padx=(20,20), pady=(20,20))        
+        self.object_id_label = ctk.CTkLabel(self, text="1. Please insert object_id for plot")
+        self.object_id_label.pack(pady=(5,5), anchor='w')
+        self.left_frame = ctk.CTkFrame(master=self, height=400)
+        self.left_frame.pack(pady=(5,20), anchor = "w") #grid(row=0, column=0, sticky="w", padx=(20,20), pady=(20,20))
 
-        self.left_frame = ctk.CTkFrame(master=self, width=400, height=400)
-        self.left_frame.grid(row=0, column=0, sticky="w", padx=(20,20), pady=(20,20))
+        self.object_id_label = ctk.CTkLabel(self, text="2. Plotting area")
+        self.object_id_label.pack(pady=(0,5), anchor='w')
+        self.right_frame = ctk.CTkCanvas(master=self, height=400)
+        self.right_frame.pack(pady=(5,20), anchor = "w") #grid(row=1, column=0, sticky="w", padx=(20,20), pady=(20,20))  
+
 
         self.object_id = ctk.CTkTextbox(master=self.left_frame, height=30)
         self.object_id.insert("0.0", "object_id") 
-        self.object_id.grid(row=0, column=0, sticky="w", padx=(20,20), pady=(20,20))
+        self.object_id.pack(pady=(5,5), padx=(5,5), anchor = "w") #grid(row=0, column=0, sticky="w", padx=(20,20), pady=(20,20))
 
         self.show_plot = ctk.CTkButton(self.left_frame, anchor='w', 
                                  command=self.plot_figure, text="Plot")
-        self.show_plot.grid(row=1, column=0, sticky="w", padx=(20,20), pady=(20,20))
+        self.show_plot.pack(pady=(5,5), padx=(5,5), anchor = "w") #grid(row=1, column=0, sticky="w", padx=(20,20), pady=(20,20))
         
         '''
         x = 4 + np.random.normal(0, 2, 24)
@@ -67,11 +72,16 @@ class VisualizeFrame(ctk.CTkFrame):
        self.table.show()  
        
     def plot_figure(self):
+        
+        # Remove and create frame again to update figure
+        self.right_frame.destroy()
+        self.right_frame = ctk.CTkFrame(master=self, height=400)
+        self.right_frame.pack(pady=(5,20), anchor = "w") 
+        
         x = 4 + np.random.normal(0, 2, 24)
         y = 4 + np.random.normal(0, 2, len(x))
         sizes = np.random.uniform(15, 80, len(x))
         colors = np.random.uniform(15, 80, len(x))
-        
         # create a figure
         figure = Figure(figsize=(6, 4), dpi=100)
         figure_canvas = FigureCanvasTkAgg(figure, self.right_frame )
@@ -84,4 +94,3 @@ class VisualizeFrame(ctk.CTkFrame):
                ylim=(0, 8), yticks=np.arange(1, 8))
         
         figure_canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=1)
-        
