@@ -39,31 +39,18 @@ class VisualizeFrame(ctk.CTkFrame):
         self.object_id = ctk.CTkTextbox(master=self.left_frame, height=30)
         self.object_id.insert("0.0", "object_id") 
         self.object_id.pack(pady=(5,5), padx=(5,5), anchor = "w") #grid(row=0, column=0, sticky="w", padx=(20,20), pady=(20,20))
-
+        self.object_id.bind('<KeyRelease>', self.get_object_id)
+        
         self.show_plot = ctk.CTkButton(self.left_frame, anchor='w', 
-                                 command=self.plot_figure, text="Plot")
+                                 command=self.plot_figure, text="Update plot")
         self.show_plot.pack(pady=(5,5), padx=(5,5), anchor = "w") #grid(row=1, column=0, sticky="w", padx=(20,20), pady=(20,20))
         
-        '''
-        x = 4 + np.random.normal(0, 2, 24)
-        y = 4 + np.random.normal(0, 2, len(x))
-        sizes = np.random.uniform(15, 80, len(x))
-        colors = np.random.uniform(15, 80, len(x))
-        
-        # create a figure
-        figure = Figure(figsize=(6, 4), dpi=100)
-        figure_canvas = FigureCanvasTkAgg(figure, self.right_frame )
-        NavigationToolbar2Tk(figure_canvas, self.right_frame )
-        
-        axes = figure.add_subplot()
-        
-        axes.scatter(x, y, s=sizes, c=colors, vmin=0, vmax=100)
-        axes.set(xlim=(0, 8), xticks=np.arange(1, 8),
-               ylim=(0, 8), yticks=np.arange(1, 8))
-        
-        figure_canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=1)
-        '''
-        
+    
+    # Get dropout
+    def get_object_id(self, dummy):
+        self.globalData["object_id_plot"] = str(self.object_id.get("0.0", "end"))
+        self.globalData["object_id_plot"] = self.globalData["object_id_plot"].strip()
+        print(f"Selected object_id for plot = {self.globalData['object_id_plot']}")
         
     def display_static_data(self):
        data = pd.read_csv(self.config['static_data_file'], delimiter=",", header=0)
@@ -78,19 +65,34 @@ class VisualizeFrame(ctk.CTkFrame):
         self.right_frame = ctk.CTkFrame(master=self, height=400)
         self.right_frame.pack(pady=(5,20), anchor = "w") 
         
-        x = 4 + np.random.normal(0, 2, 24)
-        y = 4 + np.random.normal(0, 2, len(x))
-        sizes = np.random.uniform(15, 80, len(x))
-        colors = np.random.uniform(15, 80, len(x))
-        # create a figure
-        figure = Figure(figsize=(6, 4), dpi=100)
-        figure_canvas = FigureCanvasTkAgg(figure, self.right_frame )
-        NavigationToolbar2Tk(figure_canvas, self.right_frame )
-        
-        axes = figure.add_subplot()
-        
-        axes.scatter(x, y, s=sizes, c=colors, vmin=0, vmax=100)
-        axes.set(xlim=(0, 8), xticks=np.arange(1, 8),
-               ylim=(0, 8), yticks=np.arange(1, 8))
-        
-        figure_canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=1)
+        try:           
+            obs = self.globalData["y_test_scale"][self.globalData["object_id_plot"]]            
+            predict = self.globalData["y_test_scale_predict"]\
+                [self.globalData["object_id_plot"]].detach().numpy()
+            figure = Figure(figsize=(15, 4), dpi=100)
+            figure_canvas = FigureCanvasTkAgg(figure, self.right_frame )
+            NavigationToolbar2Tk(figure_canvas, self.right_frame )          
+            axes = figure.add_subplot()
+            axes.plot(obs, 'ro', label = "Observed (test data)", 
+                      alpha=0.9, markersize=2.5 )            
+            axes.plot(predict, color = 'blue', label = "Predicted (test data)", 
+                      alpha=0.9, linewidth=0.75)
+            axes.set_title(f"object_id = {self.globalData['object_id_plot']}")
+            axes.legend() 
+            figure_canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=1)
+            
+        except:
+            x = 4 + np.random.normal(0, 2, 24)
+            y = 4 + np.random.normal(0, 2, len(x))
+            figure = Figure(figsize=(15, 4), dpi=100)
+            figure_canvas = FigureCanvasTkAgg(figure, self.right_frame )
+            NavigationToolbar2Tk(figure_canvas, self.right_frame )
+            axes = figure.add_subplot()            
+            axes.plot(x, color = 'blue', label = "Predicted (test data)", 
+                      alpha=0.9, linewidth=0.75)
+            axes.plot(y, 'ro', label = "Observed (test data)", 
+                      alpha=0.9, markersize=2.5 )
+            axes.legend()
+            axes.set_title("Test plot")
+                
+            figure_canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=1)            

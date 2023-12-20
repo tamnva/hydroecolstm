@@ -147,7 +147,6 @@ class TrainTestFrame(ctk.CTkScrollableFrame):
         print("Training was done, forward run for test data...")
         self.globalData["y_test_scale_predict"] =\
             self.globalData["model"].forward(self.globalData["x_test_scale"])
-            
         print("Done")
         
         

@@ -56,7 +56,7 @@ def get_obs_predict_object_id(object_id):
     sim = y_test_scale_sim['2011'].detach().numpy()
     return obs, sim
 
-'''
+
 import numpy as np
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk
@@ -72,10 +72,10 @@ NavigationToolbar2Tk(figure_canvas, self.right_frame )
 
 axes = figure.add_subplot()
 
-axes.plot(x, color = 'blue', label = "Simulated Q (train)", alpha=0.9, linewidth=0.75)
-axes.plot(y, color = 'blue', label = "Simulated Q (train)", alpha=0.9, linewidth=0.75)
+axes.plot(x, color = 'blue', label = "Predicted (test data)", alpha=0.9, linewidth=0.75)
+axes.plot(y, 'ro', label = "Observed (test data)", alpha=0.9, markersize=2.5 )
+axes.legend()
 
 figure
 
 figure_canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=1)
-'''

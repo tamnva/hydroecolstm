@@ -508,7 +508,7 @@ class DataFrame(ctk.CTkScrollableFrame):
             self.globalData["y_scaler"].transform(x=self.globalData["y_train"])
         self.globalData["y_test_scale"] =\
             self.globalData["y_scaler"].transform(x=self.globalData["y_test"])   
-        
+        print(self.globalData["y_test_scale"])
         # Show message box
         tk.messagebox.showinfo(title="Message box", 
                                message="Done transforming data")
