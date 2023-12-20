@@ -49,33 +49,3 @@ plt.show()
 
 from hydroecolstm.interface.main_gui import show_gui
 show_gui()
-
-
-def get_obs_predict_object_id(object_id):
-    obs = y_test_scale['2011'].detach().numpy()
-    sim = y_test_scale_sim['2011'].detach().numpy()
-    return obs, sim
-
-
-import numpy as np
-from matplotlib.figure import Figure
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk
-
-x = 4 + np.random.normal(0, 2, 24)
-y = 4 + np.random.normal(0, 2, len(x))
-
-
-# create a figure
-figure = Figure(figsize=(6, 4), dpi=100)
-figure_canvas = FigureCanvasTkAgg(figure, self.right_frame )
-NavigationToolbar2Tk(figure_canvas, self.right_frame )
-
-axes = figure.add_subplot()
-
-axes.plot(x, color = 'blue', label = "Predicted (test data)", alpha=0.9, linewidth=0.75)
-axes.plot(y, 'ro', label = "Observed (test data)", alpha=0.9, markersize=2.5 )
-axes.legend()
-
-figure
-
-figure_canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=1)
