@@ -43,20 +43,3 @@ class LSTM_DL_Base(nn.Module):
         
         # return output
         return output
-
-'''
-mod = LSTM_DL_Base(input_size=6, output_size=2, hidden_size=30, num_layers=1, 
-             dropout=0.0, activation_function_name="Identity")
-
-test = nn.LSTM(input_size=6, 
-                    hidden_size=30, 
-                    num_layers=1,
-                    dropout=0.0, 
-                    batch_first=True)
-
-import torch
-inputx = x_train_scale['2009'].to(torch.float32)
-
-test(x_train_scale['2009'].to(torch.float32))
-mod(x=x_train_scale['2009'])
-'''

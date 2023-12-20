@@ -85,15 +85,3 @@ def _split_by_object_id(data, config):
         output[str(object_id)] = torch.tensor(data.loc[object_id].values, 
                                               dtype=torch.float32)
     return output
-    
-
-
-
-
-
-
-
-
-
-
-    

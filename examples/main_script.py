@@ -22,6 +22,7 @@ x_scaler, y_scaler = get_scaler_name(config)
 x_train_scaler, y_train_scaler = Scaler(), Scaler()
 x_train_scaler.fit(x=data["x_train"], method=x_scaler)
 x_train_scale = x_train_scaler.transform(x=data["x_train"])
+
 x_test_scale = x_train_scaler.transform(x=data["x_test"])
 
 y_train_scaler.fit(x=data["y_train"], method=y_scaler)
