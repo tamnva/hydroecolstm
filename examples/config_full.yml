@@ -1,0 +1,544 @@
+# Link to the data file (contains input features and targeted data for training)
+dynamic_data_file: 
+  - C:/Users/nguyenta/Documents/GitHub/HydroEcoLSTM/examples/time_series.csv
+
+static_data_file: 
+  - C:/Users/nguyenta/Documents/GitHub/HydroEcoLSTM/examples/static_attributes.csv
+
+# Object ID/Basins: see full list of catchments at the end of this documentation
+object_id:
+  - 2009
+  - 2011
+
+# Input dynamic features
+input_dynamic_features:
+  - precipitation_mm_d
+  - temperature_mean_degC
+  - rel_sun_dur
+
+# Input static features => full list of features at the end of this documentation
+input_static_features:
+  - p_mean
+  - aridity
+  - pet_mean
+  - p_seasonality
+
+# Target/output features
+target_features:
+  - discharge_vol_m3_s
+
+# Scaler for target features
+scaler_target_features:
+  - MinMaxScaler
+
+# Scaler for static features
+scaler_input_dynamic_features:
+  - MinMaxScaler
+
+# If you did not have input static_features, please leave this empyt
+scaler_input_static_features:
+  - MinMaxScaler
+
+# Training period with format YYYY-MM-DD
+train_period:
+  - 2010-01-01
+  - 2020-12-31
+
+# Hidden size of the LSTM
+hidden_size: 30
+
+# Number of layers
+num_layers: 1
+
+# Activation function: "ReLu", "Sigmoid", "Tanh", "Softplus", "Identity"
+activation_function_name: Identity
+
+# Dropout layer on the outputs of each LSTM layer except the last layer
+# Therefore, this parameter is only used if  num_layers > 1
+dropout: 0.4
+
+# Validation period with format YYYY-MM-DD
+test_period:
+  - 1982-01-01
+  - 2009-12-31
+
+# Number of epochs
+n_epochs: 500
+
+# Learning rate
+learning_rate: 0.005
+
+# warmup_length must be < batch_size
+# when calculating the loss, the first warmup_length timesteps will be omitted
+warmup_length: 12
+
+# objective function
+objective_function_name: MSE
+
+# optimization method
+optim_method: Adam
+
+
+# input_static_features:
+#	object_id
+#	ind_number_of_years
+#	p_mean
+#	pet_mean
+#	aridity
+#	p_seasonality
+#	frac_snow
+#	high_prec_freq
+#	high_prec_dur
+#	low_prec_freq
+#	low_prec_dur
+#	geo_porosity
+#	geo_log10_permeability
+#	unconsol_sediments
+#	siliciclastic_sedimentary
+#	mixed_sedimentary
+#	carbonate_sedimentary
+#	pyroclastic
+#	acid_volcanic
+#	basic_volcanic
+#	acid_plutonic
+#	intermediate_plutonic
+#	basic_plutonic
+#	metamorphics
+#	water_geo
+#	ice_geo
+#	glac_area
+#	glac_vol
+#	glac_mass
+#	glac_area_neighbours
+#	n_inhabitants
+#	dens_inhabitants
+#	hp_count
+#	hp_qturb
+#	hp_inst_turb
+#	hp_max_power
+#	num_reservoir
+#	reservoir_cap
+#	reservoir_he
+#	reservoir_fs
+#	reservoir_irr
+#	reservoir_nousedata
+#	reservoir_year_first
+#	reservoir_year_last
+#	unconsol_coarse_perc
+#	unconsol_medium_perc
+#	unconsol_fine_perc
+#	unconsol_imperm_perc
+#	hardrock_perc
+#	hardrock_imperm_perc
+#	karst_perc
+#	water_perc
+#	null_perc
+#	ext_area_perc
+#	sign_number_of_years
+#	q_mean
+#	runoff_ratio
+#	stream_elas
+#	slope_fdc
+#	baseflow_index_landson
+#	hfd_mean
+#	Q5
+#	Q95
+#	high_q_freq
+#	high_q_dur
+#	low_q_freq
+#	low_q_dur
+#	zero_q_freq
+#	crop_perc
+#	grass_perc
+#	scrub_perc
+#	dwood_perc
+#	mixed_wood_perc
+#	ewood_perc
+#	wetlands_perc
+#	inwater_perc
+#	ice_perc
+#	loose_rock_perc
+#	rock_perc
+#	urban_perc
+#	sand_perc
+#	sand_perc_5
+#	sand_perc_25
+#	sand_perc_50
+#	sand_perc_75
+#	sand_perc_90
+#	sand_perc_skewness
+#	sand_perc_missing
+#	silt_perc
+#	silt_perc_5
+#	silt_perc_25
+#	silt_perc_50
+#	silt_perc_75
+#	silt_perc_90
+#	silt_perc_skewness
+#	silt_perc_missing
+#	clay_perc
+#	clay_perc_5
+#	clay_perc_25
+#	clay_perc_50
+#	clay_perc_75
+#	clay_perc_90
+#	clay_perc_skewness
+#	clay_perc_missing
+#	organic_perc
+#	organic_perc_5
+#	organic_perc_25
+#	organic_perc_50
+#	organic_perc_75
+#	organic_perc_90
+#	organic_perc_skewness
+#	organic_perc_missing
+#	bulk_dens
+#	bulk_dens_5
+#	bulk_dens_25
+#	bulk_dens_50
+#	bulk_dens_75
+#	bulk_dens_90
+#	bulk_dens_skewness
+#	bulk_dens_missing
+#	tot_avail_water
+#	tot_avail_water_5
+#	tot_avail_water_25
+#	tot_avail_water_50
+#	tot_avail_water_75
+#	tot_avail_water_90
+#	tot_avail_water_skewness
+#	tot_avail_water_missing
+#	root_depth
+#	root_depth_5
+#	root_depth_25
+#	root_depth_50
+#	root_depth_75
+#	root_depth_90
+#	root_depth_skewness
+#	root_depth_missing
+#	coarse_fragm_perc
+#	coarse_fragm_perc_5
+#	coarse_fragm_perc_25
+#	coarse_fragm_perc_50
+#	coarse_fragm_perc_75
+#	coarse_fragm_perc_90
+#	coarse_fragm_perc_skewness
+#	coarse_fragm_perc_missing
+#	porosity
+#	porosity_5
+#	porosity_25
+#	porosity_50
+#	porosity_75
+#	porosity_90
+#	porosity_skewness
+#	porosity_missing
+#	conductivity
+#	conductivity_5
+#	conductivity_25
+#	conductivity_50
+#	conductivity_75
+#	conductivity_90
+#	conductivity_skewness
+#	conductivity_missing
+#	country
+#	gauge_lon
+#	gauge_lat
+#	gauge_easting
+#	gauge_northing
+#	gauge_elevation
+#	area
+#	elev_mean
+#	elev_min
+#	elev_percentile10
+#	elev_percentile25
+#	elev_percentile50
+#	elev_percentile75
+#	elev_percentile90
+#	elev_max
+#	slope_mean
+#	flat_area_perc
+#	steep_area_perc
+
+# object_id
+#	2009
+#	2011
+#	2016
+#	2018
+#	2019
+#	2020
+#	2024
+#	2029
+#	2030
+#	2033
+#	2034
+#	2044
+#	2053
+#	2056
+#	2063
+#	2067
+#	2068
+#	2070
+#	2078
+#	2079
+#	2084
+#	2085
+#	2086
+#	2087
+#	2091
+#	2099
+#	2102
+#	2104
+#	2105
+#	2106
+#	2109
+#	2110
+#	2112
+#	2117
+#	2119
+#	2122
+#	2125
+#	2126
+#	2132
+#	2135
+#	2139
+#	2141
+#	2143
+#	2150
+#	2151
+#	2152
+#	2155
+#	2157
+#	2159
+#	2160
+#	2161
+#	2167
+#	2170
+#	2174
+#	2176
+#	2179
+#	2181
+#	2185
+#	2187
+#	2199
+#	2200
+#	2202
+#	2203
+#	2205
+#	2206
+#	2210
+#	2215
+#	2219
+#	2232
+#	2239
+#	2243
+#	2244
+#	2247
+#	2251
+#	2252
+#	2256
+#	2262
+#	2263
+#	2265
+#	2268
+#	2269
+#	2270
+#	2276
+#	2282
+#	2283
+#	2288
+#	2289
+#	2290
+#	2299
+#	2300
+#	2303
+#	2304
+#	2305
+#	2307
+#	2308
+#	2309
+#	2312
+#	2319
+#	2321
+#	2327
+#	2342
+#	2343
+#	2346
+#	2347
+#	2349
+#	2351
+#	2352
+#	2355
+#	2356
+#	2364
+#	2366
+#	2368
+#	2369
+#	2370
+#	2371
+#	2372
+#	2374
+#	2378
+#	2386
+#	2387
+#	2403
+#	2409
+#	2410
+#	2412
+#	2414
+#	2415
+#	2416
+#	2417
+#	2418
+#	2419
+#	2420
+#	2426
+#	2430
+#	2432
+#	2433
+#	2434
+#	2436
+#	2437
+#	2446
+#	2447
+#	2450
+#	2457
+#	2458
+#	2461
+#	2462
+#	2463
+#	2468
+#	2469
+#	2471
+#	2473
+#	2474
+#	2475
+#	2477
+#	2478
+#	2480
+#	2481
+#	2485
+#	2486
+#	2487
+#	2488
+#	2490
+#	2491
+#	2493
+#	2494
+#	2497
+#	2498
+#	2500
+#	2602
+#	2603
+#	2604
+#	2605
+#	2606
+#	2607
+#	2608
+#	2609
+#	2610
+#	2612
+#	2613
+#	2617
+#	2620
+#	2629
+#	2630
+#	2631
+#	2634
+#	2635
+#	3001
+#	3002
+#	3003
+#	3004
+#	3005
+#	3006
+#	3007
+#	3008
+#	3009
+#	3010
+#	3011
+#	3012
+#	3013
+#	3014
+#	3015
+#	3016
+#	3017
+#	3018
+#	3019
+#	3020
+#	3021
+#	3022
+#	3023
+#	3024
+#	3025
+#	3026
+#	3027
+#	3028
+#	3029
+#	3030
+#	3031
+#	3032
+#	3033
+#	4001
+#	4002
+#	4003
+#	4004
+#	4005
+#	4006
+#	4007
+#	4008
+#	4009
+#	4010
+#	4011
+#	4012
+#	4013
+#	4014
+#	4015
+#	4016
+#	4017
+#	4018
+#	4019
+#	4020
+#	4021
+#	4022
+#	4023
+#	4024
+#	4025
+#	4026
+#	5001
+#	5002
+#	5003
+#	5005
+#	5006
+#	5009
+#	5010
+#	5012
+#	5013
+#	5014
+#	5015
+#	5016
+#	5017
+#	5018
+#	5019
+#	5020
+#	5022
+#	5023
+#	5025
+#	5026
+#	5027
+#	5029
+#	5030
+#	5031
+#	5032
+#	6002
+#	6003
+#	6004
+#	6005
+#	6006
+#	6007
+#	6008
+#	6009
+#	6011
+
+
+
+
