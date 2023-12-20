@@ -21,4 +21,4 @@ hydroecolstm.interface.show_gui()
 
 
 
-![](C:\Users\nguyenta\Documents\GitHub\hydroecolstm\examples\gui.gif)
+![](.\examples\gui.gif)
