@@ -17,10 +17,16 @@ input_dynamic_features:
   - rel_sun_dur
 
 # Input static features => full list of features at the end of this documentation
+input_static_features:
+  - p_mean
+  - aridity
+  - pet_mean
+  - p_seasonality
 
 # Target/output features
 target_features:
   - discharge_vol_m3_s
+  - discharge_spec_mm_d
 
 # Scaler for target features
 scaler_target_features:
@@ -28,6 +34,10 @@ scaler_target_features:
 
 # Scaler for static features
 scaler_input_dynamic_features:
+  - MinMaxScaler
+
+# If you did not have input static_features, please leave this empyt
+scaler_input_static_features:
   - MinMaxScaler
 
 # Training period with format YYYY-MM-DD
@@ -54,7 +64,7 @@ test_period:
   - 2009-12-31
 
 # Number of epochs
-n_epochs: 100
+n_epochs: 10
 
 # Learning rate
 learning_rate: 0.005

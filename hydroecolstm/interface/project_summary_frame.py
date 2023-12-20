@@ -76,11 +76,6 @@ class ProjectSummaryFrame(ctk.CTkScrollableFrame):
             for key in self.config["target_features"]:
                 self.summary_textbox.insert("end", "  - " + str(key) + "\n")
 
-        if "target_features" in self.config.keys():
-            self.summary_textbox.insert("end", "target_features:\n")
-            for key in self.config["target_features"]:
-                self.summary_textbox.insert("end", "  - " + str(key) + "\n")
-
         if "scaler_input_dynamic_features" in self.config.keys():
             self.summary_textbox.insert("end", "scaler_input_dynamic_features:\n")
             self.summary_textbox.insert("end", "  - " + 

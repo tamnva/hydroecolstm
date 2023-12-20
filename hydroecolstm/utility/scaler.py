@@ -100,7 +100,7 @@ def get_scaler_name(config):
     
     # replicate this n times
     if no_static_features > 0 and\
-        "scaler_input_static_features" in config["scaler_input_static_features"]:
+        "scaler_input_static_features" in config:
             for name in config["scaler_input_static_features"]*no_static_features:
                 scaler_name_input.append(name)
         

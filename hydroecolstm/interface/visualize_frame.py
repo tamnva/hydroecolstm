@@ -40,6 +40,11 @@ class VisualizeFrame(ctk.CTkFrame):
         self.object_id.insert("0.0", "object_id") 
         self.object_id.pack(pady=(5,5), padx=(5,5), anchor = "w") #grid(row=0, column=0, sticky="w", padx=(20,20), pady=(20,20))
         self.object_id.bind('<KeyRelease>', self.get_object_id)
+
+        self.target_feature = ctk.CTkTextbox(master=self.left_frame, height=30)
+        self.target_feature.insert("0.0", "target_feature") 
+        self.target_feature.pack(pady=(5,5), padx=(5,5), anchor = "w") #grid(row=0, column=0, sticky="w", padx=(20,20), pady=(20,20))
+        self.target_feature.bind('<KeyRelease>', self.get_target_feature)
         
         self.show_plot = ctk.CTkButton(self.left_frame, anchor='w', 
                                  command=self.plot_figure, text="Update plot")
@@ -51,6 +56,11 @@ class VisualizeFrame(ctk.CTkFrame):
         self.globalData["object_id_plot"] = str(self.object_id.get("0.0", "end"))
         self.globalData["object_id_plot"] = self.globalData["object_id_plot"].strip()
         print(f"Selected object_id for plot = {self.globalData['object_id_plot']}")
+
+    def get_target_feature(self, dummy):
+        self.globalData["target_feature_plot"] = str(self.target_feature.get("0.0", "end"))
+        self.globalData["target_feature_plot"] = self.globalData["target_feature_plot"].strip()
+        print(f"Selected target_feature for plot = {self.globalData['target_feature_plot']}")
         
     def display_static_data(self):
        data = pd.read_csv(self.config['static_data_file'], delimiter=",", header=0)
@@ -66,9 +76,15 @@ class VisualizeFrame(ctk.CTkFrame):
         self.right_frame.pack(pady=(5,20), anchor = "w") 
         
         try:           
-            obs = self.globalData["y_test_scale"][self.globalData["object_id_plot"]]            
+            obs = self.globalData["y_test_scale"][self.globalData["object_id_plot"]]  
+            obs = obs[:, self.config["target_features"].\
+                      index(self.globalData["target_feature_plot"])]  
+                
             predict = self.globalData["y_test_scale_predict"]\
                 [self.globalData["object_id_plot"]].detach().numpy()
+            predict = predict[:, self.config["target_features"].\
+                              index(self.globalData["target_feature_plot"])]    
+            
             figure = Figure(figsize=(15, 4), dpi=100)
             figure_canvas = FigureCanvasTkAgg(figure, self.right_frame )
             NavigationToolbar2Tk(figure_canvas, self.right_frame )          
