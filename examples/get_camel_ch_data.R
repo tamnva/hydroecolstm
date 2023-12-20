@@ -1,3 +1,13 @@
+library(magick)
+library(magrittr)
+
+setwd("C:/Users/nguyenta/Documents")
+list.files(path='C:/Users/nguyenta/Documents', pattern = '*.PNG', full.names = TRUE) %>% 
+  image_read() %>% # reads each path file
+  image_join() %>% # joins image
+  image_animate(fps=1) %>% # animates, can opt for number of loops
+  image_write("FileName.gif") # write to current dir
+
 
 # Set workding directory
 setwd("C:/Users/nguyenta/Documents/GitHub/hydroModLSTM/examples/example_1")

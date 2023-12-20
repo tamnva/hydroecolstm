@@ -18,3 +18,7 @@ hydroecolstm.interface.show_gui()
 # 'examples/main_script.py' and the configuration file 'examples/config.yml'
 
 ```
+
+
+
+![](C:\Users\nguyenta\Documents\GitHub\hydroecolstm\examples\gui.gif)
