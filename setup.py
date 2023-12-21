@@ -23,7 +23,8 @@ setup(
                       'pandastable',
                       'tkcalendar',
                       'CTkListbox',
-                      'CTkToolTip'
+                      'CTkToolTip',
+                      'ruamel.yaml'
                       ],
 
     classifiers=[
