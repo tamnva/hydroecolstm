@@ -63,7 +63,7 @@ test_period:
   - 2009-12-31
 
 # Number of epochs
-n_epochs: 10
+n_epochs: 150
 
 # Learning rate
 learning_rate: 0.005
@@ -72,8 +72,8 @@ learning_rate: 0.005
 # when calculating the loss, the first warmup_length timesteps will be omitted
 warmup_length: 12
 
-# objective function
-objective_function_name: MSE
+# objective function 1-NSE, MSE, RMSE, MAE
+objective_function_name: MAE
 
 # optimization method
 optim_method: Adam

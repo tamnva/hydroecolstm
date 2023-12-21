@@ -22,8 +22,8 @@ class NetworkDesignFrame(ctk.CTkScrollableFrame):
         self.tabview.add("LSTM_DL")
         self.tabview.tab("LSTM_DL").grid_columnconfigure((0,1), weight=1)
         self.tabview.tab("LSTM_DL").rowconfigure((0,1,2,3,4,5,6,7), weight=1)
-        self.tabview.add("RNN")
-        self.tabview.tab("RNN").grid_columnconfigure((0,1), weight=1)
+        #self.tabview.add("RNN")
+        #self.tabview.tab("RNN").grid_columnconfigure((0,1), weight=1)
                    
         # ---------------------------------------------content of load data tab
         self.intro_label = ctk.CTkLabel(self.tabview.tab("LSTM_DL"), 

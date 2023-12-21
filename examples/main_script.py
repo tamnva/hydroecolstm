@@ -38,8 +38,8 @@ x_test_scale
 import matplotlib.pyplot as plt
 
 
-obs = y_test_scale['2011'].detach().numpy()
-sim = y_test_scale_sim['2011'].detach().numpy()
+obs = y_test_scale['2009'].detach().numpy()
+sim = y_test_scale_sim['2009'].detach().numpy()
 
 #plt.scatter(obs[:,1], sim[:,1])
 
@@ -47,5 +47,5 @@ plt.plot(sim, color = 'blue', label = "Simulated Q (train)", alpha=0.9, linewidt
 plt.plot(obs, color = 'red', label = "Simulated Q (test)", alpha=0.9, linewidth=0.75)
 plt.show()
 
-#from hydroecolstm.interface.main_gui import show_gui
-#show_gui()
+from hydroecolstm.interface.main_gui import show_gui
+show_gui()

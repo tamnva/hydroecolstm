@@ -20,8 +20,8 @@ class TrainTestFrame(ctk.CTkScrollableFrame):
         self.tabview.grid(row=0, column=0, padx=(20, 20), pady=(10, 10), sticky="ew")
         self.tabview.add("LSTM_DL")
         self.tabview.tab("LSTM_DL").grid_columnconfigure((1,1), weight=1)
-        self.tabview.add("RNN")
-        self.tabview.tab("RNN").grid_columnconfigure((0,1), weight=1)
+        #self.tabview.add("RNN")
+        #self.tabview.tab("RNN").grid_columnconfigure((0,1), weight=1)
         
         # ---------------------------------------------content of load data tab
         self.nepoch_label = ctk.CTkLabel(self.tabview.tab("LSTM_DL"), 
@@ -72,12 +72,11 @@ class TrainTestFrame(ctk.CTkScrollableFrame):
                                                text="5. Optimization method")
         self.loss_functionlabel.pack(anchor='w', pady=(4, 4))      
         self.loss = ctk.CTkOptionMenu(self.tabview.tab("LSTM_DL"),
-                                                   values=['Nash–Sutcliffe Efficiency (NSE)', 
-                                                           'Kling-Gupta Efficiency (KGE)', 
-                                                           'Root Mean Square Error (RMSE)', 
+                                                   values=['Root Mean Square Error (RMSE)',
+                                                           "Nash–Sutcliffe Efficiency (1-NSE)",
+                                                           #"Kling-Gupta Efficiency (1-KGE)",
                                                            'Mean Absolute Error (MAE)',
-                                                           'Mean Squared Error (MSE)',
-                                                           'Negative Log-Likelihood Loss (NLL)'],
+                                                           'Mean Squared Error (MSE)'],
                                                    command=self.get_objective_function_name) 
         self.loss.pack(anchor='w')
         
@@ -115,12 +114,12 @@ class TrainTestFrame(ctk.CTkScrollableFrame):
         
     # Get number of lstm layers
     def get_objective_function_name(self, method: str):
-        obj_name = {"Nash–Sutcliffe Efficiency (NSE)": "NSE",
-                    "Kling-Gupta Efficiency (KGE)": "KGE",
-                    'Root Mean Square Error (RMSE)': "RMSE",
+        obj_name = {'Root Mean Square Error (RMSE)': "RMSE",
+                    "Nash–Sutcliffe Efficiency (1-NSE)": "NSE",
+                    #"Kling-Gupta Efficiency (1-KGE)": "KGE",
                     'Mean Absolute Error (MAE)': "MAE",
-                    'Mean Squared Error (MSE)': "MSE",
-                    "Negative Log-Likelihood Loss (NLL)": "NLL"} 
+                    'Mean Squared Error (MSE)': "MSE"} 
+        
         print(method)                       
         self.config["objective_function_name"] = obj_name[method]
         print(self.config["objective_function_name"])

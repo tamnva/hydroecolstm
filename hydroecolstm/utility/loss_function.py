@@ -5,7 +5,8 @@ class LossFunction:
                  objective_function_name:str) -> torch.Tensor:
         
         # Loss function as list
-        loss_functions = {"MSE": self.MSE, "RMSE": self.RMSE}
+        loss_functions = {"MSE": self.MSE, "RMSE": self.RMSE, 
+                          "1-NSE": self.NSE, "MAE": self.MAE}
         
         loss = {}
 
@@ -30,3 +31,36 @@ class LossFunction:
         mse = self.MSE(ytrue, ypredict)
         rmse = mse**0.5
         return rmse
+    
+    # 1 - Nash–Sutcliffe efficiency (NSE)
+    def NSE(self, ytrue:torch.Tensor, ypredict:torch.Tensor):
+        mask = ~torch.isnan(ytrue)
+        
+        # Sum of Square Error (sse) = sum((true-predict)^2)
+        # Sum of Square Difference around mean (ssd) = sum((true-mean_true)^2)
+        sse = []        
+        ssd = []
+        for i in range(ytrue.shape[1]):
+            sse.append(torch.sum((ytrue[:,i][mask[:,i]] - ypredict[:,i][mask[:,i]])**2))
+            ssd.append(torch.sum((ytrue[:,i][mask[:,i]] - torch.nanmean(ytrue[:,i]))**2))
+        
+        # get 1 - nse, here I call it as nse
+        nse = torch.stack(sse)/torch.stack(ssd)
+        
+        if torch.isnan(nse).any():
+            raise ValueError("nan values found when calculating NSE - zero division")
+            
+        return nse
+       
+    def MAE(self, ytrue:torch.Tensor, ypredict:torch.Tensor):
+        mask = ~torch.isnan(ytrue)
+        mae = []
+        for i in range(ytrue.shape[1]):
+            error = ytrue[:,i][mask[:,i]] - ypredict[:,i][mask[:,i]]
+            mae.append(torch.mean(torch.abs(error)))
+        mae = torch.stack(mae)
+        
+        return mae        
+        
+        
+        
