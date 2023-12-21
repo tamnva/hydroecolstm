@@ -140,10 +140,13 @@ class DataFrame(ctk.CTkScrollableFrame):
                                              text="3. Training period (yyyy-mm-dd)")
         self.select_date_train.grid(row=2, column=0, padx = 10, pady=(5,5), sticky="w")    
         self.start_train = tkc.DateEntry(self.tabview.tab("2. Filter data"), 
-                                         date_pattern= 'yyyy-mm-dd', width = 25)
+                                         date_pattern= 'yyyy-mm-dd', width = 25,
+                                         year=2000, month=1, day=1, 
+                                         font=ctk.CTkFont(size=12))
         self.start_train.grid(row= 3,column=0, padx=30, pady=10, sticky='w')
         self.end_train = tkc.DateEntry(self.tabview.tab("2. Filter data"), 
-                                       date_pattern= 'yyyy-mm-dd', width = 25)
+                                       date_pattern= 'yyyy-mm-dd', width = 25,
+                                       year=2010, month=1, day=1, font=ctk.CTkFont(size=12))
         self.end_train.grid(row= 4,column=0, padx=30, pady=10, sticky='w')   
         CTkToolTip(self.select_date_train, delay=0.1, bg_color = 'orange',
                    text_color = 'black', anchor='w', 
@@ -155,14 +158,16 @@ class DataFrame(ctk.CTkScrollableFrame):
                                             text="4. Testing period (yyyy-mm-dd)")
         self.select_date_test.grid(row=2, column=1, padx = 10, pady=(5,5), sticky="e")    
         self.start_test = tkc.DateEntry(self.tabview.tab("2. Filter data"), 
-                                         date_pattern= 'yyyy-mm-dd', width = 25)
+                                         date_pattern= 'yyyy-mm-dd', width = 25,
+                                         year=2011, month=1, day=1, font=ctk.CTkFont(size=12))
         CTkToolTip(self.select_date_test, delay=0.1, bg_color = 'orange',
                    text_color = 'black', anchor='w', 
                    message='Select starting date (upper calender box) and \n' + 
                    'ending date (lower calendar box) of the testing period')
         self.start_test.grid(row= 3,column=1, padx=30, pady=10, sticky='e')
         self.end_test = tkc.DateEntry(self.tabview.tab("2. Filter data"), 
-                                       date_pattern= 'yyyy-mm-dd', width = 25)
+                                       date_pattern= 'yyyy-mm-dd', width = 25,
+                                       year=2018, month=1, day=1, font=ctk.CTkFont(size=12))
         self.end_test.grid(row= 4,column=1, padx=30, pady=10, sticky='e')   
         
 
@@ -508,7 +513,7 @@ class DataFrame(ctk.CTkScrollableFrame):
             self.globalData["y_scaler"].transform(x=self.globalData["y_train"])
         self.globalData["y_test_scale"] =\
             self.globalData["y_scaler"].transform(x=self.globalData["y_test"])   
-        print(self.globalData["y_test_scale"])
+            
         # Show message box
         tk.messagebox.showinfo(title="Message box", 
                                message="Done transforming data")
