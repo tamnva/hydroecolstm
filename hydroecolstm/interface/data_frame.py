@@ -38,16 +38,6 @@ class DataFrame(ctk.CTkScrollableFrame):
         self.dynamic_label = ctk.CTkLabel(self.tabview.tab("1. Load data"), 
                                          text="1. Dynamic/time series data")
         self.dynamic_label.grid(row=0, column=0, padx = 10, pady=(5,5), sticky="w")
-        CTkToolTip(self.dynamic_label, delay=0.1, bg_color = 'orange',
-                   text_color = 'black', anchor='w',  wraplength=500, 
-                   message='Click here to select dynamic (timeseries) data file' + 
-                   'the data file must be in .csv format with header, seperator' + 
-                   'is <,>. This data file must contains at least two colums,' +
-                   'one with the name <object_id> and the other column with the ' +
-                   'name <time> in format yyyy-mm-dd .The object_id column will '+ 
-                   'link object in dynamic/timeseries data file with static data file. ' +
-                   'Timeseries of BOTH input and target features must be in this file' +
-                   'template of this file can be seen in this Github repo ./example_1')
         
         # Select dynamic data label
         self.select_dynamic_file = ctk.CTkButton(self.tabview.tab("1. Load data"), 
@@ -55,6 +45,16 @@ class DataFrame(ctk.CTkScrollableFrame):
                                                text="Select dynamic data file", 
                                                command=self.get_dynamic_file)
         self.select_dynamic_file.grid(row=1, column=0, padx = 10, pady=(5,5), sticky="w")        
+        CTkToolTip(self.select_dynamic_file, delay=0.1, bg_color = 'orange',
+                   text_color = 'black', anchor='e',  wraplength=500, 
+                   message='Click here to select dynamic (timeseries) data file. ' + 
+                   'The data file must be in .csv format with header, seperator' + 
+                   'is <,>. This data file must contains at least two colums, ' +
+                   'one with the name <object_id> and the other column with the ' +
+                   'name <time> in format yyyy-mm-dd .The object_id column will '+ 
+                   'link object in dynamic/timeseries data file with static data file. ' +
+                   'Timeseries of BOTH input and target features must be in this file. ' +
+                   'Template of this file can be seen in this Github repo ./example_1')
         
         # display selected data file
         self.selected_dynamic_filename = ctk.CTkLabel(self.tabview.tab("1. Load data"),
@@ -91,7 +91,14 @@ class DataFrame(ctk.CTkScrollableFrame):
 
         self.select_static_file.grid(row=1, column=1, padx = 10, 
                                    pady=(5,5), sticky="e")
-
+        CTkToolTip(self.select_static_file, delay=0.1, bg_color = 'orange',
+                   text_color = 'black', anchor='w',  wraplength=500, 
+                   message='Click here to select static (catchment attributes) data file. ' + 
+                   'the data file must be in .csv format with header, seperator ' + 
+                   'is <,>. This data file must contains at a column name ' +
+                   '<object_id> to connect static with dynamic data. ' +
+                   'Template of this file can be seen in this Github repo ./example_1')
+        
         # display selected data file
         self.selected_static_filename = ctk.CTkLabel(self.tabview.tab("1. Load data"),
                                                       text="No file was selected")
@@ -213,8 +220,8 @@ class DataFrame(ctk.CTkScrollableFrame):
         self.transform_tar_label.pack(anchor="w")
         
         self.transform_tar_option = ctk.CTkOptionMenu(self.tabview.tab("3. Transform data"),
-                                                   values=['MinMaxScaler', 'Z-score', 'None'],
-                                                   command=self.transform_target_data_option) 
+                                                      values=['MinMaxScaler', 'Z-score', 'None'],
+                                                      command=self.transform_target_data_option) 
         self.transform_tar_option.pack(anchor="w")
         
         self.execute_label = ctk.CTkLabel(self.tabview.tab("3. Transform data"),

@@ -31,6 +31,7 @@ class MainGUI(ctk.CTk):
         config["learning_rate"] = 0.01
         config["dropout"] = 0.30
         config["warmup_length"] = 20
+        config["objective_function_name"] = "RMSE"
 
         # Initialize global data
         globalData = {}
