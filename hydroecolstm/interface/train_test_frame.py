@@ -88,6 +88,15 @@ class TrainTestFrame(ctk.CTkScrollableFrame):
                                          text="Run")
         self.run.pack(anchor='w')
       
+        #self.slider_progressbar_frame = ctk.CTkFrame(self, fg_color="transparent",height=10)
+        #self.slider_progressbar_frame.pack(fill='both',expand=1)
+        #self.slider_progressbar_frame.grid_columnconfigure(0, weight=1)
+        #self.progressbar = ctk.CTkProgressBar(master=self.tabview.tab("LSTM_DL"))
+        #self.progressbar.pack(fill='both',expand=1)
+        #self.progressbar.configure(mode="determinate",progress_color="orange")
+        #self.progressbar.set(0)
+        #self.progressbar.step()
+        
     # Get number of epochs
     def get_nepoch(self, dummy):
         get_n_epochs = self.nepoch.get("0.0", "end")
@@ -130,32 +139,33 @@ class TrainTestFrame(ctk.CTkScrollableFrame):
         print(self.config["optim_method"])
      
     def run_train_test(self):
-        # First create the network with given input
-        # print(self.config)
-        # print("creating models")
-        self.globalData["model"] = LSTM_DL(config=self.config)
-        print("Done creating models")
+        #
+        self.run.configure(fg_color='gray')
+        self.run.configure(state="disabled")
         
-        # Show message box
         tk.messagebox.showinfo(title="Message box", 
-                               message="Training will start after closing this box \
-                                   training might take time. Another message box will \
-                                       appear when traning is done")
+                               message="Trainning will start after closing this box")
+        
+        #self.progressbar.set(0.1)
+        self.globalData["model"] = LSTM_DL(config=self.config)
+        #self.progressbar.set(0.2)
         
         # Train the model
-        print("Training is processing...")
         _, self.globalData["y_train_scale_predict"] =\
             self.globalData["model"].train(x_train=self.globalData["x_train_scale"],
                                            y_train=self.globalData["y_train_scale"])
+        #self.progressbar.set(0.9)
         
         # Run forward test the model
-        print("Training was done, forward run for test data...")
         self.globalData["y_test_scale_predict"] =\
             self.globalData["model"].forward(self.globalData["x_test_scale"])
-        print("Done")
+
+        #self.progressbar.set(1.0)        
+        self.run.configure(state="normal")
+        self.run.configure(fg_color=['#3a7ebf', '#1f538d'])
         
         tk.messagebox.showinfo(title="Message box", 
-                               message="Training/Testing is done")
+                               message="Finished training/testing")
         
         
         
