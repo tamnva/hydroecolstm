@@ -1,4 +1,4 @@
-
+import tkinter as tk
 import customtkinter as ctk
 from hydroecolstm.model.lstms import LSTM_DL
 
@@ -136,6 +136,12 @@ class TrainTestFrame(ctk.CTkScrollableFrame):
         self.globalData["model"] = LSTM_DL(config=self.config)
         print("Done creating models")
         
+        # Show message box
+        tk.messagebox.showinfo(title="Message box", 
+                               message="Training will start after closing this box \
+                                   training might take time. Another message box will \
+                                       appear when traning is done")
+        
         # Train the model
         print("Training is processing...")
         _, self.globalData["y_train_scale_predict"] =\
@@ -147,6 +153,9 @@ class TrainTestFrame(ctk.CTkScrollableFrame):
         self.globalData["y_test_scale_predict"] =\
             self.globalData["model"].forward(self.globalData["x_test_scale"])
         print("Done")
+        
+        tk.messagebox.showinfo(title="Message box", 
+                               message="Training/Testing is done")
         
         
         

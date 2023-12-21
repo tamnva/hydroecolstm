@@ -24,7 +24,7 @@ setup(
                       'tkcalendar',
                       'CTkListbox',
                       'CTkToolTip',
-                      'ruamel.yaml'
+                      'PyYAML'
                       ],
 
     classifiers=[

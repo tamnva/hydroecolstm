@@ -1,7 +1,5 @@
 
 import customtkinter as ctk
-import pandas as pd
-from pandastable import Table
 import tkinter as tk
 import numpy as np
 
