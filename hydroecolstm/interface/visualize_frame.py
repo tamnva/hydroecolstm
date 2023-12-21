@@ -19,39 +19,86 @@ class VisualizeFrame(ctk.CTkFrame):
         self.config = config
         self.globalData = globalData
         self.columnconfigure((0), weight=1)
-        self.rowconfigure((0,1), weight=1)
+        #self.rowconfigure((0,1), weight=1)
         self.__create_widgets() 
         
     # create widgets for sidebar frame
     def __create_widgets(self): 
         # ---------------------------------------------content of load data tab
         self.object_id_label = ctk.CTkLabel(self, text="1. Please insert object_id for plot")
-        self.object_id_label.pack(pady=(5,5), anchor='w')
-        self.left_frame = ctk.CTkFrame(master=self, height=400)
-        self.left_frame.pack(pady=(5,20), anchor = "w") #grid(row=0, column=0, sticky="w", padx=(20,20), pady=(20,20))
+        self.object_id_label.grid(row=0, column=0, sticky="w", padx=(5,5))
+        self.select_input_frame = ctk.CTkFrame(master=self, height=400)
+        self.select_input_frame.grid(row=1, column=0, sticky="w", padx=(20,20), pady=(20,20))
+        self.select_input_frame.columnconfigure((0,1), weight=1)
 
         self.object_id_label = ctk.CTkLabel(self, text="2. Plotting area")
-        self.object_id_label.pack(pady=(0,5), anchor='w')
-        self.right_frame = ctk.CTkCanvas(master=self, height=400)
-        self.right_frame.pack(pady=(5,20), anchor = "w") #grid(row=1, column=0, sticky="w", padx=(20,20), pady=(20,20))  
+        self.object_id_label.grid(row=2, column=0, sticky="w", padx=(5,5))
+        self.plot_frame = ctk.CTkCanvas(master=self, height=400)
+        self.plot_frame.grid(row=3, column=0, sticky="w", padx=(20,20), pady=(20,20))  
 
 
-        self.object_id = ctk.CTkTextbox(master=self.left_frame, height=30)
+        self.object_id = ctk.CTkTextbox(master=self.select_input_frame, height=30)
         self.object_id.insert("0.0", "object_id") 
-        self.object_id.pack(pady=(5,5), padx=(5,5), anchor = "w") #grid(row=0, column=0, sticky="w", padx=(20,20), pady=(20,20))
+        self.object_id.grid(row=0, column=0, sticky="w", padx=(5,5), pady=(5,5))
         self.object_id.bind('<KeyRelease>', self.get_object_id)
 
-        self.target_feature = ctk.CTkTextbox(master=self.left_frame, height=30)
+        self.target_feature = ctk.CTkTextbox(master=self.select_input_frame, height=30)
         self.target_feature.insert("0.0", "target_feature") 
-        self.target_feature.pack(pady=(5,5), padx=(5,5), anchor = "w") #grid(row=0, column=0, sticky="w", padx=(20,20), pady=(20,20))
+        self.target_feature.grid(row=1, column=0, sticky="w", padx=(5,5), pady=(5,5))
         self.target_feature.bind('<KeyRelease>', self.get_target_feature)
         
-        self.show_plot = ctk.CTkButton(self.left_frame, anchor='w', 
+        self.next_object_id_button = ctk.CTkButton(self.select_input_frame, 
+                                                   anchor='w',
+                                                   command=self.next_object_id, 
+                                                   text="Next object id")
+        self.next_object_id_button.grid(row=0, column=1, sticky="w", 
+                                        padx=(5,5), pady=(5,5))
+        self.next_target_feature_button = ctk.CTkButton(self.select_input_frame, 
+                                                        anchor='w',
+                                                   command=self.next_target_feature, 
+                                                   text="Next target features")
+        self.next_target_feature_button.grid(row=1, column=1, sticky="w", 
+                                             padx=(5,5), pady=(5,5))
+        
+        
+        self.update_plot = ctk.CTkButton(self.select_input_frame, anchor='w', 
                                  command=self.plot_figure, text="Update plot")
-        self.show_plot.pack(pady=(5,5), padx=(5,5), anchor = "w") #grid(row=1, column=0, sticky="w", padx=(20,20), pady=(20,20))
+        self.update_plot.grid(row=3, column=0, columnspan=2, sticky="w", padx=(5,20), pady=(20,20))
         
     
     # Get dropout
+    def next_object_id(self):
+        try:
+            if self.globalData["object_id_no"] > len(self.config["object_id"]) - 1:
+                self.globalData["object_id_no"] = 0
+            
+            #print(self.globalData["object_id_no"])
+            self.object_id.delete("0.0", "end")
+            self.object_id.insert("0.0", self.config["object_id"]
+                                  [self.globalData["object_id_no"]])
+            self.globalData["object_id_plot"] = str(self.config["object_id"]
+                                                    [self.globalData["object_id_no"]])
+                
+            #print(self.globalData["object_id_plot"])
+                
+            self.globalData["object_id_no"] += 1
+        except:
+            None
+
+    def next_target_feature(self):
+        try:
+            if self.globalData["target_feature_no"] > len(self.config["target_features"]) - 1:
+                self.globalData["target_feature_no"] = 0
+               
+            self.target_feature.delete("0.0", "end")
+            self.target_feature.insert("0.0", self.config["target_features"]
+                                       [self.globalData["target_feature_no"]])
+            self.globalData["target_feature_plot"] = str(self.config["target_features"]
+                                                         [self.globalData["target_feature_no"]])
+            self.globalData["target_feature_no"] += 1
+        except:
+            None
+            
     def get_object_id(self, dummy):
         self.globalData["object_id_plot"] = str(self.object_id.get("0.0", "end"))
         self.globalData["object_id_plot"] = self.globalData["object_id_plot"].strip()
@@ -61,19 +108,13 @@ class VisualizeFrame(ctk.CTkFrame):
         self.globalData["target_feature_plot"] = str(self.target_feature.get("0.0", "end"))
         self.globalData["target_feature_plot"] = self.globalData["target_feature_plot"].strip()
         print(f"Selected target_feature for plot = {self.globalData['target_feature_plot']}")
-        
-    def display_static_data(self):
-       data = pd.read_csv(self.config['static_data_file'], delimiter=",", header=0)
-       data = data.describe()
-       self.table = Table(self.viz_frame, dataframe=data, showtoolbar=True, showstatusbar=True)
-       self.table.show()  
        
     def plot_figure(self):
         
         # Remove and create frame again to update figure
-        self.right_frame.destroy()
-        self.right_frame = ctk.CTkFrame(master=self, height=400)
-        self.right_frame.pack(pady=(5,20), anchor = "w") 
+        self.plot_frame.destroy()
+        self.plot_frame = ctk.CTkFrame(master=self, height=400)
+        self.plot_frame.grid(row=3, column=0, sticky="w", padx=(20,20), pady=(20,20))
         
         try:           
             obs = self.globalData["y_test_scale"][self.globalData["object_id_plot"]]  
@@ -86,8 +127,8 @@ class VisualizeFrame(ctk.CTkFrame):
                               index(self.globalData["target_feature_plot"])]    
             
             figure = Figure(figsize=(15, 4), dpi=100)
-            figure_canvas = FigureCanvasTkAgg(figure, self.right_frame )
-            NavigationToolbar2Tk(figure_canvas, self.right_frame )          
+            figure_canvas = FigureCanvasTkAgg(figure, self.plot_frame )
+            NavigationToolbar2Tk(figure_canvas, self.plot_frame )          
             axes = figure.add_subplot()
             axes.plot(obs, 'ro', label = "Observed (test data)", 
                       alpha=0.9, markersize=2.5 )            
@@ -101,8 +142,8 @@ class VisualizeFrame(ctk.CTkFrame):
             x = 4 + np.random.normal(0, 2, 24)
             y = 4 + np.random.normal(0, 2, len(x))
             figure = Figure(figsize=(15, 4), dpi=100)
-            figure_canvas = FigureCanvasTkAgg(figure, self.right_frame )
-            NavigationToolbar2Tk(figure_canvas, self.right_frame )
+            figure_canvas = FigureCanvasTkAgg(figure, self.plot_frame )
+            NavigationToolbar2Tk(figure_canvas, self.plot_frame )
             axes = figure.add_subplot()            
             axes.plot(x, color = 'blue', label = "Predicted (test data)", 
                       alpha=0.9, linewidth=0.75)
@@ -111,4 +152,4 @@ class VisualizeFrame(ctk.CTkFrame):
             axes.legend()
             axes.set_title("Test plot")
                 
-            figure_canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=1)            
+            figure_canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=1) 

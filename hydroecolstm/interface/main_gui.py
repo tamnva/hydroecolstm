@@ -16,7 +16,7 @@ class MainGUI(ctk.CTk):
         ctk.set_appearance_mode("Light")
         ctk.set_default_color_theme("dark-blue") 
 
-        # Initialize project setting
+        # Initialize project setting - will be replaced by user defined values in GUI
         global config
         global globalData
         
@@ -37,7 +37,8 @@ class MainGUI(ctk.CTk):
         globalData = {}
         globalData['dynamic_data_header'] =[]
         globalData['static_data_header'] =[]
-        
+        globalData["object_id_no"] = 0
+        globalData["target_feature_no"] = 0
 
         
         super().__init__()
