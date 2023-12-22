@@ -28,7 +28,7 @@ class LSTM_DL:
                                   **kwargs)
         
     # Train the model
-    def train(self, x_train: dict[str: torch.Tensor], y_train: dict[str: torch.Tensor]):
+    def train(self, x_train: dict[str: torch.Tensor], y_train: dict[str: torch.Tensor], progressbar=None):
         
         # Optimization function
         self.optim = torch.optim.Adam(self.model.parameters(), lr=self.learning_rate)
@@ -55,9 +55,12 @@ class LSTM_DL:
             error_avg.backward()
             # Update weights and biases
             self.optim.step()
-            # Print to screen the process  LSTM.state_dict()
-            #if epoch % 2 == 0: 
+            
+            # Print to console
             print(f"Epoch [{epoch+1}/{self.n_epochs}], err: {error_avg:.8f}")
+            
+            if progressbar is not None:
+                progressbar.set((epoch+1)/self.n_epochs)
             
         return self.model, y_predict  #, error, error_avg
     

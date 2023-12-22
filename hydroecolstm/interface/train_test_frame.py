@@ -69,7 +69,7 @@ class TrainTestFrame(ctk.CTkScrollableFrame):
         self.optim.pack(anchor='w')
         
         self.loss_functionlabel = ctk.CTkLabel(self.tabview.tab("LSTM_DL"), 
-                                               text="5. Optimization method")
+                                               text="6. Loss function")
         self.loss_functionlabel.pack(anchor='w', pady=(4, 4))      
         self.loss = ctk.CTkOptionMenu(self.tabview.tab("LSTM_DL"),
                                                    values=['Root Mean Square Error (RMSE)',
@@ -81,7 +81,7 @@ class TrainTestFrame(ctk.CTkScrollableFrame):
         self.loss.pack(anchor='w')
         
         self.run_label = ctk.CTkLabel(self.tabview.tab("LSTM_DL"), 
-                                      text="6. Run train test")
+                                      text="7. Run train test")
         self.run_label.pack(anchor='w', pady=(4, 4))      
         self.run = ctk.CTkButton(self.tabview.tab("LSTM_DL"), anchor='w', 
                                          command=self.run_train_test,
@@ -138,30 +138,37 @@ class TrainTestFrame(ctk.CTkScrollableFrame):
      
     def run_train_test(self):
         #
+        self.progressbar.set(0)
+        
         self.run.configure(fg_color='gray')
         self.run.configure(state="disabled")
         
         tk.messagebox.showinfo(title="Message box", 
                                message="Trainning will start after closing this box")
         
-        self.globalData["model"] = LSTM_DL(config=self.config)
-        
-        # Train the model
-        _, self.globalData["y_train_scale_predict"] =\
-            self.globalData["model"].train(x_train=self.globalData["x_train_scale"],
-                                           y_train=self.globalData["y_train_scale"])
-        #self.progressbar.set(0.9)
-        
-        # Run forward test the model
-        self.globalData["y_test_scale_predict"] =\
-            self.globalData["model"].forward(self.globalData["x_test_scale"])
-
-        #self.progressbar.set(1.0)        
+        try:
+            self.globalData["model"] = LSTM_DL(config=self.config)
+            
+            # Train the model
+            _, self.globalData["y_train_scale_predict"] =\
+                self.globalData["model"].train(x_train=self.globalData["x_train_scale"],
+                                               y_train=self.globalData["y_train_scale"],
+                                               progressbar=self.progressbar)
+            
+            # Run forward test the model
+            self.globalData["y_test_scale_predict"] =\
+                self.globalData["model"].forward(self.globalData["x_test_scale"])
+                
+            tk.messagebox.showinfo(title="Message box",
+                                   message="Finished training/testing")
+        except:
+            None
+            
+        self.progressbar.set(1.0)        
         self.run.configure(state="normal")
         self.run.configure(fg_color=['#3a7ebf', '#1f538d'])
         
-        tk.messagebox.showinfo(title="Message box", 
-                               message="Finished training/testing")
+
         
         
         
