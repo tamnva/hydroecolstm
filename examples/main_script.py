@@ -1,6 +1,6 @@
 
 from hydroecolstm.utility.scaler import Scaler, get_scaler_name
-from hydroecolstm.data.read_data import read_split
+from hydroecolstm.data.read_data import read_train_test_data, read_forecast_data
 from hydroecolstm.data.read_config import read_config
 from hydroecolstm.model.lstms import LSTM_DL
 import matplotlib.pyplot as plt
@@ -11,7 +11,7 @@ config = read_config("C:/Users/nguyenta/Documents/GitHub/HydroEcoLSTM/examples/c
 
 
 # Read and split data
-data = read_split(config)
+data = read_train_test_data(config)
 
 # Scale data
 x_scaler, y_scaler = get_scaler_name(config)
@@ -34,8 +34,8 @@ y_test_scale_sim=my_model.forward(x_test_scale)
 
 # Plot
 for object_id in y_test_scale.keys():
-    obs = y_test_scale['2009'].detach().numpy()
-    sim = y_test_scale_sim['2009'].detach().numpy()
+    obs = y_test_scale[object_id].detach().numpy()
+    sim = y_test_scale_sim[object_id].detach().numpy()
     plt.plot(sim[:,0], color = 'blue', label = "Simulated Q (train)", alpha=0.9, linewidth=0.75)
     plt.plot(obs[:,0], color = 'red', label = "Simulated Q (test)", alpha=0.9, linewidth=0.75)
     plt.title(label=f"object_id = {object_id}, target featue = {config['target_features'][0]}")

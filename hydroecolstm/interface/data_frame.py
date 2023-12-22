@@ -7,7 +7,7 @@ import tkcalendar as tkc
 from CTkListbox import CTkListbox
 from CTkToolTip import CTkToolTip
 from hydroecolstm.utility.scaler import Scaler, get_scaler_name
-from hydroecolstm.data.read_data import read_split
+from hydroecolstm.data.read_data import read_train_test_data
 
 class DataFrame(ctk.CTkScrollableFrame):
     def __init__(self, container=None, config=None, globalData=None):
@@ -473,7 +473,7 @@ class DataFrame(ctk.CTkScrollableFrame):
         self.config['object_id'] = [all_items[i] for i in select_index]
         
         # Get train and test data
-        data_train_test_split = read_split(self.config)
+        data_train_test_split = read_train_test_data(self.config)
         self.globalData["x_train"] = data_train_test_split["x_train"]
         self.globalData["y_train"] = data_train_test_split["y_train"]
         self.globalData["time_train"] = data_train_test_split["time_train"]

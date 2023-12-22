@@ -2,9 +2,11 @@
 #           Configuration for training and testing the LSTM network          #
 #----------------------------------------------------------------------------#
 # Link to the data file (contains input features and targeted data for training)
+# MUST have input file
 dynamic_data_file: 
   - C:/Users/nguyenta/Documents/GitHub/HydroEcoLSTM/examples/time_series.csv
 
+# Optional input file
 static_data_file: 
   - C:/Users/nguyenta/Documents/GitHub/HydroEcoLSTM/examples/static_attributes.csv
 
@@ -44,8 +46,8 @@ scaler_input_static_features:
 
 # Training period with format YYYY-MM-DD
 train_period:
-  - 2010-01-01
-  - 2020-12-31
+  - 2010-01-01 11:15
+  - 2020-12-31 11:15
 
 # Hidden size of the LSTM
 hidden_size: 30
@@ -62,8 +64,8 @@ dropout: 0.4
 
 # Validation period with format YYYY-MM-DD
 test_period:
-  - 1982-01-01
-  - 2009-12-31
+  - 1982-01-01 11:15
+  - 2009-12-31 11:15
 
 # Number of epochs
 n_epochs: 150
@@ -85,13 +87,13 @@ optim_method: Adam
 # Configuration for forward run (optional input - delete if no required)     #
 #    e.g., ungauged basins or prediction with the trained model              #
 #----------------------------------------------------------------------------#
-dynamic_data_file_test: 
+dynamic_data_file_forecast: 
   - dynamic_data_file
-static_data_file_test: 
+static_data_file_forecast: 
   - static_data_file
-object_id_test:
+object_id_forecast:
   - 2009
   - 2011
-test_period_test:
-  - 1982-01-01
-  - 2009-12-31
+forecast_period:
+  - 1982-01-01 11:15
+  - 2009-12-31 00:00
