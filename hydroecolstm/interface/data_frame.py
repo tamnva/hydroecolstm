@@ -476,9 +476,17 @@ class DataFrame(ctk.CTkScrollableFrame):
         data_train_test_split = read_split(self.config)
         self.globalData["x_train"] = data_train_test_split["x_train"]
         self.globalData["y_train"] = data_train_test_split["y_train"]
+        self.globalData["time_train"] = data_train_test_split["time_train"]
+        
         self.globalData["x_test"] = data_train_test_split["x_test"]
         self.globalData["y_test"] = data_train_test_split["y_test"]
-
+        self.globalData["time_test"] = data_train_test_split["time_test"]
+        
+        self.globalData["x_column_name"] = data_train_test_split["x_column_name"]
+        self.globalData["y_column_name"] = data_train_test_split["y_column_name"]
+        
+        del data_train_test_split
+         
         # Show message box
         tk.messagebox.showinfo(title="Message box", 
                                message="Done filtering/spliting data")

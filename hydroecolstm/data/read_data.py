@@ -27,22 +27,23 @@ def read_split(config:dict=None) -> dict:
     train_data = dynamic_data[(dynamic_data["time"] >= config["train_period"][0]) &
                               (dynamic_data["time"] <= config["train_period"][1])]
 
-    # split to train data by object id
-    x_train = _split_by_object_id(train_data[config['input_dynamic_features']], config)
-    #x_train_column_name = config['input_dynamic_features']
+    # Colum name of the ouput tensor
+    x_column_name = config['input_dynamic_features']
+    y_column_name = config['target_features']
     
-    y_train = _split_by_object_id(train_data[config['target_features']], config)
-    #y_train_column_name = config['target_features']
+    # split to train data by object id    
+    x_train = _split_by_object_id(train_data[x_column_name], config)
+    y_train = _split_by_object_id(train_data[y_column_name], config)
+    time_train = _time_by_object_id(train_data, config)
+
     
     config["test_period"] = pd.to_datetime(config["test_period"], format = "%Y-%m-%d")
     test_data = dynamic_data[(dynamic_data["time"] >= config["test_period"][0]) &
                              (dynamic_data["time"] <= config["test_period"][1])]
     
-    x_test = _split_by_object_id(test_data[config['input_dynamic_features']], config)
-    #x_test_column_name = "please see 'x_train_column_name'"
-    
-    y_test = _split_by_object_id(test_data[config['target_features']], config)
-    #y_train_column_name = "please see 'y_train_column_name'"
+    x_test = _split_by_object_id(test_data[x_column_name], config)
+    y_test = _split_by_object_id(test_data[y_column_name], config)
+    time_test = _time_by_object_id(test_data, config)
     
     # Read static input data file    
     if 'input_static_features' in config:
@@ -64,6 +65,9 @@ def read_split(config:dict=None) -> dict:
             static_data = torch.tensor(static_data.loc[config["object_id"]].values,
                                        dtype=torch.float32)
             
+            # Update columne name
+            x_column_name.extend(config['input_static_features'])
+            
     else:
         static_data = None
         
@@ -76,8 +80,9 @@ def read_split(config:dict=None) -> dict:
             rep_static_data = static_data[i,].repeat(x_test[object_id].shape[0],1)
             x_test[object_id] = torch.cat((x_test[object_id], rep_static_data), 1)
 
-    return {"x_train":x_train, "y_train": y_train,
-            "x_test":x_test, "y_test": y_test}
+    return {"x_train":x_train, "y_train": y_train, "time_train" : time_train, 
+            "x_test":x_test, "y_test": y_test, "time_test": time_test,
+            "x_column_name": x_column_name, "y_column_name": y_column_name}
   
 def _split_by_object_id(data, config):
     output = {}
@@ -85,3 +90,10 @@ def _split_by_object_id(data, config):
         output[str(object_id)] = torch.tensor(data.loc[object_id].values, 
                                               dtype=torch.float32)
     return output
+
+def _time_by_object_id(data, config):
+    output = {}
+    for object_id in config["object_id"]: 
+        output[str(object_id)] = data.loc[object_id]["time"].values
+    return output
+    

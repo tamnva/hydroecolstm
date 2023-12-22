@@ -113,7 +113,9 @@ class VisualizeFrame(ctk.CTkFrame):
         self.plot_frame = ctk.CTkFrame(master=self, height=400)
         self.plot_frame.grid(row=3, column=0, sticky="w", padx=(20,20), pady=(20,20))
         
-        try:           
+        try:
+            time = self.globalData["time_test"][self.globalData["object_id_plot"]]
+            
             obs = self.globalData["y_test_scale"][self.globalData["object_id_plot"]]  
             obs = obs[:, self.config["target_features"].\
                       index(self.globalData["target_feature_plot"])]  
@@ -127,9 +129,9 @@ class VisualizeFrame(ctk.CTkFrame):
             figure_canvas = FigureCanvasTkAgg(figure, self.plot_frame )
             NavigationToolbar2Tk(figure_canvas, self.plot_frame )          
             axes = figure.add_subplot()
-            axes.plot(obs, 'ro', label = "Observed (test data)", 
+            axes.plot(time, obs, 'ro', label = "Observed (test data)", 
                       alpha=0.9, markersize=2.5 )            
-            axes.plot(predict, color = 'blue', label = "Predicted (test data)", 
+            axes.plot(time, predict, color = 'blue', label = "Predicted (test data)", 
                       alpha=0.9, linewidth=0.75)
             axes.set_title(f"object_id = {self.globalData['object_id_plot']}")
             axes.legend() 

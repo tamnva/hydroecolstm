@@ -126,8 +126,7 @@ class TrainTestFrame(ctk.CTkScrollableFrame):
                     #"Kling-Gupta Efficiency (1-KGE)": "KGE",
                     'Mean Absolute Error (MAE)': "MAE",
                     'Mean Squared Error (MSE)': "MSE"} 
-        
-        print(method)                       
+                              
         self.config["objective_function_name"] = obj_name[method]
         print(self.config["objective_function_name"])
 
