@@ -17,8 +17,9 @@ def read_config(config_file):
     # Check if required keywords are missing
     for keyword in key: 
         if keyword not in cfg:
-            print(f"Error in configuration file, keyword '{keyword}' is missing")
-            raise SystemExit
+            raise NameError(f"Error in configuration file, keyword '{keyword}' is missing")
+            
+    #checkiftraiistest
 
     # Return output
     return cfg

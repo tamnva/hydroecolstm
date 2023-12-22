@@ -5,9 +5,12 @@ dynamic_data_file:
 static_data_file: 
   - C:/Users/nguyenta/Documents/GitHub/HydroEcoLSTM/examples/static_attributes.csv
 
-# Object ID/Basins: see full list of catchments at the end of this documentation
-object_id:
+# Object ID/Basins for training
+object_id_train:
   - 2009
+
+# Object ID/Basins
+object_id_test:
   - 2011
 
 # Input dynamic features
