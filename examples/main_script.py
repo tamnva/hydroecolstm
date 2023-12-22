@@ -45,3 +45,9 @@ for object_id in y_test_scale.keys():
 # Work with GUI, use the two lines below to call the GUI
 from hydroecolstm.interface.main_gui import show_gui
 show_gui()
+
+'''
+config = read_config("C:/Users/nguyenta/Documents/GitHub/HydroEcoLSTM/examples/config.yml")
+test = config["test_basins"]
+test[0]['dynamic_data_file_test']
+'''

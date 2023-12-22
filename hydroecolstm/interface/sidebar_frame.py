@@ -91,6 +91,13 @@ class SidebarFrame(ctk.CTkFrame):
                                                      button_color='gray', fg_color = 'gray',
                                                      command=self.change_scaling_event)
         self.scaling_optionemenu.place(relx=0.5, rely=0.82, anchor="n")
+        
+        # Only activate the data_button when open GUI
+        self.data_button.configure(fg_color=['#3a7ebf', '#1f538d'])
+        self.net_button.configure(fg_color='gray')
+        self.train_button.configure(fg_color='gray')
+        self.visualize_button.configure(fg_color='gray')
+        self.forecast_button.configure(fg_color='gray')
      
     def change_scaling_event(self, new_scaling: str):
         new_scaling_float = int(new_scaling.replace("%", "")) / 100
