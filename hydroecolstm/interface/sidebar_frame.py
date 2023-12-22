@@ -69,7 +69,7 @@ class SidebarFrame(ctk.CTkFrame):
         self.forecast_button = ctk.CTkButton(self,
                                           command=self.forecast_button_event,
                                           anchor='w', 
-                                          text="5. Forcast/prediction")
+                                          text="5. Forecast/prediction")
         self.forecast_button.grid(row=5, column=0, padx=0, pady=10)
         CTkToolTip(self.forecast_button, delay=0.1, bg_color = 'orange', 
                    text_color = 'black', anchor = 'w', 

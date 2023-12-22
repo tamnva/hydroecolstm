@@ -192,7 +192,7 @@ class DataFrame(ctk.CTkScrollableFrame):
         self.data_filter = ctk.CTkButton(self.tabview.tab("2. Filter data"),
                                          anchor='e',
                                          text="Filter and split data",
-                                         command=self.read_split)
+                                         command=self.read_train_and_test_data)
         self.data_filter.grid(row=6, column=1, padx = 10, pady=(5,5), sticky="en")
         
         #-----------------------------------------------------3. Transform data
@@ -424,8 +424,8 @@ class DataFrame(ctk.CTkScrollableFrame):
         except:
             None
    
-    # Assemble all the information to config and perform read_split
-    def read_split(self):        
+    # Assemble all the information to config and perform read_train_and_test_data
+    def read_train_and_test_data(self):        
         # get training and testing periods
         self.config['train_period'] = [self.start_train.get_date(),
                                        self.end_train.get_date()]
