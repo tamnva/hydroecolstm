@@ -7,14 +7,15 @@ from .project_summary_frame import ProjectSummaryFrame
 from .sidebar_frame import SidebarFrame
 from .train_test_frame import TrainTestFrame
 from .visualize_frame import VisualizeFrame
-
+from .forcast_frame import ForcastFrame
 
 class MainGUI(ctk.CTk):
     def __init__(self):
 
         # Initialize the interface apprearence
         ctk.set_appearance_mode("Light")
-        ctk.set_default_color_theme("dark-blue") 
+        ctk.set_default_color_theme("dark-blue")
+        ctk.set_widget_scaling(1.1)
 
         # Initialize project setting - will be replaced by user defined values in GUI
         global config
@@ -72,6 +73,10 @@ class MainGUI(ctk.CTk):
         # visualize frame
         self.visual_frame = VisualizeFrame(container=self, config=config,
                                            globalData=globalData)
+
+        # visualize frame
+        self.forcast_frame = ForcastFrame(container=self, config=config,
+                                           globalData=globalData)
             
         # summary frame
         self.summary_frame = ProjectSummaryFrame(container=self, config=config)
@@ -83,7 +88,9 @@ class MainGUI(ctk.CTk):
                                           data_frame=self.data_frame,
                                           network_frame=self.network_frame,
                                           train_test_frame=self.train_test_frame,
-                                          visual_frame=self.visual_frame)
+                                          visual_frame=self.visual_frame,
+                                          forcast_frame=self.forcast_frame)
+        
         self.sidebar_frame.grid(row=0, column=0, rowspan=4, padx = 0,
                                 pady=(20, 20), sticky="nsew") 
 

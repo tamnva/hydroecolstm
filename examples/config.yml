@@ -6,11 +6,8 @@ static_data_file:
   - C:/Users/nguyenta/Documents/GitHub/HydroEcoLSTM/examples/static_attributes.csv
 
 # Object ID/Basins for training
-object_id_train:
+object_id:
   - 2009
-
-# Object ID/Basins
-object_id_test:
   - 2011
 
 # Input dynamic features
