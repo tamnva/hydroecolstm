@@ -7,7 +7,7 @@ from .project_summary_frame import ProjectSummaryFrame
 from .sidebar_frame import SidebarFrame
 from .train_test_frame import TrainTestFrame
 from .visualize_frame import VisualizeFrame
-from .forcast_frame import ForcastFrame
+from .forecast_frame import ForecastFrame
 
 class MainGUI(ctk.CTk):
     def __init__(self):
@@ -75,7 +75,7 @@ class MainGUI(ctk.CTk):
                                            globalData=globalData)
 
         # visualize frame
-        self.forcast_frame = ForcastFrame(container=self, config=config,
+        self.forecast_frame = ForecastFrame(container=self, config=config,
                                            globalData=globalData)
             
         # summary frame
@@ -89,7 +89,7 @@ class MainGUI(ctk.CTk):
                                           network_frame=self.network_frame,
                                           train_test_frame=self.train_test_frame,
                                           visual_frame=self.visual_frame,
-                                          forcast_frame=self.forcast_frame)
+                                          forecast_frame=self.forecast_frame)
         
         self.sidebar_frame.grid(row=0, column=0, rowspan=4, padx = 0,
                                 pady=(20, 20), sticky="nsew") 

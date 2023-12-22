@@ -4,7 +4,7 @@ from CTkToolTip import CTkToolTip
 
 class SidebarFrame(ctk.CTkFrame):
     def __init__(self, container=None, data_frame=None, network_frame=None,
-                 train_test_frame=None, visual_frame=None, forcast_frame=None):
+                 train_test_frame=None, visual_frame=None, forecast_frame=None):
         super().__init__(container)
         
         # setup the grid layout manager
@@ -12,7 +12,7 @@ class SidebarFrame(ctk.CTkFrame):
         self.network_frame = network_frame
         self.train_test_frame = train_test_frame
         self.visual_frame = visual_frame
-        self.forcast_frame = forcast_frame
+        self.forecast_frame = forecast_frame
         self.columnconfigure(0, weight=1)
         self.rowconfigure((0,1,2,3,4,5,6,7,8), weight=0)
         self.__create_widgets() 
@@ -66,12 +66,12 @@ class SidebarFrame(ctk.CTkFrame):
                    text_color = 'black', anchor = 'w', 
                    message= 'Click here to visualize the model outputs')
 
-        self.forcast_button = ctk.CTkButton(self,
-                                          command=self.forcast_button_event,
+        self.forecast_button = ctk.CTkButton(self,
+                                          command=self.forecast_button_event,
                                           anchor='w', 
                                           text="5. Forcast/prediction")
-        self.forcast_button.grid(row=5, column=0, padx=0, pady=10)
-        CTkToolTip(self.forcast_button, delay=0.1, bg_color = 'orange', 
+        self.forecast_button.grid(row=5, column=0, padx=0, pady=10)
+        CTkToolTip(self.forecast_button, delay=0.1, bg_color = 'orange', 
                    text_color = 'black', anchor = 'w', 
                    message= 'Click here to make a forward run for forcast, or \n' +
                        'simulation in ungauged basins using the trained network')
@@ -105,7 +105,7 @@ class SidebarFrame(ctk.CTkFrame):
         self.network_frame.grid_forget()
         self.train_test_frame.grid_forget()
         self.visual_frame.grid_forget()
-        self.forcast_frame.grid_forget()
+        self.forecast_frame.grid_forget()
         
         # turn on data frame
         self.data_frame.grid(row=0, column=1, rowspan=4, padx = 10, 
@@ -116,14 +116,14 @@ class SidebarFrame(ctk.CTkFrame):
         self.net_button.configure(fg_color='gray')
         self.train_button.configure(fg_color='gray')
         self.visualize_button.configure(fg_color='gray')
-        self.forcast_button.configure(fg_color='gray')
+        self.forecast_button.configure(fg_color='gray')
         
     def network_button_event(self):
         # turn of other frames
         self.data_frame.grid_forget()
         self.train_test_frame.grid_forget()
         self.visual_frame.grid_forget()
-        self.forcast_frame.grid_forget()
+        self.forecast_frame.grid_forget()
         
         # turn on data frame
         self.network_frame.grid(row=0, column=1, rowspan=4, padx = 10, 
@@ -134,14 +134,14 @@ class SidebarFrame(ctk.CTkFrame):
         self.net_button.configure(fg_color=['#3a7ebf', '#1f538d'])
         self.train_button.configure(fg_color='gray')
         self.visualize_button.configure(fg_color='gray')
-        self.forcast_button.configure(fg_color='gray')
+        self.forecast_button.configure(fg_color='gray')
         
     def traintest_button_event(self):
         # turn of other frames
         self.data_frame.grid_forget()
         self.network_frame.grid_forget()
         self.visual_frame.grid_forget()
-        self.forcast_frame.grid_forget()
+        self.forecast_frame.grid_forget()
         
         # turn on data frame
         self.train_test_frame.grid(row=0, column=1, rowspan=4, padx = 10, 
@@ -152,14 +152,14 @@ class SidebarFrame(ctk.CTkFrame):
         self.train_button.configure(fg_color=['#3a7ebf', '#1f538d'])
         self.net_button.configure(fg_color='gray')
         self.visualize_button.configure(fg_color='gray')
-        self.forcast_button.configure(fg_color='gray')
+        self.forecast_button.configure(fg_color='gray')
         
     def visualize_button_event(self):
         # turn of other frames
         self.data_frame.grid_forget()
         self.network_frame.grid_forget()
         self.train_test_frame.grid_forget()
-        self.forcast_frame.grid_forget()
+        self.forecast_frame.grid_forget()
         
         # turn on data frame
         self.visual_frame.grid(row=0, column=1, rowspan=4, padx = 10, 
@@ -170,16 +170,16 @@ class SidebarFrame(ctk.CTkFrame):
         self.train_button.configure(fg_color='gray')
         self.net_button.configure(fg_color='gray')
         self.visualize_button.configure(fg_color=['#3a7ebf', '#1f538d'])
-        self.forcast_button.configure(fg_color='gray')
+        self.forecast_button.configure(fg_color='gray')
         
-    def forcast_button_event(self):
+    def forecast_button_event(self):
         self.data_frame.grid_forget()
         self.network_frame.grid_forget()
         self.train_test_frame.grid_forget()
         self.visual_frame.grid_forget()
    
         # turn on data frame
-        self.forcast_frame.grid(row=0, column=1, rowspan=4, padx = 10, 
+        self.forecast_frame.grid(row=0, column=1, rowspan=4, padx = 10, 
                                columnspan=2, pady=(20, 20), sticky="nsew")
         
         # change button color
@@ -187,7 +187,7 @@ class SidebarFrame(ctk.CTkFrame):
         self.train_button.configure(fg_color='gray')
         self.net_button.configure(fg_color='gray')
         self.visualize_button.configure(fg_color='gray')
-        self.forcast_button.configure(fg_color=['#3a7ebf', '#1f538d'])
+        self.forecast_button.configure(fg_color=['#3a7ebf', '#1f538d'])
                 
         
         

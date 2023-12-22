@@ -6,7 +6,7 @@ import numpy as np
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk
 
-class ForcastFrame(ctk.CTkFrame):
+class ForecastFrame(ctk.CTkFrame):
     def __init__(self, container=None, config=None, globalData=None):
         super().__init__(container)
         
