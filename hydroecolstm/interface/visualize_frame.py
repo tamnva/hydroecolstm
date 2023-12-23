@@ -22,7 +22,7 @@ class VisualizeFrame(ctk.CTkFrame):
     # create widgets for sidebar frame
     def __create_widgets(self): 
         # ---------------------------------------------content of load data tab
-        self.object_id_label = ctk.CTkLabel(self, text="1. Please insert object_id for plot")
+        self.object_id_label = ctk.CTkLabel(self, text="1. Select object id and target feature for plot")
         self.object_id_label.grid(row=0, column=0, sticky="w", padx=(5,5))
         self.select_input_frame = ctk.CTkFrame(master=self, height=400)
         self.select_input_frame.grid(row=1, column=0, sticky="w", padx=(20,20), pady=(20,20))
@@ -58,9 +58,9 @@ class VisualizeFrame(ctk.CTkFrame):
                                              padx=(5,5), pady=(5,5))
         
         
-        self.update_plot = ctk.CTkButton(self.select_input_frame, anchor='w', 
+        self.update_plot = ctk.CTkButton(self.select_input_frame, anchor='we', 
                                  command=self.plot_figure, text="Update plot")
-        self.update_plot.grid(row=3, column=0, columnspan=2, sticky="w", padx=(5,20), pady=(20,20))
+        self.update_plot.grid(row=3, column=0, columnspan=2, sticky="we", padx=(5,5), pady=(20,20))
         
     
     # Get dropout

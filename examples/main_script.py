@@ -1,4 +1,4 @@
-
+#from pathlib import Path
 from hydroecolstm.utility.scaler import Scaler, get_scaler_name
 from hydroecolstm.data.read_data import read_train_test_data, read_forecast_data
 from hydroecolstm.data.read_config import read_config
@@ -10,7 +10,6 @@ import torch
 #                        Train and test model                                 #
 #-----------------------------------------------------------------------------#
 
-# Read configuration file
 config = read_config("C:/Users/nguyenta/Documents/GitHub/HydroEcoLSTM/examples/config.yml")
 
 
@@ -72,3 +71,9 @@ for key in y_test_scale_sim.keys():
 #-----------------------------------------------------------------------------#
 from hydroecolstm.interface.main_gui import show_gui
 show_gui()
+
+# Read configuration file
+#x = Path("C:/Users/nguyenta/Documents/GitHub/HydroEcoLSTM")
+#x = Path(x, "examples", "config.yml")
+#read_config(x)
+
