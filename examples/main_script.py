@@ -4,6 +4,7 @@ from hydroecolstm.data.read_data import read_train_test_data, read_forecast_data
 from hydroecolstm.data.read_config import read_config
 from hydroecolstm.model.lstms import LSTM_DL
 import matplotlib.pyplot as plt
+import torch
 
 
 # Read configuration file
@@ -31,7 +32,10 @@ my_model = LSTM_DL(config=config)
 model, y_predict = my_model.train(x_train=x_train_scale, y_train=y_train_scale)
 y_test_scale_sim=my_model.forward(x_test_scale)
 
+# Save model parameters
+torch.save(model, config["output_dir"][0] + "/model.pt")
 
+tam = torch.load(config["output_dir"][0] + "/model.pt")
 # Plot
 for object_id in y_test_scale.keys():
     obs = y_test_scale[object_id].detach().numpy()
