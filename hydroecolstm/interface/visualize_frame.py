@@ -2,6 +2,9 @@
 import customtkinter as ctk
 import tkinter as tk
 import numpy as np
+from pathlib import Path
+import torch
+import yaml
 
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk
@@ -26,7 +29,7 @@ class VisualizeFrame(ctk.CTkFrame):
         self.object_id_label.grid(row=0, column=0, sticky="w", padx=(5,5))
         self.select_input_frame = ctk.CTkFrame(master=self, height=400)
         self.select_input_frame.grid(row=1, column=0, sticky="w", padx=(20,20), pady=(20,20))
-        self.select_input_frame.columnconfigure((0,1), weight=1)
+        self.select_input_frame.columnconfigure((0,1,3,4), weight=0)
 
         self.object_id_label = ctk.CTkLabel(self, text="2. Plotting area")
         self.object_id_label.grid(row=2, column=0, sticky="w", padx=(5,5))
@@ -61,7 +64,15 @@ class VisualizeFrame(ctk.CTkFrame):
         self.update_plot = ctk.CTkButton(self.select_input_frame, anchor='we', 
                                  command=self.plot_figure, text="Update plot")
         self.update_plot.grid(row=3, column=0, columnspan=2, sticky="we", padx=(5,5), pady=(20,20))
-        
+
+        self.save_project = ctk.CTkButton(self.select_input_frame, anchor='w',
+                                          command=self.save_project_event,
+                                          text="Save project") 
+        self.save_project.grid(row=3, column=2, sticky="e", padx=(5,5), pady=(20,20))
+        self.load_project = ctk.CTkButton(self.select_input_frame, anchor='w',
+                                          command=self.load_project_event, 
+                                          text="Load project") 
+        self.load_project.grid(row=3, column=3, sticky="e", padx=(5,5), pady=(20,20))
     
     # Get dropout
     def next_object_id(self):
@@ -152,3 +163,53 @@ class VisualizeFrame(ctk.CTkFrame):
             axes.set_title("Test plot")
                 
             figure_canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=1) 
+            
+    def save_project_event(self):
+        output_dir = tk.filedialog.askdirectory()
+        self.config["output_dir"] = Path(output_dir)
+        
+        # Save model_state_dicts to model_state_dict.pt file
+        torch.save(self.globalData["model"].model.state_dict(), 
+                   Path(self.config["output_dir"], "model_state_dict.pt"))
+        print("Model state_dict was saved as model_state_dict.pt")
+        
+        # Save global data
+        torch.save(self.globalData, 
+                   Path(self.config["output_dir"], "globalData.pt"))
+        print("globalData was saved as globalData.pt")
+        
+        # Save config
+        config_file = Path(self.config["output_dir"][0], "config.yml")
+        with open(config_file, 'w') as file:
+            yaml.dump(self.datetime_to_string(self.config), file)
+        print("config was saved as config.yml")
+
+        
+    def load_project_event(self):
+        None
+        
+    def datetime_to_string(config):
+        if "train_period" in config.keys():
+            try:
+                print("try")
+                config["train_period"] = str(config["train_period"].\
+                                             strftime('%Y-%m-%d %H:%M'))
+                print("ok")
+            except:
+                None
+                
+        if "test_period" in config.keys():
+            try:
+                config["test_period"] = str(config["test_period"].\
+                                            strftime('%Y-%m-%d %H:%M'))
+            except:
+                None
+
+        if "forecast_period" in config.keys():
+            try:
+                config["forecast_period"] = str(config["forecast_period"].\
+                                                strftime('%Y-%m-%d %H:%M'))
+            except:
+                None
+        return config
+                
