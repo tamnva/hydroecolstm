@@ -72,7 +72,7 @@ test_period:
   - 2009-12-31 11:15
 
 # Number of epochs
-n_epochs: 150
+n_epochs: 3
 
 # Learning rate
 learning_rate: 0.005

@@ -6,6 +6,9 @@ from hydroecolstm.model.lstms import LSTM_DL
 import matplotlib.pyplot as plt
 import torch
 
+#-----------------------------------------------------------------------------#
+#                        Train and test model                                 #
+#-----------------------------------------------------------------------------#
 
 # Read configuration file
 config = read_config("C:/Users/nguyenta/Documents/GitHub/HydroEcoLSTM/examples/config.yml")
@@ -32,10 +35,7 @@ my_model = LSTM_DL(config=config)
 model, y_predict = my_model.train(x_train=x_train_scale, y_train=y_train_scale)
 y_test_scale_sim=my_model.forward(x_test_scale)
 
-# Save model parameters
-torch.save(model, config["output_dir"][0] + "/model.pt")
 
-tam = torch.load(config["output_dir"][0] + "/model.pt")
 # Plot
 for object_id in y_test_scale.keys():
     obs = y_test_scale[object_id].detach().numpy()
@@ -45,13 +45,30 @@ for object_id in y_test_scale.keys():
     plt.title(label=f"object_id = {object_id}, target featue = {config['target_features'][0]}")
     plt.show()
 
+#-----------------------------------------------------------------------------#
+#                      Save model and load model                              #
+#-----------------------------------------------------------------------------#
+# Save model, save state_dict of the BASE MODEL
+out_file = "C:/Users/nguyenta/Documents/save_model.pt"
+torch.save(model.state_dict(), out_file)
 
-# Work with GUI, use the two lines below to call the GUI
+# Load model
+model_load = LSTM_DL(config=config)
+model_load.model.load_state_dict(torch.load(out_file))
+model_load.model.eval()
+
+# Result with model retrieve from saved model should identical to model
+y_test_scale_sim_load = model_load.forward(x_test_scale)
+
+# Max min should be 0
+for key in y_test_scale_sim.keys():
+    print("Max diff = ", torch.max(y_test_scale_sim[key]-
+                                   y_test_scale_sim_load[key]),
+          " Min diff = ", torch.min(y_test_scale_sim[key]-
+                                    y_test_scale_sim_load[key]))                                                                     
+
+#-----------------------------------------------------------------------------#
+#             Work with GUI, use the two lines below to call the GUI          #
+#-----------------------------------------------------------------------------#
 from hydroecolstm.interface.main_gui import show_gui
 show_gui()
-
-'''
-config = read_config("C:/Users/nguyenta/Documents/GitHub/HydroEcoLSTM/examples/config.yml")
-test = config["test_basins"]
-test[0]['dynamic_data_file_test']
-'''

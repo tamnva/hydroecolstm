@@ -16,8 +16,7 @@ class DataFrame(ctk.CTkScrollableFrame):
         # setup the grid layout manager
         self.config = config
         self.globalData = globalData
-        self.__create_widgets() 
-        
+        self.__create_widgets()         
         self.tableframe = tk.Frame()
         
     # create widgets for sidebar frame
