@@ -68,7 +68,7 @@ class VisualizeFrame(ctk.CTkFrame):
         self.save_project = ctk.CTkButton(self.select_input_frame, anchor='w',
                                           command=self.save_project_event,
                                           text="Save project") 
-        self.save_project.grid(row=3, column=2, sticky="e", padx=(5,5), pady=(20,20))
+        self.save_project.grid(row=0, column=2, rowspan=4, sticky="ns", padx=(5,5), pady=(0,0))
         #self.load_project = ctk.CTkButton(self.select_input_frame, anchor='w',
         #                                  command=self.load_project_event, 
         #                                  text="Load project") 

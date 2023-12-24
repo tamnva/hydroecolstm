@@ -37,100 +37,27 @@ class ProjectSummaryFrame(ctk.CTkScrollableFrame):
     def update_project_summary(self):
         # Delete text
         self.summary_textbox.delete("0.0", "end")
-        
-        # update selected dynamic data file name
-        try:
-            if "dynamic_data_file" in self.config.keys():
-                self.summary_textbox.insert("end", "dynamic_data_file:\n" )
-                self.summary_textbox.insert("end", "  - " + 
-                                            self.config["dynamic_data_file"][0] + "\n")
-        except:
-            None
-
-        # update selected static data file name
-        try:        
-            if "static_data_file" in self.config.keys():
-                self.summary_textbox.insert("end", "static_data_file:\n" )
-                self.summary_textbox.insert("end", "  - " + 
-                                            self.config["static_data_file"][0] + "\n")
-        except:
-            None
-               
-        if "object_id" in self.config.keys():
-            self.summary_textbox.insert("end", "object_id:\n")
-            for key in self.config["object_id"]:
-                self.summary_textbox.insert("end", "  - " + str(key) + "\n")
-            
-        if "input_dynamic_features" in self.config.keys():
-            self.summary_textbox.insert("end", "input_dynamic_features:\n")
-            for key in self.config["input_dynamic_features"]:
-                self.summary_textbox.insert("end", "  - " + str(key) + "\n")
-
-        if "input_static_features" in self.config.keys():
-            self.summary_textbox.insert("end", "input_static_features:\n")
-            for key in self.config["input_static_features"]:
-                self.summary_textbox.insert("end", "  - " + str(key) + "\n")
-                
-        if "target_features" in self.config.keys():
-            self.summary_textbox.insert("end", "target_features:\n")
-            for key in self.config["target_features"]:
-                self.summary_textbox.insert("end", "  - " + str(key) + "\n")
-
-        if "scaler_input_dynamic_features" in self.config.keys():
-            self.summary_textbox.insert("end", "scaler_input_dynamic_features:\n")
-            self.summary_textbox.insert("end", "  - " + 
-                                        self.config["scaler_input_dynamic_features"][0] + "\n")
-
-        if "scaler_input_static_features" in self.config.keys():
-            self.summary_textbox.insert("end", "scaler_input_static_features:\n")
-            self.summary_textbox.insert("end", "  - " + 
-                                        self.config["scaler_input_static_features"][0] + "\n")
-
-        if "train_period" in self.config.keys():
-            self.summary_textbox.insert("end", "train_period:\n")
-            for key in self.config["train_period"]:
-                self.summary_textbox.insert("end", "  - " + str(key) + "\n")
-                
-        if "test_period" in self.config.keys():
-            self.summary_textbox.insert("end", "test_period:\n")
-            for key in self.config["test_period"]:
-                self.summary_textbox.insert("end", "  - " + str(key) + "\n")
+        output_text = self.config_to_list_text(config=self.config)
+    
+        for text in output_text:
+            self.summary_textbox.insert("end", text)
  
-        if "hidden_size" in self.config.keys():
-            self.summary_textbox.insert("end", "hidden_size:\n")
-            self.summary_textbox.insert("end", "  - " + str(self.config["hidden_size"]) + "\n")               
+    def config_to_list_text(self, config):    
+        out_text = []
+        for key in config.keys():
+            if type(config[key]) is list:
+                out_text.append(key + ":\n")
+                for element in config[key]:
+                    out_text.append("  - " + str(element) + "\n")
+            else:
+                try:
+                    if (len(config[key]) == 2):
+                        out_text.append(key +": \n")
+                        out_text.append("  - " + str(config["train_period"][0])[:16] + "\n")
+                        out_text.append("  - " + str(config["train_period"][1])[:16] + "\n")
+                except:
+                    out_text.append(key +": " + str(config[key]) + "\n")
+        return out_text
+  
 
-        if "num_layers" in self.config.keys():
-            self.summary_textbox.insert("end", "num_layers:\n")
-            self.summary_textbox.insert("end", "  - " + str(self.config["num_layers"]) + "\n")               
-
-        if "dropout" in self.config.keys():
-            self.summary_textbox.insert("end", "dropout:\n")
-            self.summary_textbox.insert("end", "  - " + str(self.config["dropout"]) + "\n")      
-                
-        if "activation_function_name" in self.config.keys():
-            self.summary_textbox.insert("end", "activation_function_name:\n")
-            self.summary_textbox.insert("end", "  - " + str(self.config["activation_function_name"]) + "\n")                     
-
-        if "n_epochs" in self.config.keys():
-            self.summary_textbox.insert("end", "n_epochs:\n")
-            self.summary_textbox.insert("end", "  - " + str(self.config["n_epochs"]) + "\n")    
-
-        if "learning_rate" in self.config.keys():
-            self.summary_textbox.insert("end", "learning_rate:\n")
-            self.summary_textbox.insert("end", "  - " + str(self.config["learning_rate"]) + "\n")
-            
-        if "warmup_length" in self.config.keys():
-            self.summary_textbox.insert("end", "warmup_length:\n")
-            self.summary_textbox.insert("end", "  - " + str(self.config["warmup_length"]) + "\n")               
-
-        if "objective_function_name" in self.config.keys():
-            self.summary_textbox.insert("end", "objective_function_name:\n")
-            self.summary_textbox.insert("end", "  - " + str(self.config["objective_function_name"]) + "\n")     
-
-        if "optim_method" in self.config.keys():
-            self.summary_textbox.insert("end", "optim_method:\n")
-            self.summary_textbox.insert("end", "  - " + str(self.config["optim_method"]) + "\n")    
-        
-        
         
