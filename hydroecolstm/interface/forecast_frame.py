@@ -194,7 +194,7 @@ class ForecastFrame(ctk.CTkFrame):
     def run_forecast(self):
         
         try:
-            print("trying")
+            #print("trying")
             # Get forecast period
             self.config['forecast_period'] = [self.start_forecast.get_date(),
                                               self.end_forecast.get_date()]
@@ -205,24 +205,20 @@ class ForecastFrame(ctk.CTkFrame):
             object_id_forecast = [all_items[i] for i in select_index]
             self.config['object_id_forecast'] = object_id_forecast
             
-            print("forecast object id= ", self.config['object_id_forecast'])
-            print("forecast period= ", self.config['forecast_period'] )
-            
+            #print("forecast object id= ", self.config['object_id_forecast'])
+            #print("forecast period= ", self.config['forecast_period'] )
             # Get forecast data
-            print("Reading forecast data")
-            print(self.config)
-            
-            import pickle
-            with open('C:/Users/nguyenta/Documents/config.pickle', 'wb') as outfile:
-                pickle.dump(self.config, outfile)
-            '''
-            with open('C:/Users/nguyenta/Documents/config.pickle', 'rb') as handle:
-                config = pickle.load(handle)
-    
-            '''
+            #print("Reading forecast data")
+            #print(self.config)
+            #import pickle
+            #with open('C:/Users/nguyenta/Documents/config.pickle', 'wb') as outfile:
+            #    pickle.dump(self.config, outfile)
+            #with open('C:/Users/nguyenta/Documents/config.pickle', 'rb') as handle:
+            #    config = pickle.load(handle)
     
             predict_data = read_forecast_data(self.config)
-            print("Done reading forecast data")
+            #print("Done reading forecast data")
+            
             self.globalData["x_forecast"] = predict_data["x_forecast"]
             self.globalData["y_forecast"] = predict_data["y_forecast"]
             self.globalData["time_forecast"] = predict_data["time_forecast"]
@@ -231,26 +227,27 @@ class ForecastFrame(ctk.CTkFrame):
             del predict_data
             
             # Scale forecast data
-            print("Transforming data")
+            #print("Transforming data")
             self.globalData["x_forecast_scale"] =\
                 self.globalData["x_scaler"].transform(x=self.globalData["x_forecast"])
 
             self.globalData["y_forecast_scale"] =\
                 self.globalData["y_scaler"].transform(x=self.globalData["y_forecast"])
-            print("Done transforming data")
+            #print("Done transforming data")
             
             # Run forward model
-            print("Run forward model with forecast data")
+            #print("Run forward model with forecast data")
             self.globalData["y_forecast_scale_predict"] =\
                 self.globalData["model"].forward(self.globalData["x_forecast_scale"])
-            print("Done run forward model")
+            #print("Done run forward model")
             # Scale forecast data
-            print(self.globalData["y_forecast_scale_predict"])
-   
+            #print(self.globalData["y_forecast_scale_predict"])
+            
+            tk.messagebox.showinfo(title="Message box", 
+                                   message="Finished forward run")
         except:
-            pass
-        # Read and split data forecast 
-        #
+            tk.messagebox.showinfo(title="Message box", 
+                                   message="Error: Cannot run with forecast data")
 
     # Get dropout
     def next_object_id(self):
@@ -350,17 +347,5 @@ class ForecastFrame(ctk.CTkFrame):
             figure_canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=1)
             
         except:
-            x = 4 + np.random.normal(0, 2, 24)
-            y = 4 + np.random.normal(0, 2, len(x))
-            figure = Figure(figsize=(15, 4), dpi=100)
-            figure_canvas = FigureCanvasTkAgg(figure, self.plot_frame )
-            NavigationToolbar2Tk(figure_canvas, self.plot_frame )
-            axes = figure.add_subplot()            
-            axes.plot(x, color = 'blue', label = "Predicted (test data)", 
-                      alpha=0.9, linewidth=0.75)
-            axes.plot(y, 'ro', label = "Observed (test data)", 
-                      alpha=0.9, markersize=2.5 )
-            axes.legend()
-            axes.set_title("Test plot")
-                
-            figure_canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=1) 
+            tk.messagebox.showinfo(title="Message box", 
+                                   message="Error: Cannot show plot")

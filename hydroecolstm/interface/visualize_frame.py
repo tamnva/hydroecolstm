@@ -168,7 +168,6 @@ class VisualizeFrame(ctk.CTkFrame):
         
         output_dir = tk.filedialog.askdirectory()
         self.config["output_dir"] = [output_dir]
-        
         # Save config
         #config_file = Path(self.config["output_dir"][0], "config.yml")
         #with open(config_file, 'w') as file:

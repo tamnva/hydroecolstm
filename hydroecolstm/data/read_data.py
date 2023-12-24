@@ -141,8 +141,7 @@ def read_forecast_data(config:dict=None) -> dict:
     y_forecast = _split_by_object_id(forecast_data[y_column_name], 
                                      config["object_id_forecast"])
     time_forecast = _time_by_object_id(forecast_data, config["object_id_forecast"])
-    
-    print("ok5")   
+      
     # Read static input data file    
     if 'input_static_features' in config:
         if len(config['input_static_features']) > 0:
@@ -200,7 +199,3 @@ def _time_by_object_id(data, object_id):
         output[str(objectid)] = data.loc[objectid]["time"].values
     return output
     
-'''
-object_id = config["object_id_forecast"].copy()
-data = forecast_data.copy()
-'''
