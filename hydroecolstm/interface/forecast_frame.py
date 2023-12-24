@@ -262,7 +262,7 @@ class ForecastFrame(ctk.CTkFrame):
             self.object_id.delete("0.0", "end")
             self.object_id.insert("0.0", self.config["object_id_forecast"]
                                   [self.globalData["object_id_forecast_no"]])
-            self.globalData["object_id_plot"] = str(self.config["object_id_forecast"]
+            self.globalData["object_id_forecast_plot"] = str(self.config["object_id_forecast"]
                                                     [self.globalData["object_id_forecast_no"]])
                 
             #print(self.globalData["object_id_plot"])
@@ -317,6 +317,15 @@ class ForecastFrame(ctk.CTkFrame):
         self.plot_frame.grid(row=3, column=0, sticky="w", padx=(20,20), pady=(20,20))
         
         try:
+            
+            import pickle
+            with open('C:/Users/nguyenta/Documents/globalData.pickle', 'wb') as outfile:
+                pickle.dump(self.globalData, outfile)
+            print("Save global data")
+            
+            #with open('C:/Users/nguyenta/Documents/globalData.pickle', 'rb') as handle:
+            #    globalData = pickle.load(handle)
+             
             time = self.globalData["time_forecast"][self.globalData["object_id_forecast_plot"]]
             
             obs = self.globalData["y_forecast_scale"][self.globalData["object_id_forecast_plot"]]  
