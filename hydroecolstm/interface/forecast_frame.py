@@ -135,19 +135,19 @@ class ForecastFrame(ctk.CTkFrame):
         
         self.next_object_id_button = ctk.CTkButton(self.select_input_frame, 
                                                    anchor='w',
-                                                   command=None, 
+                                                   command=self.next_object_id, 
                                                    text="Next object id")
         self.next_object_id_button.grid(row=0, column=1, sticky="w", 
                                         padx=(5,5), pady=(5,5))
         self.next_target_feature_button = ctk.CTkButton(self.select_input_frame, 
                                                         anchor='w',
-                                                   command=None, 
+                                                   command=self.next_target_feature, 
                                                    text="Next target features")
         self.next_target_feature_button.grid(row=1, column=1, sticky="w", 
                                              padx=(5,5), pady=(5,5))
                 
         self.update_plot = ctk.CTkButton(self.select_input_frame, anchor='w', 
-                                 command=None, text="Update plot")
+                                 command=self.plot_figure, text="Update plot")
         self.update_plot.grid(row=3, column=0, columnspan=2, sticky="w", 
                               padx=(5,20), pady=(10,10))
 
@@ -254,27 +254,32 @@ class ForecastFrame(ctk.CTkFrame):
         except:
             None
 
-    '''
     def next_target_feature(self):
         try:
-            if self.globalData["target_feature_no"] > len(self.config["target_features"]) - 1:
-                self.globalData["target_feature_no"] = 0
+            if self.globalData["target_feature_forecast_no"] >\
+                len(self.config["target_features"]) - 1:
+                self.globalData["target_feature_forecast_no"] = 0
                
             self.target_feature.delete("0.0", "end")
+            
             self.target_feature.insert("0.0", self.config["target_features"]
-                                       [self.globalData["target_feature_no"]])
-            self.globalData["target_feature_plot"] = str(self.config["target_features"]
-                                                         [self.globalData["target_feature_no"]])
-            self.globalData["target_feature_no"] += 1
+                                       [self.globalData["target_feature_forecast_no"]])
+            
+            self.globalData["target_feature_forecast_plot"] =\
+                str(self.config["target_features"]\
+                    [self.globalData["target_feature_forecast_no"]])
+                
+            self.globalData["target_feature_forecast_no"] += 1
         except:
             None
-    '''
             
     def get_object_id(self, dummy):
         self.globalData["object_id_forecast_plot"] =\
             str(self.object_id.get("0.0", "end"))
+            
         self.globalData["object_id_forecast_plot"] =\
             self.globalData["object_id_forecast_plot"].strip()
+            
         print(f"Selected object_id for plot =\
               {self.globalData['object_id_forecast_plot']}")
 
@@ -286,7 +291,7 @@ class ForecastFrame(ctk.CTkFrame):
         print(f"Selected target_feature for plot =\
               {self.globalData['target_feature_forecast_plot']}")
         
-    '''   
+  
     def plot_figure(self):
         
         # Remove and create frame again to update figure
@@ -295,16 +300,16 @@ class ForecastFrame(ctk.CTkFrame):
         self.plot_frame.grid(row=3, column=0, sticky="w", padx=(20,20), pady=(20,20))
         
         try:
-            # time = self.globalData["time_test"][self.globalData["object_id_plot"]]
+            time = self.globalData["time_forecast"][self.globalData["object_id_forecast_plot"]]
             
-            obs = self.globalData["y_test_scale"][self.globalData["object_id_plot"]]  
+            obs = self.globalData["y_forecast_scale"][self.globalData["object_id_forecast_plot"]]  
             obs = obs[:, self.config["target_features"].\
-                      index(self.globalData["target_feature_plot"])]  
+                      index(self.globalData["target_feature_forecast_plot"])]  
                 
-            predict = self.globalData["y_test_scale_predict"]\
-                [self.globalData["object_id_plot"]].detach().numpy()
+            predict = self.globalData["y_forecast_scale_predict"]\
+                [self.globalData["object_id_forecast_plot"]].detach().numpy()
             predict = predict[:, self.config["target_features"].\
-                              index(self.globalData["target_feature_plot"])]    
+                              index(self.globalData["target_feature_forecast_plot"])]    
             
             figure = Figure(figsize=(15, 4), dpi=100)
             figure_canvas = FigureCanvasTkAgg(figure, self.plot_frame )
@@ -314,7 +319,7 @@ class ForecastFrame(ctk.CTkFrame):
                       alpha=0.9, markersize=2.5 )            
             axes.plot(time, predict, color = 'blue', label = "Predicted (test data)", 
                       alpha=0.9, linewidth=0.75)
-            axes.set_title(f"object_id = {self.globalData['object_id_plot']}")
+            axes.set_title(f"object_id = {self.globalData['object_id_forecast_plot']}")
             axes.legend() 
             figure_canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=1)
             
@@ -333,4 +338,3 @@ class ForecastFrame(ctk.CTkFrame):
             axes.set_title("Test plot")
                 
             figure_canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=1) 
-    '''
