@@ -2,11 +2,11 @@
 import customtkinter as ctk
 import tkcalendar as tkc
 from hydroecolstm.data.read_data import read_forecast_data
-#import tkinter as tk
-#import numpy as np
+import tkinter as tk
+import numpy as np
 from CTkListbox import CTkListbox
-#from matplotlib.figure import Figure
-#from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk
+from matplotlib.figure import Figure
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk
 
 class ForecastFrame(ctk.CTkFrame):
     def __init__(self, container=None, config=None, globalData=None):
@@ -107,7 +107,7 @@ class ForecastFrame(ctk.CTkFrame):
                                               command=None)
         self.run_button.grid(row=6, column=3, padx = 10, pady=(5,5), sticky="w") 
         
-        #----------------------------------------------------------------------
+        #---------------------------------------------------------2 Outputs
         self.object_id_label = ctk.CTkLabel(self.tabview.tab("2. Outputs"), 
                                             text="1. Please insert object_id for plot")
         self.object_id_label.grid(row=0, column=0, sticky="w", padx=(5,5))
@@ -123,33 +123,33 @@ class ForecastFrame(ctk.CTkFrame):
         self.plot_frame = ctk.CTkCanvas(master=self.tabview.tab("2. Outputs"), height=400)
         self.plot_frame.grid(row=3, column=0, sticky="w", padx=(20,20), pady=(20,20))  
 
-        
         self.object_id = ctk.CTkTextbox(master=self.select_input_frame, height=30)
         self.object_id.insert("0.0", "object_id") 
         self.object_id.grid(row=0, column=0, sticky="w", padx=(5,5), pady=(5,5))
-        #self.object_id.bind('<KeyRelease>', self.get_object_id)
+        self.object_id.bind('<KeyRelease>', self.get_object_id)
 
         self.target_feature = ctk.CTkTextbox(master=self.select_input_frame, height=30)
         self.target_feature.insert("0.0", "target_feature") 
         self.target_feature.grid(row=1, column=0, sticky="w", padx=(5,5), pady=(5,5))
-        #self.target_feature.bind('<KeyRelease>', self.get_target_feature)
+        self.target_feature.bind('<KeyRelease>', self.get_target_feature)
         
         self.next_object_id_button = ctk.CTkButton(self.select_input_frame, 
                                                    anchor='w',
-                                                   command= None, #self.next_object_id, 
+                                                   command=None, 
                                                    text="Next object id")
         self.next_object_id_button.grid(row=0, column=1, sticky="w", 
                                         padx=(5,5), pady=(5,5))
         self.next_target_feature_button = ctk.CTkButton(self.select_input_frame, 
                                                         anchor='w',
-                                                   command=None, #self.next_target_feature, 
+                                                   command=None, 
                                                    text="Next target features")
         self.next_target_feature_button.grid(row=1, column=1, sticky="w", 
                                              padx=(5,5), pady=(5,5))
                 
         self.update_plot = ctk.CTkButton(self.select_input_frame, anchor='w', 
                                  command=None, text="Update plot")
-        self.update_plot.grid(row=3, column=0, columnspan=2, sticky="w", padx=(5,20), pady=(10,10))
+        self.update_plot.grid(row=3, column=0, columnspan=2, sticky="w", 
+                              padx=(5,20), pady=(10,10))
 
     # Get dropout
     
@@ -217,8 +217,120 @@ class ForecastFrame(ctk.CTkFrame):
             del predict_data
             
             # Scale forecast data
+            self.globalData["x_forecast_scale"] =\
+                self.globalData["x_scaler"].transform(x=self.globalData["x_forecast"])
+
+            self.globalData["y_forecast_scale"] =\
+                self.globalData["y_scaler"].transform(x=self.globalData["y_forecast"])
+
+            # Run forward model
+            self.globalData["y_forecast_scale_predict"] =\
+                self.globalData["model"].forward(self.globalData["x_forecast_scale"])
             
+            # Scale forecast data
+            print(self.globalData["y_forecast_scale_predict"])
    
         except:
             pass
         # Read and split data forecast 
+        #
+
+    # Get dropout
+    def next_object_id(self):
+        try:
+            if self.globalData["object_id_no"] > len(self.config["object_id"]) - 1:
+                self.globalData["object_id_no"] = 0
+            
+            #print(self.globalData["object_id_no"])
+            self.object_id.delete("0.0", "end")
+            self.object_id.insert("0.0", self.config["object_id"]
+                                  [self.globalData["object_id_no"]])
+            self.globalData["object_id_plot"] = str(self.config["object_id"]
+                                                    [self.globalData["object_id_no"]])
+                
+            #print(self.globalData["object_id_plot"])
+                
+            self.globalData["object_id_no"] += 1
+        except:
+            None
+
+    '''
+    def next_target_feature(self):
+        try:
+            if self.globalData["target_feature_no"] > len(self.config["target_features"]) - 1:
+                self.globalData["target_feature_no"] = 0
+               
+            self.target_feature.delete("0.0", "end")
+            self.target_feature.insert("0.0", self.config["target_features"]
+                                       [self.globalData["target_feature_no"]])
+            self.globalData["target_feature_plot"] = str(self.config["target_features"]
+                                                         [self.globalData["target_feature_no"]])
+            self.globalData["target_feature_no"] += 1
+        except:
+            None
+    '''
+            
+    def get_object_id(self, dummy):
+        self.globalData["object_id_forecast_plot"] =\
+            str(self.object_id.get("0.0", "end"))
+        self.globalData["object_id_forecast_plot"] =\
+            self.globalData["object_id_forecast_plot"].strip()
+        print(f"Selected object_id for plot =\
+              {self.globalData['object_id_forecast_plot']}")
+
+    def get_target_feature(self, dummy):
+        self.globalData["target_feature_forecast_plot"] =\
+            str(self.target_feature.get("0.0", "end"))
+        self.globalData["target_feature_forecast_plot"] =\
+            self.globalData["target_feature_forecast_plot"].strip()
+        print(f"Selected target_feature for plot =\
+              {self.globalData['target_feature_forecast_plot']}")
+        
+    '''   
+    def plot_figure(self):
+        
+        # Remove and create frame again to update figure
+        self.plot_frame.destroy()
+        self.plot_frame = ctk.CTkFrame(master=self, height=400)
+        self.plot_frame.grid(row=3, column=0, sticky="w", padx=(20,20), pady=(20,20))
+        
+        try:
+            # time = self.globalData["time_test"][self.globalData["object_id_plot"]]
+            
+            obs = self.globalData["y_test_scale"][self.globalData["object_id_plot"]]  
+            obs = obs[:, self.config["target_features"].\
+                      index(self.globalData["target_feature_plot"])]  
+                
+            predict = self.globalData["y_test_scale_predict"]\
+                [self.globalData["object_id_plot"]].detach().numpy()
+            predict = predict[:, self.config["target_features"].\
+                              index(self.globalData["target_feature_plot"])]    
+            
+            figure = Figure(figsize=(15, 4), dpi=100)
+            figure_canvas = FigureCanvasTkAgg(figure, self.plot_frame )
+            NavigationToolbar2Tk(figure_canvas, self.plot_frame )          
+            axes = figure.add_subplot()
+            axes.plot(time, obs, 'ro', label = "Observed (test data)", 
+                      alpha=0.9, markersize=2.5 )            
+            axes.plot(time, predict, color = 'blue', label = "Predicted (test data)", 
+                      alpha=0.9, linewidth=0.75)
+            axes.set_title(f"object_id = {self.globalData['object_id_plot']}")
+            axes.legend() 
+            figure_canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=1)
+            
+        except:
+            x = 4 + np.random.normal(0, 2, 24)
+            y = 4 + np.random.normal(0, 2, len(x))
+            figure = Figure(figsize=(15, 4), dpi=100)
+            figure_canvas = FigureCanvasTkAgg(figure, self.plot_frame )
+            NavigationToolbar2Tk(figure_canvas, self.plot_frame )
+            axes = figure.add_subplot()            
+            axes.plot(x, color = 'blue', label = "Predicted (test data)", 
+                      alpha=0.9, linewidth=0.75)
+            axes.plot(y, 'ro', label = "Observed (test data)", 
+                      alpha=0.9, markersize=2.5 )
+            axes.legend()
+            axes.set_title("Test plot")
+                
+            figure_canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=1) 
+    '''
