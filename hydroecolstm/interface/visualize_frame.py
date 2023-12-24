@@ -168,12 +168,11 @@ class VisualizeFrame(ctk.CTkFrame):
         
         output_dir = tk.filedialog.askdirectory()
         self.config["output_dir"] = [output_dir]
+        
         # Save config
-        #config_file = Path(self.config["output_dir"][0], "config.yml")
-        #with open(config_file, 'w') as file:
-        #    yaml.safe_dump(self.config, file)
-        #print("config was saved as config.yml")
-
+        out_file = Path(self.config["output_dir"][0], "config.yml")
+        self.write_yml_file(config=self.config, out_file=out_file)
+        print("config was saved as config.yml")
 
         # Save model_state_dicts to model_state_dict.pt file
         torch.save(self.globalData["model"].model.state_dict(), 
@@ -184,3 +183,22 @@ class VisualizeFrame(ctk.CTkFrame):
         torch.save(self.globalData, 
                    Path(self.config["output_dir"][0], "globalData.pt"))
         print("globalData was saved as globalData.pt")
+        
+    def write_yml_file(self, config, out_file):
+        with open(out_file, "w") as config_file:
+            for key in config.keys():
+                if type(config[key]) is list:
+                    config_file.write(key + ":\n")
+                    for element in config[key]:
+                        config_file.write("  - " + str(element) + "\n")
+                    config_file.write("\n")
+                else:
+                    try:
+                        if (len(config[key]) == 2):
+                            config_file.write(key +": \n")
+                            config_file.write("  - " + str(config["train_period"][0])[:16] + "\n")
+                            config_file.write("  - " + str(config["train_period"][1])[:16] + "\n")
+                            config_file.write("\n")
+                    except:
+                        config_file.write(key +": " + str(config[key]) + "\n")
+                        config_file.write("\n")

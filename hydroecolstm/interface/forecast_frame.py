@@ -3,7 +3,7 @@ import customtkinter as ctk
 import tkcalendar as tkc
 from hydroecolstm.data.read_data import read_forecast_data
 import tkinter as tk
-import numpy as np
+#import numpy as np
 from CTkListbox import CTkListbox
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk
