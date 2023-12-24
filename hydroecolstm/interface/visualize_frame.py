@@ -70,10 +70,10 @@ class VisualizeFrame(ctk.CTkFrame):
                                           command=self.save_project_event,
                                           text="Save project") 
         self.save_project.grid(row=3, column=2, sticky="e", padx=(5,5), pady=(20,20))
-        self.load_project = ctk.CTkButton(self.select_input_frame, anchor='w',
-                                          command=self.load_project_event, 
-                                          text="Load project") 
-        self.load_project.grid(row=3, column=3, sticky="e", padx=(5,5), pady=(20,20))
+        #self.load_project = ctk.CTkButton(self.select_input_frame, anchor='w',
+        #                                  command=self.load_project_event, 
+        #                                  text="Load project") 
+        #self.load_project.grid(row=3, column=3, sticky="e", padx=(5,5), pady=(20,20))
     
     # Get dropout
     def next_object_id(self):
@@ -173,7 +173,7 @@ class VisualizeFrame(ctk.CTkFrame):
         # Save config
         config_file = Path(self.config["output_dir"][0], "config.yml")
         with open(config_file, 'w') as file:
-            yaml.safe_dump(self.datetime_to_string(self.config), 
+            yaml.safe_dump(self.config, 
                            file, default_style=None, 
                            default_flow_style=False)
 
@@ -190,41 +190,3 @@ class VisualizeFrame(ctk.CTkFrame):
         torch.save(self.globalData, 
                    Path(self.config["output_dir"][0], "globalData.pt"))
         print("globalData was saved as globalData.pt")
-        
-
-    def load_project_event(self):
-        pass
-        
-    def datetime_to_string(self, config):
-        if "train_period" in config.keys():
-            try:
-                config["train_period"] = str(config["train_period"].\
-                                             strftime('%Y-%m-%d %H:%M'))
-                #config["train_period"] = list(config["train_period"])
-            except:
-                pass
-                
-        if "test_period" in config.keys():
-            try:
-                config["test_period"] = str(config["test_period"].\
-                                            strftime('%Y-%m-%d %H:%M'))    
-                #config["test_period"] = list(config["test_period"])    
-            except:
-                pass
-
-        if "forecast_period" in config.keys():
-            try:
-                config["forecast_period"] = str(config["forecast_period"].\
-                                                strftime('%Y-%m-%d %H:%M'))
-                #config["forecast_period"] = list(config["forecast_period"])
-            except:
-                pass
-                
-        if "object_id" in config.keys():
-            object_id = []
-            for i in config["object_id"]:
-                object_id.append(str(i))
-                
-            config["object_id"] = object_id                
-        return config
-                

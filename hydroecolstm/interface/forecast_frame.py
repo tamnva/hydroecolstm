@@ -104,7 +104,7 @@ class ForecastFrame(ctk.CTkFrame):
         self.run_button = ctk.CTkButton(self.tabview.tab("1. Inputs"), 
                                               anchor='w', 
                                               text="Run", 
-                                              command=None)
+                                              command=self.run_forecast)
         self.run_button.grid(row=6, column=3, padx = 10, pady=(5,5), sticky="w") 
         
         #---------------------------------------------------------2 Outputs
@@ -194,6 +194,7 @@ class ForecastFrame(ctk.CTkFrame):
     def run_forecast(self):
         
         try:
+            print("trying")
             # Get forecast period
             self.config['forecast_period'] = [self.start_forecast.get_date(),
                                               self.start_forecast.get_date()]
@@ -204,11 +205,13 @@ class ForecastFrame(ctk.CTkFrame):
             object_id_forecast = [all_items[i] for i in select_index]
             self.config['object_id_forecast'] = object_id_forecast
             
-            print(self.config['object_id_forecast'])
-            print(self.config['forecast_period'] )
+            print("forecast object id= ", self.config['object_id_forecast'])
+            print("forecast period= ", self.config['forecast_period'] )
             
             # Get forecast data
-            predict_data = read_forecast_data(self.config)           
+            print("Reading forecast data")
+            predict_data = read_forecast_data(self.config)
+            print("Done reading forecast data")
             self.globalData["x_forecast"] = predict_data["x_forecast"]
             self.globalData["y_forecast"] = predict_data["y_forecast"]
             self.globalData["time_forecast"] = predict_data["time_forecast"]
@@ -217,16 +220,19 @@ class ForecastFrame(ctk.CTkFrame):
             del predict_data
             
             # Scale forecast data
+            print("Transforming data")
             self.globalData["x_forecast_scale"] =\
                 self.globalData["x_scaler"].transform(x=self.globalData["x_forecast"])
 
             self.globalData["y_forecast_scale"] =\
                 self.globalData["y_scaler"].transform(x=self.globalData["y_forecast"])
-
+            print("Done transforming data")
+            
             # Run forward model
+            print("Run forward model with forecast data")
             self.globalData["y_forecast_scale_predict"] =\
                 self.globalData["model"].forward(self.globalData["x_forecast_scale"])
-            
+            print("Done run forward model")
             # Scale forecast data
             print(self.globalData["y_forecast_scale_predict"])
    
