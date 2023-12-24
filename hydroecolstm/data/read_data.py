@@ -102,7 +102,7 @@ def read_forecast_data(config:dict=None) -> dict:
     # Convert date time to pandas date time
     dynamic_data["time"] = pd.to_datetime(dynamic_data["time"], 
                                           format = "%Y-%m-%d %H:%M")
-    print("ok1")
+   
     # The column names must contains the following names
     require_columns = ["object_id","time"]
     require_columns.extend(config['input_dynamic_features'])
@@ -111,7 +111,7 @@ def read_forecast_data(config:dict=None) -> dict:
     for name in require_columns: 
         if name not in dynamic_data.columns:
             raise NameError(f"Error: missing column '{name}' in forecast data\n")
-    print("ok2")
+
     # Add NaN to the dynamic data target features (if they are in the data) 
     for target_feature in config["target_features"]:
         if target_feature not in dynamic_data.columns:
@@ -120,7 +120,7 @@ def read_forecast_data(config:dict=None) -> dict:
     
     # Subset of dynamic_data - only selected columns
     dynamic_data = dynamic_data[require_columns]
-    print("ok3")
+
     # Subset of dynamic data - only selected object_id
     dynamic_data.set_index("object_id", inplace=True)
     dynamic_data = dynamic_data.loc[config["object_id_forecast"]]
@@ -130,7 +130,7 @@ def read_forecast_data(config:dict=None) -> dict:
                                                format = "%Y-%m-%d %H:%M")
     forecast_data = dynamic_data[(dynamic_data["time"] >= config["forecast_period"][0]) &
                               (dynamic_data["time"] <= config["forecast_period"][1])]
-    print("ok4")
+
     # Column name of the ouput tensor
     x_column_name = config['input_dynamic_features'].copy()
     y_column_name = config['target_features'].copy()
@@ -141,6 +141,7 @@ def read_forecast_data(config:dict=None) -> dict:
     y_forecast = _split_by_object_id(forecast_data[y_column_name], 
                                      config["object_id_forecast"])
     time_forecast = _time_by_object_id(forecast_data, config["object_id_forecast"])
+    
     print("ok5")   
     # Read static input data file    
     if 'input_static_features' in config:
@@ -173,7 +174,7 @@ def read_forecast_data(config:dict=None) -> dict:
             
     else:
         static_data = None
-    print("ok6")   
+
     # add static data to x_forecast and y_train
     if static_data is not None:
         for i, object_id in zip(range(len(x_forecast)), x_forecast):
@@ -199,3 +200,7 @@ def _time_by_object_id(data, object_id):
         output[str(objectid)] = data.loc[objectid]["time"].values
     return output
     
+'''
+object_id = config["object_id_forecast"].copy()
+data = forecast_data.copy()
+'''

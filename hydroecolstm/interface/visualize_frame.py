@@ -5,7 +5,6 @@ import numpy as np
 from pathlib import Path
 import torch
 import yaml
-import pickle 
 
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk
@@ -171,14 +170,10 @@ class VisualizeFrame(ctk.CTkFrame):
         self.config["output_dir"] = [output_dir]
         
         # Save config
-        config_file = Path(self.config["output_dir"][0], "config.yml")
-        with open(config_file, 'w') as file:
-            yaml.safe_dump(self.config, 
-                           file, default_style=None, 
-                           default_flow_style=False)
-
-        
-        print("config was saved as config.yml")
+        #config_file = Path(self.config["output_dir"][0], "config.yml")
+        #with open(config_file, 'w') as file:
+        #    yaml.safe_dump(self.config, file)
+        #print("config was saved as config.yml")
 
 
         # Save model_state_dicts to model_state_dict.pt file

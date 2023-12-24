@@ -179,9 +179,9 @@ class ForecastFrame(ctk.CTkFrame):
             
             # Input dynamic and static data
             if "dynamic_data_file" in self.config.keys():
-                self.config["dynamic_data_file_forecast"] = "dynamic_data_file"
+                self.config["dynamic_data_file_forecast"] = ["dynamic_data_file"]
             if "static_data_file" in self.config.keys():
-                self.config["static_data_file"] = "static_data_file"
+                self.config["static_data_file_forecast"] = ["static_data_file"]
                 
         else:
             # Activate other buttons
@@ -197,7 +197,7 @@ class ForecastFrame(ctk.CTkFrame):
             print("trying")
             # Get forecast period
             self.config['forecast_period'] = [self.start_forecast.get_date(),
-                                              self.start_forecast.get_date()]
+                                              self.end_forecast.get_date()]
             
             # Get forecast id
             all_items = self.object_id_forecast.get(index='all')
@@ -210,6 +210,17 @@ class ForecastFrame(ctk.CTkFrame):
             
             # Get forecast data
             print("Reading forecast data")
+            print(self.config)
+            
+            import pickle
+            with open('C:/Users/nguyenta/Documents/config.pickle', 'wb') as outfile:
+                pickle.dump(self.config, outfile)
+            '''
+            with open('C:/Users/nguyenta/Documents/config.pickle', 'rb') as handle:
+                config = pickle.load(handle)
+    
+            '''
+    
             predict_data = read_forecast_data(self.config)
             print("Done reading forecast data")
             self.globalData["x_forecast"] = predict_data["x_forecast"]
@@ -244,19 +255,19 @@ class ForecastFrame(ctk.CTkFrame):
     # Get dropout
     def next_object_id(self):
         try:
-            if self.globalData["object_id_no"] > len(self.config["object_id"]) - 1:
-                self.globalData["object_id_no"] = 0
+            if self.globalData["object_id_forecast_no"] > len(self.config["object_id_forecast"]) - 1:
+                self.globalData["object_id_forecast_no"] = 0
             
-            #print(self.globalData["object_id_no"])
+            #print(self.globalData["object_id_forecast_no"])
             self.object_id.delete("0.0", "end")
-            self.object_id.insert("0.0", self.config["object_id"]
-                                  [self.globalData["object_id_no"]])
-            self.globalData["object_id_plot"] = str(self.config["object_id"]
-                                                    [self.globalData["object_id_no"]])
+            self.object_id.insert("0.0", self.config["object_id_forecast"]
+                                  [self.globalData["object_id_forecast_no"]])
+            self.globalData["object_id_plot"] = str(self.config["object_id_forecast"]
+                                                    [self.globalData["object_id_forecast_no"]])
                 
             #print(self.globalData["object_id_plot"])
                 
-            self.globalData["object_id_no"] += 1
+            self.globalData["object_id_forecast_no"] += 1
         except:
             None
 
@@ -302,7 +313,7 @@ class ForecastFrame(ctk.CTkFrame):
         
         # Remove and create frame again to update figure
         self.plot_frame.destroy()
-        self.plot_frame = ctk.CTkFrame(master=self, height=400)
+        self.plot_frame = ctk.CTkFrame(master=self.tabview.tab("2. Outputs"), height=400)
         self.plot_frame.grid(row=3, column=0, sticky="w", padx=(20,20), pady=(20,20))
         
         try:
