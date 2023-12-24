@@ -2,7 +2,7 @@
 import customtkinter as ctk
 from CTkToolTip import CTkToolTip
 
-class NetworkDesignFrame(ctk.CTkScrollableFrame):
+class NetworkDesignFrame(ctk.CTkFrame):
     def __init__(self, container=None, config=None, globalData=None):
         super().__init__(container)
         

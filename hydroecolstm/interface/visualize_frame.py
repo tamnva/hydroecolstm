@@ -5,6 +5,7 @@ import numpy as np
 from pathlib import Path
 import torch
 import yaml
+import pickle 
 
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk
@@ -164,52 +165,66 @@ class VisualizeFrame(ctk.CTkFrame):
                 
             figure_canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=1) 
             
-    def save_project_event(self):
+    def save_project_event(self):    
+        
         output_dir = tk.filedialog.askdirectory()
-        self.config["output_dir"] = Path(output_dir)
-        
-        # Save model_state_dicts to model_state_dict.pt file
-        torch.save(self.globalData["model"].model.state_dict(), 
-                   Path(self.config["output_dir"], "model_state_dict.pt"))
-        print("Model state_dict was saved as model_state_dict.pt")
-        
-        # Save global data
-        torch.save(self.globalData, 
-                   Path(self.config["output_dir"], "globalData.pt"))
-        print("globalData was saved as globalData.pt")
+        self.config["output_dir"] = [output_dir]
         
         # Save config
         config_file = Path(self.config["output_dir"][0], "config.yml")
         with open(config_file, 'w') as file:
-            yaml.dump(self.datetime_to_string(self.config), file)
-        print("config was saved as config.yml")
+            yaml.safe_dump(self.datetime_to_string(self.config), 
+                           file, default_style=None, 
+                           default_flow_style=False)
 
         
-    def load_project_event(self):
-        None
+        print("config was saved as config.yml")
+
+
+        # Save model_state_dicts to model_state_dict.pt file
+        torch.save(self.globalData["model"].model.state_dict(), 
+                   Path(self.config["output_dir"][0], "model_state_dict.pt"))
+        print("Model state_dict was saved as model_state_dict.pt")
         
-    def datetime_to_string(config):
+        # Save global data
+        torch.save(self.globalData, 
+                   Path(self.config["output_dir"][0], "globalData.pt"))
+        print("globalData was saved as globalData.pt")
+        
+
+    def load_project_event(self):
+        pass
+        
+    def datetime_to_string(self, config):
         if "train_period" in config.keys():
             try:
-                print("try")
                 config["train_period"] = str(config["train_period"].\
                                              strftime('%Y-%m-%d %H:%M'))
-                print("ok")
+                #config["train_period"] = list(config["train_period"])
             except:
-                None
+                pass
                 
         if "test_period" in config.keys():
             try:
                 config["test_period"] = str(config["test_period"].\
-                                            strftime('%Y-%m-%d %H:%M'))
+                                            strftime('%Y-%m-%d %H:%M'))    
+                #config["test_period"] = list(config["test_period"])    
             except:
-                None
+                pass
 
         if "forecast_period" in config.keys():
             try:
                 config["forecast_period"] = str(config["forecast_period"].\
                                                 strftime('%Y-%m-%d %H:%M'))
+                #config["forecast_period"] = list(config["forecast_period"])
             except:
-                None
+                pass
+                
+        if "object_id" in config.keys():
+            object_id = []
+            for i in config["object_id"]:
+                object_id.append(str(i))
+                
+            config["object_id"] = object_id                
         return config
                 

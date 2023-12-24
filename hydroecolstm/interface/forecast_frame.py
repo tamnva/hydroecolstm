@@ -1,5 +1,7 @@
 
 import customtkinter as ctk
+import tkcalendar as tkc
+from hydroecolstm.data.read_data import read_forecast_data
 #import tkinter as tk
 #import numpy as np
 from CTkListbox import CTkListbox
@@ -31,59 +33,63 @@ class ForecastFrame(ctk.CTkFrame):
         self.tabview.add("2. Outputs")
         self.tabview.tab("2. Outputs").grid_columnconfigure((0), weight=1)
         
-        # ---------------------------------------------content of load data tab        
+        # ---------------------------------------------content of load data tab
+        # -----------------------------------------------------------Column 1
+        self.import_label = ctk.CTkLabel(self.tabview.tab("1. Inputs"), 
+                                         text="1. Internal import")
+        self.import_label.grid(row=0, column=0, padx = 10, pady=(5,5), sticky="w")
+        self.import_checkvalue = ctk.IntVar(value=0)         
+        self.import_checkbox = ctk.CTkCheckBox(self.tabview.tab("1. Inputs"), 
+                                               text=" ",
+                                               command=self.import_button_event, 
+                                               variable=self.import_checkvalue)
+        self.import_checkbox.grid(row=1, column=0, padx = 10, pady=(10,10), sticky="we")
+
+        # -----------------------------------------------------------Column 2
         self.file_selection_label = ctk.CTkLabel(self.tabview.tab("1. Inputs"), 
-                                         text="1. Input data files")
-        self.file_selection_label.grid(row=0, column=0, padx = 10, pady=(5,5), sticky="w")
+                                         text="2. Input data files")
+        self.file_selection_label.grid(row=0, column=1, padx = 10, pady=(5,5), sticky="w")
+
+        self.load_train_test_config = ctk.CTkButton(self.tabview.tab("1. Inputs"), 
+                                               anchor='w', 
+                                               text="Select train/test config file", 
+                                               command=None)
+        self.load_train_test_config.grid(row=1, column=1, padx = 10, pady=(2,2), sticky="w")  
         
-        # Select dynamic data label
         self.dynamic_file_button = ctk.CTkButton(self.tabview.tab("1. Inputs"), 
                                                anchor='w', 
                                                text="Select dynamic data file", 
                                                command=None)
-        self.dynamic_file_button.grid(row=1, column=0, padx = 10, pady=(5,5), sticky="we")       
+        self.dynamic_file_button.grid(row=2, column=1, padx = 10, pady=(2,2), sticky="w")       
     
         self.static_file_button = ctk.CTkButton(self.tabview.tab("1. Inputs"), 
                                                anchor='w', 
                                                text="Select static data file", 
                                                command=None)
-        self.static_file_button.grid(row=2, column=0, padx = 10, pady=(5,5), sticky="we")  
-        
-        self.file_check_label = ctk.CTkLabel(self.tabview.tab("1. Inputs"), 
-                                         text="Internal import")
-        self.file_check_label.grid(row=0, column=1, padx = 10, pady=(5,5), sticky="w")
+        self.static_file_button.grid(row=3, column=1, padx = 10, pady=(2,2), sticky="w")  
 
-        self.dynamic_file_checkvalue = ctk.IntVar(value=0)         
-        self.dynamic_file_checkbox = ctk.CTkCheckBox(self.tabview.tab("1. Inputs"), 
-                                               text=" ",
-                                               command=None, 
-                                               variable=self.dynamic_file_checkvalue)
-        self.dynamic_file_checkbox.grid(row=1, column=1, padx = 10, pady=(10,10), sticky="we")
-
-        self.static_file_checkvalue = ctk.IntVar(value=0)         
-        self.static_file_checkbox = ctk.CTkCheckBox(self.tabview.tab("1. Inputs"), 
-                                               text=" ",
-                                               command=None, 
-                                               variable=self.static_file_checkvalue)
-        self.static_file_checkbox.grid(row=2, column=1, padx = 10, pady=(10,10), sticky="we")
-
-        self.model_label = ctk.CTkLabel(self.tabview.tab("1. Inputs"), 
-                                         text="2. Trained model from")
-        self.model_label.grid(row=3, column=0, padx = 10, pady=(40,5), sticky="w")
         self.model_button = ctk.CTkButton(self.tabview.tab("1. Inputs"), 
                                                anchor='w', 
-                                               text="Load saved model", 
+                                               text="Load trained model", 
                                                command=None)
-        self.model_button.grid(row=4, column=0, padx = 10, pady=(5,5), sticky="we")          
-        self.model_check_value = ctk.IntVar(value=0)         
-        self.model_check = ctk.CTkCheckBox(self.tabview.tab("1. Inputs"), 
-                                               text=" ",
-                                               command=None, 
-                                               variable=self.model_check_value)
-        self.model_check.grid(row=4, column=1, padx = 10, pady=(10,10), sticky="we")
-
+        self.model_button.grid(row=4, column=1, padx = 10, pady=(2,2), sticky="w")    
+        
+        self.model_label = ctk.CTkLabel(self.tabview.tab("1. Inputs"), 
+                                         text="3. Forecast period")
+        self.model_label.grid(row=5, column=1, padx = 10, pady=(40,5), sticky="w")
+        
+        self.start_forecast = tkc.DateEntry(self.tabview.tab("1. Inputs"), 
+                                         date_pattern= 'yyyy-mm-dd', width = 25,
+                                         year=1800, month=1, day=1, font=ctk.CTkFont(size=14))
+        self.start_forecast.grid(row= 6, column=1, padx=30, pady=10, sticky='e')
+        self.end_forecast = tkc.DateEntry(self.tabview.tab("1. Inputs"), 
+                                       date_pattern= 'yyyy-mm-dd', width = 25,
+                                       year=2015, month=1, day=1, font=ctk.CTkFont(size=14))
+        self.end_forecast.grid(row= 7, column=1, padx=30, pady=10, sticky='e')   
+        
+        # ---------------------------------------------------------------Column 3
         self.object_id_label = ctk.CTkLabel(self.tabview.tab("1. Inputs"), 
-                                 text="3. Select object_id for forecasting")
+                                 text="4. Select object_id for forecasting")
         self.object_id_label.grid(row=0, column=3, columnspan=1, padx = 10, pady=(5,5), sticky="w")
         self.object_id_forecast = CTkListbox(master=self.tabview.tab("1. Inputs"), 
                                            multiple_selection=True, border_width=1.5,
@@ -92,7 +98,7 @@ class ForecastFrame(ctk.CTkFrame):
         self.object_id_forecast.grid(row=1, column=3, rowspan=4, padx = 10, pady=(10,10), sticky="we")
 
         self.run_label = ctk.CTkLabel(self.tabview.tab("1. Inputs"), 
-                                        text="4. Run forecast")
+                                        text="5. Run forecast")
         self.run_label.grid(row=5, column=3, padx = 10, pady=(5,5), sticky="w")
        
         self.run_button = ctk.CTkButton(self.tabview.tab("1. Inputs"), 
@@ -100,7 +106,6 @@ class ForecastFrame(ctk.CTkFrame):
                                               text="Run", 
                                               command=None)
         self.run_button.grid(row=6, column=3, padx = 10, pady=(5,5), sticky="w") 
-        
         
         #----------------------------------------------------------------------
         self.object_id_label = ctk.CTkLabel(self.tabview.tab("2. Outputs"), 
@@ -147,5 +152,73 @@ class ForecastFrame(ctk.CTkFrame):
         self.update_plot.grid(row=3, column=0, columnspan=2, sticky="w", padx=(5,20), pady=(10,10))
 
     # Get dropout
-    def test(self):
-        return None
+    
+    def import_button_event(self):
+        
+        if self.import_checkbox.get() == 1:
+            
+            # Deactive other buttons
+            self.load_train_test_config.configure(state="disabled")
+            self.dynamic_file_button.configure(state="disabled")
+            self.static_file_button.configure(state="disabled")
+            self.model_button.configure(state="disabled")
+            
+            # First try to remove all items in object_id_forecast
+            try:
+                self.object_id_forecast.delete(index=0, last='END')
+            except:
+                pass
+            
+            # Add items to object_id_forecast from globalData
+            try:
+                object_id = self.globalData['object_id'].copy()
+                for i in object_id:
+                    self.object_id_forecast.insert('END', option=i)
+            except:
+                pass
+            
+            # Input dynamic and static data
+            if "dynamic_data_file" in self.config.keys():
+                self.config["dynamic_data_file_forecast"] = "dynamic_data_file"
+            if "static_data_file" in self.config.keys():
+                self.config["static_data_file"] = "static_data_file"
+                
+        else:
+            # Activate other buttons
+            self.load_train_test_config.configure(state="normal")
+            self.dynamic_file_button.configure(state="normal")
+            self.static_file_button.configure(state="normal")
+            self.model_button.configure(state="normal")
+                
+        
+    def run_forecast(self):
+        
+        try:
+            # Get forecast period
+            self.config['forecast_period'] = [self.start_forecast.get_date(),
+                                              self.start_forecast.get_date()]
+            
+            # Get forecast id
+            all_items = self.object_id_forecast.get(index='all')
+            select_index = self.object_id_forecast.curselection()
+            object_id_forecast = [all_items[i] for i in select_index]
+            self.config['object_id_forecast'] = object_id_forecast
+            
+            print(self.config['object_id_forecast'])
+            print(self.config['forecast_period'] )
+            
+            # Get forecast data
+            predict_data = read_forecast_data(self.config)           
+            self.globalData["x_forecast"] = predict_data["x_forecast"]
+            self.globalData["y_forecast"] = predict_data["y_forecast"]
+            self.globalData["time_forecast"] = predict_data["time_forecast"]
+            self.globalData["x_forecast_column_name"] = predict_data["x_column_name"]
+            self.globalData["y_forecast_column_name"] = predict_data["y_column_name"]         
+            del predict_data
+            
+            # Scale forecast data
+            
+   
+        except:
+            pass
+        # Read and split data forecast 
