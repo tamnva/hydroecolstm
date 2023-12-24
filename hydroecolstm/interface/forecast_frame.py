@@ -315,11 +315,10 @@ class ForecastFrame(ctk.CTkFrame):
         
         try:
             
-            import pickle
-            with open('C:/Users/nguyenta/Documents/globalData.pickle', 'wb') as outfile:
-                pickle.dump(self.globalData, outfile)
-            print("Save global data")
-            
+            #import pickle
+            #with open('C:/Users/nguyenta/Documents/globalData.pickle', 'wb') as outfile:
+            #    pickle.dump(self.globalData, outfile)
+            #print("Save global data")
             #with open('C:/Users/nguyenta/Documents/globalData.pickle', 'rb') as handle:
             #    globalData = pickle.load(handle)
              
