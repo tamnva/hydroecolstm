@@ -84,13 +84,16 @@ class SidebarFrame(ctk.CTkFrame):
         self.appearance_option.place(relx=0.5, rely=0.90, anchor="n")
         CTkToolTip(self.appearance_option, delay=0.1, bg_color = 'orange', 
                    text_color = 'black', anchor='w', 
-                   message='Select your background themes here')
+                   message='Please select your background themes here')
         
         self.scaling_optionemenu = ctk.CTkOptionMenu(self, 
                                                      values=["110%", "75%", "100%", "125%", "150%"],
                                                      button_color='gray', fg_color = 'gray',
                                                      command=self.change_scaling_event)
         self.scaling_optionemenu.place(relx=0.5, rely=0.82, anchor="n")
+        CTkToolTip(self.scaling_optionemenu, delay=0.1, bg_color = 'orange',
+                   text_color = 'black', anchor = 'w', 
+                   message= 'Please select the text size here \n')
         
         # Only activate the data_button when open GUI
         self.data_button.configure(fg_color=['#3a7ebf', '#1f538d'])

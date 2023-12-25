@@ -80,11 +80,11 @@ class ForecastFrame(ctk.CTkFrame):
         
         self.start_forecast = tkc.DateEntry(self.tabview.tab("1. Inputs"), 
                                          date_pattern= 'yyyy-mm-dd', width = 25,
-                                         year=1800, month=1, day=1, font=ctk.CTkFont(size=14))
+                                         year=1800, month=1, day=1, font=ctk.CTkFont(size=16))
         self.start_forecast.grid(row= 6, column=1, padx=30, pady=10, sticky='e')
         self.end_forecast = tkc.DateEntry(self.tabview.tab("1. Inputs"), 
                                        date_pattern= 'yyyy-mm-dd', width = 25,
-                                       year=2015, month=1, day=1, font=ctk.CTkFont(size=14))
+                                       year=2015, month=1, day=1, font=ctk.CTkFont(size=16))
         self.end_forecast.grid(row= 7, column=1, padx=30, pady=10, sticky='e')   
         
         # ---------------------------------------------------------------Column 3
@@ -261,7 +261,6 @@ class ForecastFrame(ctk.CTkFrame):
                                   [self.globalData["object_id_forecast_no"]])
             self.globalData["object_id_forecast_plot"] = str(self.config["object_id_forecast"]
                                                     [self.globalData["object_id_forecast_no"]])
-                
             #print(self.globalData["object_id_plot"])
                 
             self.globalData["object_id_forecast_no"] += 1
@@ -313,8 +312,7 @@ class ForecastFrame(ctk.CTkFrame):
         self.plot_frame = ctk.CTkFrame(master=self.tabview.tab("2. Outputs"), height=400)
         self.plot_frame.grid(row=3, column=0, sticky="w", padx=(20,20), pady=(20,20))
         
-        try:
-            
+        try:   
             #import pickle
             #with open('C:/Users/nguyenta/Documents/globalData.pickle', 'wb') as outfile:
             #    pickle.dump(self.globalData, outfile)

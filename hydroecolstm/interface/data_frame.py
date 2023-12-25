@@ -6,6 +6,7 @@ from pandastable import Table
 import tkcalendar as tkc
 from CTkListbox import CTkListbox
 from CTkToolTip import CTkToolTip
+
 from hydroecolstm.utility.scaler import Scaler, get_scaler_name
 from hydroecolstm.data.read_data import read_train_test_data
 
@@ -50,7 +51,7 @@ class DataFrame(ctk.CTkScrollableFrame):
                    'The data file must be in .csv format with header, seperator' + 
                    'is <,>. This data file must contains at least two colums, ' +
                    'one with the name <object_id> and the other column with the ' +
-                   'name <time> in format yyyy-mm-dd .The object_id column will '+ 
+                   'name <time> in format yyyy-mm-dd hh:mm.The object_id column will '+ 
                    'link object in dynamic/timeseries data file with static data file. ' +
                    'Timeseries of BOTH input and target features must be in this file. ' +
                    'Template of this file can be seen in this Github repo ./example_1')
@@ -76,6 +77,11 @@ class DataFrame(ctk.CTkScrollableFrame):
                                                command=self.load_dynamic_data, 
                                                variable=self.check_dynamic_data)
         self.checkbox_dynamic_data.grid(row=4, column=0, padx = 10, pady=(10,10), sticky="w")
+        CTkToolTip(self.checkbox_dynamic_data, delay=0.1, bg_color = 'orange',
+                   text_color = 'black', anchor = 'w', 
+                   message= 'If you check this box, data from the selected \n' +
+                       'dynamic data file will be used, uncheck means data will \n' +
+                       'not be used')
 
         # ---------------------------------------------------------Static data       
         self.static_label = ctk.CTkLabel(self.tabview.tab("1. Load data"), 
@@ -110,6 +116,10 @@ class DataFrame(ctk.CTkScrollableFrame):
                                               command=self.display_static_data)
         self.show_data.grid(row=3, column=1, padx = 10, 
                                    pady=(5,5), sticky="e")
+        CTkToolTip(self.show_data, delay=0.1, bg_color = 'orange',
+                   text_color = 'black', anchor = 'w', 
+                   message= 'Click here to have a look at the data (using pandastable)' +
+                   'here you can also visualize the data with differnt type of plots')
         
         # check to load/unload
         self.check_static_data = ctk.IntVar(value=0)        
@@ -120,9 +130,6 @@ class DataFrame(ctk.CTkScrollableFrame):
         
         self.checkbox_static_data.grid(row=4, column=1, padx = 10, pady=(5,5), sticky="e")
 
-
-
-        
         #--------------------------------------------content of filter data tab
         self.select_input_feature_label = ctk.CTkLabel(self.tabview.tab("2. Filter data"),
                                                        text="1. Select input features")
@@ -147,11 +154,11 @@ class DataFrame(ctk.CTkScrollableFrame):
         self.select_date_train.grid(row=2, column=0, padx = 10, pady=(5,5), sticky="w")    
         self.start_train = tkc.DateEntry(self.tabview.tab("2. Filter data"), 
                                          date_pattern= 'yyyy-mm-dd', width = 25,
-                                         year=1800, month=1, day=1, font=ctk.CTkFont(size=14))
+                                         year=1800, month=1, day=1, font=ctk.CTkFont(size=16))
         self.start_train.grid(row= 3,column=0, padx=30, pady=10, sticky='w')
         self.end_train = tkc.DateEntry(self.tabview.tab("2. Filter data"), 
                                        date_pattern= 'yyyy-mm-dd', width = 25,
-                                       year=2010, month=1, day=1, font=ctk.CTkFont(size=14))
+                                       year=2010, month=1, day=1, font=ctk.CTkFont(size=16))
         self.end_train.grid(row= 4,column=0, padx=30, pady=10, sticky='w')   
         CTkToolTip(self.select_date_train, delay=0.1, bg_color = 'orange',
                    text_color = 'black', anchor='w', 
@@ -164,7 +171,7 @@ class DataFrame(ctk.CTkScrollableFrame):
         self.select_date_test.grid(row=2, column=1, padx = 10, pady=(5,5), sticky="e")    
         self.start_test = tkc.DateEntry(self.tabview.tab("2. Filter data"), 
                                          date_pattern= 'yyyy-mm-dd', width = 25,
-                                         year=1800, month=1, day=1, font=ctk.CTkFont(size=14))
+                                         year=1800, month=1, day=1, font=ctk.CTkFont(size=16))
         CTkToolTip(self.select_date_test, delay=0.1, bg_color = 'orange',
                    text_color = 'black', anchor='w', 
                    message='Select starting date (upper calender box) and \n' + 
@@ -172,7 +179,7 @@ class DataFrame(ctk.CTkScrollableFrame):
         self.start_test.grid(row= 3,column=1, padx=30, pady=10, sticky='e')
         self.end_test = tkc.DateEntry(self.tabview.tab("2. Filter data"), 
                                        date_pattern= 'yyyy-mm-dd', width = 25,
-                                       year=2018, month=1, day=1, font=ctk.CTkFont(size=14))
+                                       year=2018, month=1, day=1, font=ctk.CTkFont(size=16))
         self.end_test.grid(row= 4,column=1, padx=30, pady=10, sticky='e')   
         
 
