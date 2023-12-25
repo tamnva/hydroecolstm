@@ -10,7 +10,7 @@ from CTkToolTip import CTkToolTip
 from hydroecolstm.utility.scaler import Scaler, get_scaler_name
 from hydroecolstm.data.read_data import read_train_test_data
 
-class DataFrame(ctk.CTkFrame):
+class DataFrame(ctk.CTkScrollableFrame):
     def __init__(self, container=None, config=None, globalData=None):
         super().__init__(container)
         

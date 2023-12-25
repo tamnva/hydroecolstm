@@ -2,7 +2,7 @@ import tkinter as tk
 import customtkinter as ctk
 from hydroecolstm.model.lstms import LSTM_DL
 
-class TrainTestFrame(ctk.CTkFrame):
+class TrainTestFrame(ctk.CTkScrollableFrame):
     def __init__(self, container=None, config=None, globalData=None):
         super().__init__(container)
         
