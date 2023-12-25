@@ -68,7 +68,7 @@ class VisualizeFrame(ctk.CTkFrame):
         self.save_project = ctk.CTkButton(self.select_input_frame, anchor='w',
                                           command=self.save_project_event,
                                           text="Save project") 
-        self.save_project.grid(row=0, column=2, rowspan=4, sticky="ns", padx=(5,5), pady=(0,0))
+        self.save_project.grid(row=3, column=2, sticky="w", padx=(5,5), pady=(0,0))
         #self.load_project = ctk.CTkButton(self.select_input_frame, anchor='w',
         #                                  command=self.load_project_event, 
         #                                  text="Load project") 
@@ -194,7 +194,7 @@ class VisualizeFrame(ctk.CTkFrame):
                     config_file.write("\n")
                 else:
                     try:
-                        if (len(config[key]) == 2):
+                        if (len(config[key]) > 0):
                             config_file.write(key +": \n")
                             config_file.write("  - " + str(config["train_period"][0])[:16] + "\n")
                             config_file.write("  - " + str(config["train_period"][1])[:16] + "\n")

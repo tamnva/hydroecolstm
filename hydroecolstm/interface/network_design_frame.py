@@ -69,11 +69,15 @@ class NetworkDesignFrame(ctk.CTkFrame):
         print(self.config["hidden_size"])
              
     # Get number of lstm layers
-    def get_num_layers(self, method: str):
-        self.config["num_layers"] = int(method)
+    def get_num_layers(self, nlayer: str):
+        self.config["num_layers"] = int(nlayer)
+        print("num_layers = ", self.config["num_layers"])
         
-    def get_activation_function_name(self, method: str):
-        self.config["activation_function_name"] = method
+    def get_activation_function_name(self, act: str):
+        self.config["activation_function_name"] = act
+        
+        print("activation_function_name = ", 
+              self.config["activation_function_name"])
 
 
 
