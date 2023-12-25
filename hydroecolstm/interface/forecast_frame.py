@@ -8,7 +8,7 @@ from CTkListbox import CTkListbox
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk
 
-class ForecastFrame(ctk.CTkFrame):
+class ForecastFrame(ctk.CTkScrollableFrame):
     def __init__(self, container=None, config=None, globalData=None):
         super().__init__(container)
         

@@ -11,7 +11,7 @@ from .utility import config_to_text, sort_key
 
 
 
-class VisualizeFrame(ctk.CTkFrame):
+class VisualizeFrame(ctk.CTkScrollableFrame):
     def __init__(self, container=None, config=None, globalData=None):
         super().__init__(container)
         
