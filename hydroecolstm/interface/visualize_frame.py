@@ -4,10 +4,10 @@ import tkinter as tk
 import numpy as np
 from pathlib import Path
 import torch
-import yaml
-
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk
+
+from .utility import config_to_text, sort_key
 
 
 
@@ -185,20 +185,10 @@ class VisualizeFrame(ctk.CTkFrame):
         print("globalData was saved as globalData.pt")
         
     def write_yml_file(self, config, out_file):
+        # Convert config to text
+        output_text = config_to_text(config=sort_key(self.config))
+        
+        # Write config to config file
         with open(out_file, "w") as config_file:
-            for key in config.keys():
-                if type(config[key]) is list:
-                    config_file.write(key + ":\n")
-                    for element in config[key]:
-                        config_file.write("  - " + str(element) + "\n")
-                    config_file.write("\n")
-                else:
-                    try:
-                        if (len(config[key]) > 0):
-                            config_file.write(key +": \n")
-                            config_file.write("  - " + str(config["train_period"][0])[:16] + "\n")
-                            config_file.write("  - " + str(config["train_period"][1])[:16] + "\n")
-                            config_file.write("\n")
-                    except:
-                        config_file.write(key +": " + str(config[key]) + "\n")
-                        config_file.write("\n")
+            for line in output_text:
+                config_file.write(line)
