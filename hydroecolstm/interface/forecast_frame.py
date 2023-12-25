@@ -22,8 +22,9 @@ class ForecastFrame(ctk.CTkFrame):
     def __create_widgets(self): 
         # ---------------------------------------------
         # create tabs
-        self.tabview = ctk.CTkTabview(master=self, width = 750, border_width=1.5)
-        self.tabview.grid(row=0, column=0, padx = 10, pady=(5,5), sticky="we")  
+        self.tabview = ctk.CTkTabview(master=self, width = 750, border_width=1.5, 
+                                      fg_color = "transparent")
+        self.tabview.pack(fill='both',expand=1)
         self.tabview.add("1. Inputs")
         self.tabview.tab("1. Inputs").grid_columnconfigure(0, weight=0) 
         self.tabview.tab("1. Inputs").grid_columnconfigure(1, weight=0)

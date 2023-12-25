@@ -17,8 +17,9 @@ class NetworkDesignFrame(ctk.CTkFrame):
     def __create_widgets(self): 
         
         # create tabs
-        self.tabview = ctk.CTkTabview(master=self, width = 750, border_width=1.5)
-        self.tabview.grid(row=0, column=0, padx=(20, 20), pady=(10, 10), sticky="ew")
+        self.tabview = ctk.CTkTabview(master=self, width = 750, border_width=1.5,
+                                      fg_color = "transparent")
+        self.tabview.pack(fill='both',expand=1)
         self.tabview.add("LSTM_DL")
         self.tabview.tab("LSTM_DL").grid_columnconfigure((0,1), weight=1)
         self.tabview.tab("LSTM_DL").rowconfigure((0,1,2,3,4,5,6,7), weight=1)

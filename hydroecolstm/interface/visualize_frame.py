@@ -27,7 +27,7 @@ class VisualizeFrame(ctk.CTkFrame):
         # ---------------------------------------------content of load data tab
         self.object_id_label = ctk.CTkLabel(self, text="1. Select object id and target feature for plot")
         self.object_id_label.grid(row=0, column=0, sticky="w", padx=(5,5))
-        self.select_input_frame = ctk.CTkFrame(master=self, height=400)
+        self.select_input_frame = ctk.CTkFrame(master=self, height=400, fg_color = "transparent")
         self.select_input_frame.grid(row=1, column=0, sticky="w", padx=(20,20), pady=(20,20))
         self.select_input_frame.columnconfigure((0,1,3,4), weight=0)
 
