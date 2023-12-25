@@ -6,8 +6,9 @@ from pandastable import Table
 import tkcalendar as tkc
 from CTkListbox import CTkListbox
 from CTkToolTip import CTkToolTip
+
 from hydroecolstm.utility.scaler import Scaler, get_scaler_name
-from hydroecolstm.data.read_data import read_split
+from hydroecolstm.data.read_data import read_train_test_data
 
 class DataFrame(ctk.CTkScrollableFrame):
     def __init__(self, container=None, config=None, globalData=None):
@@ -16,15 +17,15 @@ class DataFrame(ctk.CTkScrollableFrame):
         # setup the grid layout manager
         self.config = config
         self.globalData = globalData
-        self.__create_widgets() 
-        
+        self.__create_widgets()         
         self.tableframe = tk.Frame()
         
     # create widgets for sidebar frame
     def __create_widgets(self): 
         
         # create tabs
-        self.tabview = ctk.CTkTabview(master=self, width = 750, border_width=1.5)
+        self.tabview = ctk.CTkTabview(master=self, width = 750, border_width=1.5,
+                                      fg_color = "transparent")
         self.tabview.pack(fill='both',expand=1)
         self.tabview.add("1. Load data")
         self.tabview.tab("1. Load data").grid_columnconfigure((0,1), weight=1)
@@ -51,7 +52,7 @@ class DataFrame(ctk.CTkScrollableFrame):
                    'The data file must be in .csv format with header, seperator' + 
                    'is <,>. This data file must contains at least two colums, ' +
                    'one with the name <object_id> and the other column with the ' +
-                   'name <time> in format yyyy-mm-dd .The object_id column will '+ 
+                   'name <time> in format yyyy-mm-dd hh:mm.The object_id column will '+ 
                    'link object in dynamic/timeseries data file with static data file. ' +
                    'Timeseries of BOTH input and target features must be in this file. ' +
                    'Template of this file can be seen in this Github repo ./example_1')
@@ -77,6 +78,11 @@ class DataFrame(ctk.CTkScrollableFrame):
                                                command=self.load_dynamic_data, 
                                                variable=self.check_dynamic_data)
         self.checkbox_dynamic_data.grid(row=4, column=0, padx = 10, pady=(10,10), sticky="w")
+        CTkToolTip(self.checkbox_dynamic_data, delay=0.1, bg_color = 'orange',
+                   text_color = 'black', anchor = 'w', 
+                   message= 'If you check this box, data from the selected \n' +
+                       'dynamic data file will be used, uncheck means data will \n' +
+                       'not be used')
 
         # ---------------------------------------------------------Static data       
         self.static_label = ctk.CTkLabel(self.tabview.tab("1. Load data"), 
@@ -111,6 +117,10 @@ class DataFrame(ctk.CTkScrollableFrame):
                                               command=self.display_static_data)
         self.show_data.grid(row=3, column=1, padx = 10, 
                                    pady=(5,5), sticky="e")
+        CTkToolTip(self.show_data, delay=0.1, bg_color = 'orange',
+                   text_color = 'black', anchor = 'w', 
+                   message= 'Click here to have a look at the data (using pandastable)' +
+                   'here you can also visualize the data with differnt type of plots')
         
         # check to load/unload
         self.check_static_data = ctk.IntVar(value=0)        
@@ -121,10 +131,8 @@ class DataFrame(ctk.CTkScrollableFrame):
         
         self.checkbox_static_data.grid(row=4, column=1, padx = 10, pady=(5,5), sticky="e")
 
-
-
-        
         #--------------------------------------------content of filter data tab
+        # Select input features
         self.select_input_feature_label = ctk.CTkLabel(self.tabview.tab("2. Filter data"),
                                                        text="1. Select input features")
         self.select_input_feature_label.grid(row=0, column=0, padx = 10, pady=(5,5), sticky="w")
@@ -133,6 +141,7 @@ class DataFrame(ctk.CTkScrollableFrame):
                                                text_color="black")
         self.select_input_feature.grid(row=1, column=0, padx = 10, pady=(5,5), sticky="w")    
         
+        # Select target features
         self.select_target_feature_label = ctk.CTkLabel(self.tabview.tab("2. Filter data"),
                                                        text="2. Select target features")
         self.select_target_feature_label.grid(row=0, column=1, padx = 10, pady=(5,5), sticky="e")
@@ -141,19 +150,27 @@ class DataFrame(ctk.CTkScrollableFrame):
                                                text_color="black")
         self.select_target_feature.grid(row=1, column=1, padx = 10, pady=(5,5), sticky="e") 
         
+        # Select object id
+        self.object_id_label = ctk.CTkLabel(self.tabview.tab("2. Filter data"),
+                                                   text="3. Select object id")
+        self.object_id_label.grid(row=2, column=0, padx = 10, pady=(5,5), sticky="w")
+        self.object_id = CTkListbox(master=self.tabview.tab("2. Filter data"), 
+                                           multiple_selection=True, border_width=1.5,
+                                           text_color="black")
+        self.object_id.grid(row=3, column=0, rowspan=7, padx = 10, pady=(5,5), sticky="w") 
         
-        # start date calander  
+        # Trainning period
         self.select_date_train= ctk.CTkLabel(self.tabview.tab("2. Filter data"),
-                                             text="3. Training period (yyyy-mm-dd)")
-        self.select_date_train.grid(row=2, column=0, padx = 10, pady=(5,5), sticky="w")    
+                                             text="4. Training period (yyyy-mm-dd)")
+        self.select_date_train.grid(row=2, column=1, padx = 10, pady=(5,5), sticky="e")    
         self.start_train = tkc.DateEntry(self.tabview.tab("2. Filter data"), 
                                          date_pattern= 'yyyy-mm-dd', width = 25,
-                                         year=2000, month=1, day=1, font=ctk.CTkFont(size=13))
-        self.start_train.grid(row= 3,column=0, padx=30, pady=10, sticky='w')
+                                         year=1800, month=1, day=1, font=ctk.CTkFont(size=16))
+        self.start_train.grid(row= 3,column=1, padx=30, pady=10, sticky='e')
         self.end_train = tkc.DateEntry(self.tabview.tab("2. Filter data"), 
                                        date_pattern= 'yyyy-mm-dd', width = 25,
-                                       year=2010, month=1, day=1, font=ctk.CTkFont(size=13))
-        self.end_train.grid(row= 4,column=0, padx=30, pady=10, sticky='w')   
+                                       year=2010, month=1, day=1, font=ctk.CTkFont(size=16))
+        self.end_train.grid(row= 4,column=1, padx=30, pady=10, sticky='e')   
         CTkToolTip(self.select_date_train, delay=0.1, bg_color = 'orange',
                    text_color = 'black', anchor='w', 
                    message='Select starting date (upper calender box) and \n' + 
@@ -161,39 +178,31 @@ class DataFrame(ctk.CTkScrollableFrame):
         
         # start testing calander  
         self.select_date_test= ctk.CTkLabel(self.tabview.tab("2. Filter data"),
-                                            text="4. Testing period (yyyy-mm-dd)")
-        self.select_date_test.grid(row=2, column=1, padx = 10, pady=(5,5), sticky="e")    
+                                            text="5. Testing period (yyyy-mm-dd)")
+        self.select_date_test.grid(row=5, column=1, padx = 10, pady=(5,5), sticky="e")    
         self.start_test = tkc.DateEntry(self.tabview.tab("2. Filter data"), 
                                          date_pattern= 'yyyy-mm-dd', width = 25,
-                                         year=2011, month=1, day=1, font=ctk.CTkFont(size=13))
+                                         year=1800, month=1, day=1, font=ctk.CTkFont(size=16))
         CTkToolTip(self.select_date_test, delay=0.1, bg_color = 'orange',
                    text_color = 'black', anchor='w', 
                    message='Select starting date (upper calender box) and \n' + 
                    'ending date (lower calendar box) of the testing period')
-        self.start_test.grid(row= 3,column=1, padx=30, pady=10, sticky='e')
+        self.start_test.grid(row= 6,column=1, padx=30, pady=10, sticky='e')
         self.end_test = tkc.DateEntry(self.tabview.tab("2. Filter data"), 
                                        date_pattern= 'yyyy-mm-dd', width = 25,
-                                       year=2018, month=1, day=1, font=ctk.CTkFont(size=13))
-        self.end_test.grid(row= 4,column=1, padx=30, pady=10, sticky='e')   
+                                       year=2018, month=1, day=1, font=ctk.CTkFont(size=16))
+        self.end_test.grid(row= 7,column=1, padx=30, pady=10, sticky='e')   
         
 
-        self.object_id_label = ctk.CTkLabel(self.tabview.tab("2. Filter data"),
-                                                   text="5. Select object id")
-        self.object_id_label.grid(row=5, column=0, padx = 10, pady=(5,5), sticky="w")
-        self.object_id = CTkListbox(master=self.tabview.tab("2. Filter data"), 
-                                           multiple_selection=True, border_width=1.5,
-                                           text_color="black")
-        self.object_id.grid(row=6, column=0, padx = 10, pady=(5,5), sticky="w") 
-
-
+        # Start subsetting data
         self.data_filter_label = ctk.CTkLabel(self.tabview.tab("2. Filter data"),
                                               text="6. Start subseting/filtering data")
-        self.data_filter_label.grid(row=5, column=1, padx = 10, pady=(5,5), sticky="e")        
+        self.data_filter_label.grid(row=8, column=1, padx = 10, pady=(5,5), sticky="e")        
         self.data_filter = ctk.CTkButton(self.tabview.tab("2. Filter data"),
                                          anchor='e',
                                          text="Filter and split data",
-                                         command=self.read_split)
-        self.data_filter.grid(row=6, column=1, padx = 10, pady=(5,5), sticky="en")
+                                         command=self.read_train_and_test_data)
+        self.data_filter.grid(row=9, column=1, padx = 10, pady=(5,5), sticky="en")
         
         #-----------------------------------------------------3. Transform data
         self.transform_dd_label = ctk.CTkLabel(self.tabview.tab("3. Transform data"),
@@ -424,8 +433,8 @@ class DataFrame(ctk.CTkScrollableFrame):
         except:
             None
    
-    # Assemble all the information to config and perform read_split
-    def read_split(self):        
+    # Assemble all the information to config and perform read_train_and_test_data
+    def read_train_and_test_data(self):        
         # get training and testing periods
         self.config['train_period'] = [self.start_train.get_date(),
                                        self.end_train.get_date()]
@@ -473,12 +482,20 @@ class DataFrame(ctk.CTkScrollableFrame):
         self.config['object_id'] = [all_items[i] for i in select_index]
         
         # Get train and test data
-        data_train_test_split = read_split(self.config)
+        data_train_test_split = read_train_test_data(self.config)
         self.globalData["x_train"] = data_train_test_split["x_train"]
         self.globalData["y_train"] = data_train_test_split["y_train"]
+        self.globalData["time_train"] = data_train_test_split["time_train"]
+        
         self.globalData["x_test"] = data_train_test_split["x_test"]
         self.globalData["y_test"] = data_train_test_split["y_test"]
-
+        self.globalData["time_test"] = data_train_test_split["time_test"]
+        
+        self.globalData["x_column_name"] = data_train_test_split["x_column_name"]
+        self.globalData["y_column_name"] = data_train_test_split["y_column_name"]
+        
+        del data_train_test_split
+         
         # Show message box
         tk.messagebox.showinfo(title="Message box", 
                                message="Done filtering/spliting data")

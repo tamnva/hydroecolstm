@@ -1,36 +1,42 @@
 #----------------------------------------------------------------------------#
 #           Configuration for training and testing the LSTM network          #
+#                   Line with OPTIONAL DATA can be removed                   #
 #----------------------------------------------------------------------------#
-# Link to the data file (contains input features and targeted data for training)
+# Input time series data (including target features)
 dynamic_data_file: 
   - C:/Users/nguyenta/Documents/GitHub/HydroEcoLSTM/examples/time_series.csv
 
+# Input cathment attributes file (*OPTIONAL DATA)
 static_data_file: 
   - C:/Users/nguyenta/Documents/GitHub/HydroEcoLSTM/examples/static_attributes.csv
 
-# Object ID/Basins for training
+# Output directory
+output_dir:
+  - C:/Users/nguyenta/Documents
+
+# Object ID/basin(s) used for training/testing
 object_id:
   - 2009
   - 2011
 
-# Input dynamic features
+# Input dynamic/timeseries feature(s)
 input_dynamic_features:
   - precipitation_mm_d
   - temperature_mean_degC
   - rel_sun_dur
 
-# Input static features => full list of features at the end of this documentation
+# Input static feature(s)/catchment attribute(s) (OPTIONAL DATA)
 input_static_features:
   - p_mean
   - aridity
   - pet_mean
   - p_seasonality
 
-# Target/output features
+# Target/output feature(s)
 target_features:
   - discharge_vol_m3_s
 
-# Scaler for target features
+# Scaler for target features: "MinMaxScaler", "Z-score", "None"
 scaler_target_features:
   - MinMaxScaler
 
@@ -38,14 +44,14 @@ scaler_target_features:
 scaler_input_dynamic_features:
   - MinMaxScaler
 
-# If you did not have input static_features, please leave this empyt
+# Scaler for static features (*OPTIONAL DATA)
 scaler_input_static_features:
   - MinMaxScaler
 
-# Training period with format YYYY-MM-DD
+# Training period (YYYY-MM-DD HH:MM)
 train_period:
-  - 2010-01-01
-  - 2020-12-31
+  - 2010-01-01 11:15
+  - 2020-12-31 11:15
 
 # Hidden size of the LSTM
 hidden_size: 30
@@ -60,38 +66,46 @@ activation_function_name: Identity
 # Therefore, this parameter is only used if  num_layers > 1
 dropout: 0.4
 
-# Validation period with format YYYY-MM-DD
+# Validation period (YYYY-MM-DD HH:MM)
 test_period:
-  - 1982-01-01
-  - 2009-12-31
+  - 1982-01-01 11:15
+  - 2009-12-31 11:15
 
 # Number of epochs
-n_epochs: 150
+n_epochs: 3
 
 # Learning rate
 learning_rate: 0.005
 
-# warmup_length must be < batch_size
-# when calculating the loss, the first warmup_length timesteps will be omitted
+# Warm-up length (the number of timesteps used for warm up)
 warmup_length: 12
 
 # objective function 1-NSE, MSE, RMSE, MAE
 objective_function_name: MAE
 
-# optimization method
+# optimization method (current version only Adam is used)
 optim_method: Adam
 
 #----------------------------------------------------------------------------#
-# Configuration for forward run (optional input - delete if no required)     #
-#    e.g., ungauged basins or prediction with the trained model              #
+# Configuration for forward run (OPTIONAL DATA)                              #
+# e.g., ungauged basins or prediction with the trained model                 #
 #----------------------------------------------------------------------------#
-dynamic_data_file_test: 
+
+# Input time series data (link to data file or same as above "dynamic_data_file")
+dynamic_data_file_forecast: 
   - dynamic_data_file
-static_data_file_test: 
+
+# Input time series data (link to data file or same as above "static_data_file")
+# *OPTIONAL DATA
+static_data_file_forecast: 
   - static_data_file
-object_id_test:
+
+# Object id/basin ids for forecasting
+object_id_forecast:
   - 2009
   - 2011
-test_period_test:
-  - 1982-01-01
-  - 2009-12-31
+
+# Forecast period (YYYY-MM-DD HH:MM)
+forecast_period:
+  - 1982-01-01 11:15
+  - 2009-12-31 00:00

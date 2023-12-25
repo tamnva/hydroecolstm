@@ -2,9 +2,12 @@
 import customtkinter as ctk
 import tkinter as tk
 import numpy as np
-
+from pathlib import Path
+import torch
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk
+
+from .utility import config_to_text, sort_key
 
 
 
@@ -22,11 +25,11 @@ class VisualizeFrame(ctk.CTkFrame):
     # create widgets for sidebar frame
     def __create_widgets(self): 
         # ---------------------------------------------content of load data tab
-        self.object_id_label = ctk.CTkLabel(self, text="1. Please insert object_id for plot")
+        self.object_id_label = ctk.CTkLabel(self, text="1. Select object id and target feature for plot")
         self.object_id_label.grid(row=0, column=0, sticky="w", padx=(5,5))
-        self.select_input_frame = ctk.CTkFrame(master=self, height=400)
+        self.select_input_frame = ctk.CTkFrame(master=self, height=400, fg_color = "transparent")
         self.select_input_frame.grid(row=1, column=0, sticky="w", padx=(20,20), pady=(20,20))
-        self.select_input_frame.columnconfigure((0,1), weight=1)
+        self.select_input_frame.columnconfigure((0,1,3,4), weight=0)
 
         self.object_id_label = ctk.CTkLabel(self, text="2. Plotting area")
         self.object_id_label.grid(row=2, column=0, sticky="w", padx=(5,5))
@@ -58,10 +61,18 @@ class VisualizeFrame(ctk.CTkFrame):
                                              padx=(5,5), pady=(5,5))
         
         
-        self.update_plot = ctk.CTkButton(self.select_input_frame, anchor='w', 
+        self.update_plot = ctk.CTkButton(self.select_input_frame, anchor='we', 
                                  command=self.plot_figure, text="Update plot")
-        self.update_plot.grid(row=3, column=0, columnspan=2, sticky="w", padx=(5,20), pady=(20,20))
-        
+        self.update_plot.grid(row=3, column=0, columnspan=2, sticky="we", padx=(5,5), pady=(20,20))
+
+        self.save_project = ctk.CTkButton(self.select_input_frame, anchor='w',
+                                          command=self.save_project_event,
+                                          text="Save project") 
+        self.save_project.grid(row=3, column=2, sticky="w", padx=(5,5), pady=(0,0))
+        #self.load_project = ctk.CTkButton(self.select_input_frame, anchor='w',
+        #                                  command=self.load_project_event, 
+        #                                  text="Load project") 
+        #self.load_project.grid(row=3, column=3, sticky="e", padx=(5,5), pady=(20,20))
     
     # Get dropout
     def next_object_id(self):
@@ -113,7 +124,9 @@ class VisualizeFrame(ctk.CTkFrame):
         self.plot_frame = ctk.CTkFrame(master=self, height=400)
         self.plot_frame.grid(row=3, column=0, sticky="w", padx=(20,20), pady=(20,20))
         
-        try:           
+        try:
+            time = self.globalData["time_test"][self.globalData["object_id_plot"]]
+            
             obs = self.globalData["y_test_scale"][self.globalData["object_id_plot"]]  
             obs = obs[:, self.config["target_features"].\
                       index(self.globalData["target_feature_plot"])]  
@@ -127,9 +140,9 @@ class VisualizeFrame(ctk.CTkFrame):
             figure_canvas = FigureCanvasTkAgg(figure, self.plot_frame )
             NavigationToolbar2Tk(figure_canvas, self.plot_frame )          
             axes = figure.add_subplot()
-            axes.plot(obs, 'ro', label = "Observed (test data)", 
+            axes.plot(time, obs, 'ro', label = "Observed (test data)", 
                       alpha=0.9, markersize=2.5 )            
-            axes.plot(predict, color = 'blue', label = "Predicted (test data)", 
+            axes.plot(time, predict, color = 'blue', label = "Predicted (test data)", 
                       alpha=0.9, linewidth=0.75)
             axes.set_title(f"object_id = {self.globalData['object_id_plot']}")
             axes.legend() 
@@ -150,3 +163,32 @@ class VisualizeFrame(ctk.CTkFrame):
             axes.set_title("Test plot")
                 
             figure_canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=1) 
+            
+    def save_project_event(self):    
+        
+        output_dir = tk.filedialog.askdirectory()
+        self.config["output_dir"] = [output_dir]
+        
+        # Save config
+        out_file = Path(self.config["output_dir"][0], "config.yml")
+        self.write_yml_file(config=self.config, out_file=out_file)
+        print("config was saved as config.yml")
+
+        # Save model_state_dicts to model_state_dict.pt file
+        torch.save(self.globalData["model"].model.state_dict(), 
+                   Path(self.config["output_dir"][0], "model_state_dict.pt"))
+        print("Model state_dict was saved as model_state_dict.pt")
+        
+        # Save global data
+        torch.save(self.globalData, 
+                   Path(self.config["output_dir"][0], "globalData.pt"))
+        print("globalData was saved as globalData.pt")
+        
+    def write_yml_file(self, config, out_file):
+        # Convert config to text
+        output_text = config_to_text(config=sort_key(self.config))
+        
+        # Write config to config file
+        with open(out_file, "w") as config_file:
+            for line in output_text:
+                config_file.write(line)

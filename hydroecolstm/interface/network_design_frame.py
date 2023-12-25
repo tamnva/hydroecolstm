@@ -2,7 +2,7 @@
 import customtkinter as ctk
 from CTkToolTip import CTkToolTip
 
-class NetworkDesignFrame(ctk.CTkScrollableFrame):
+class NetworkDesignFrame(ctk.CTkFrame):
     def __init__(self, container=None, config=None, globalData=None):
         super().__init__(container)
         
@@ -17,8 +17,9 @@ class NetworkDesignFrame(ctk.CTkScrollableFrame):
     def __create_widgets(self): 
         
         # create tabs
-        self.tabview = ctk.CTkTabview(master=self, width = 750, border_width=1.5)
-        self.tabview.grid(row=0, column=0, padx=(20, 20), pady=(10, 10), sticky="ew")
+        self.tabview = ctk.CTkTabview(master=self, width = 750, border_width=1.5,
+                                      fg_color = "transparent")
+        self.tabview.pack(fill='both',expand=1)
         self.tabview.add("LSTM_DL")
         self.tabview.tab("LSTM_DL").grid_columnconfigure((0,1), weight=1)
         self.tabview.tab("LSTM_DL").rowconfigure((0,1,2,3,4,5,6,7), weight=1)
@@ -69,11 +70,15 @@ class NetworkDesignFrame(ctk.CTkScrollableFrame):
         print(self.config["hidden_size"])
              
     # Get number of lstm layers
-    def get_num_layers(self, method: str):
-        self.config["num_layers"] = int(method)
+    def get_num_layers(self, nlayer: str):
+        self.config["num_layers"] = int(nlayer)
+        print("num_layers = ", self.config["num_layers"])
         
-    def get_activation_function_name(self, method: str):
-        self.config["activation_function_name"] = method
+    def get_activation_function_name(self, act: str):
+        self.config["activation_function_name"] = act
+        
+        print("activation_function_name = ", 
+              self.config["activation_function_name"])
 
 
 

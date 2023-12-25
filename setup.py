@@ -19,7 +19,6 @@ setup(
                       'torch',
                       'customtkinter',
                       'CTkToolTip',
-                      'datetime',
                       'pandastable',
                       'tkcalendar',
                       'CTkListbox',

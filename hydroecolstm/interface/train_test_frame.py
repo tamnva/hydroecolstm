@@ -16,8 +16,9 @@ class TrainTestFrame(ctk.CTkScrollableFrame):
     def __create_widgets(self): 
         
         # create tabs
-        self.tabview = ctk.CTkTabview(master=self, width = 750, border_width=1.5)
-        self.tabview.grid(row=0, column=0, padx=(20, 20), pady=(10, 10), sticky="ew")
+        self.tabview = ctk.CTkTabview(master=self, width = 750, border_width=1.5,
+                                      fg_color = "transparent")
+        self.tabview.pack(fill='both',expand=1)
         self.tabview.add("LSTM_DL")
         self.tabview.tab("LSTM_DL").grid_columnconfigure((1,1), weight=1)
         #self.tabview.add("RNN")
@@ -90,7 +91,7 @@ class TrainTestFrame(ctk.CTkScrollableFrame):
       
         # Progressbar
         self.progressbar = ctk.CTkProgressBar(master=self.tabview.tab("LSTM_DL"))
-        self.progressbar.pack(anchor='w', fill='both',expand=1, pady=10)
+        self.progressbar.pack(anchor='w', fill = "both", pady=10)
         self.progressbar.configure(mode="determinate", progress_color="orange")
         self.progressbar.set(0)
         #self.progressbar.step()
@@ -126,8 +127,7 @@ class TrainTestFrame(ctk.CTkScrollableFrame):
                     #"Kling-Gupta Efficiency (1-KGE)": "KGE",
                     'Mean Absolute Error (MAE)': "MAE",
                     'Mean Squared Error (MSE)': "MSE"} 
-        
-        print(method)                       
+                              
         self.config["objective_function_name"] = obj_name[method]
         print(self.config["objective_function_name"])
 

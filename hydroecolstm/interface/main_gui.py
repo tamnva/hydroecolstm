@@ -40,6 +40,8 @@ class MainGUI(ctk.CTk):
         globalData['static_data_header'] =[]
         globalData["object_id_no"] = 0
         globalData["target_feature_no"] = 0
+        globalData["object_id_forecast_no"] = 0
+        globalData["target_feature_forecast_no"] = 0
 
         
         super().__init__()
