@@ -1,8 +1,9 @@
 #from pathlib import Path
 from hydroecolstm.utility.scaler import Scaler, get_scaler_name
-from hydroecolstm.data.read_data import read_train_test_data, read_forecast_data
+from hydroecolstm.data.read_data import read_train_test_data #, read_forecast_data
 from hydroecolstm.data.read_config import read_config
-from hydroecolstm.model.lstms import LSTM_DL
+from hydroecolstm.model.lstm_linears import Lstm_Linears
+from hydroecolstm.model.training import Training
 import matplotlib.pyplot as plt
 import torch
 
@@ -30,9 +31,10 @@ y_train_scale = y_train_scaler.transform(x=data["y_train"])
 y_test_scale = y_train_scaler.transform(x=data["y_test"])
 
 # Model
-my_model = LSTM_DL(config=config)
-model, y_predict = my_model.train(x_train=x_train_scale, y_train=y_train_scale)
-y_test_scale_sim=my_model.forward(x_test_scale)
+model = Lstm_Linears(config=config)
+trainer = Training(config=config, model=model)
+model, y_predict = trainer.train(x=x_train_scale, y=y_train_scale)
+y_test_scale_sim = model(x_test_scale)
 
 
 # Plot

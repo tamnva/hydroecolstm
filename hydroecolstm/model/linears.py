@@ -10,9 +10,9 @@ class Linears(nn.Module):
     ----------
     num_layers : int
         Number of linear layers.
-    act_function_names: List[str]
-        Activation function, allows activation function names are "ReLu", 
-        "Sigmoid", "Tanh", "Softplus", "Identity"
+    activation_function: List[str]
+        Name of  activation function for each linear layer, available function 
+        names are "ReLu", "Sigmoid", "Tanh", "Softplus", "Identity"
     num_neurons: List[int]
         Number of neurons in each layers, including from the input size to the
         the multi-linear layers. Therefore, the len(num_neurons) = num_layers + 1
@@ -36,7 +36,8 @@ class Linears(nn.Module):
     >>> # Forward run
     >>> model(x)
     '''
-    def __init__(self, num_layers: int, act_function_names: List[str], 
+        
+    def __init__(self, num_layers: int, activation_function: List[str], 
                  num_neurons: List[int]):
         super(Linears, self).__init__()
         
@@ -51,7 +52,7 @@ class Linears(nn.Module):
         # Create layers of user-defined network
         for i in range(num_layers):
             layers.append(nn.Linear(num_neurons[i], num_neurons[i+1]))
-            layers.append(activation_functions[act_function_names[0]])
+            layers.append(activation_functions[activation_function[0]])
         
         # Combined all layers together using sequential
         self.model = nn.Sequential(*layers)

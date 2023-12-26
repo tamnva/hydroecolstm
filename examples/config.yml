@@ -63,15 +63,12 @@ num_layers: 1
 # Number of neurons each layers, MUST put * in the last layer 
 # (model will take the number of target features) 
 REG:
-  nlayers: 3 # Number of layers
-  nneurons: 
-    *
+  num_layers: 1
+  num_neurons: 
+    - None 
   # Activation function of the corresponding layers
   activation_function:
-    Identity
-
-# Activation function: "ReLu", "Sigmoid", "Tanh", "Softplus", "Identity"
-activation_function_name: Identity
+    - Identity
 
 # Dropout layer on the outputs of each LSTM layer except the last layer
 # Therefore, this parameter is only used if  num_layers > 1
@@ -83,7 +80,7 @@ test_period:
   - 2009-12-31 11:15
 
 # Number of epochs
-n_epochs: 3
+n_epochs: 250
 
 # Learning rate
 learning_rate: 0.005
