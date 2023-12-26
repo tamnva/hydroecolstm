@@ -80,7 +80,7 @@ class NetworkDesignFrame(ctk.CTkScrollableFrame):
         
         self.model_head_type.grid(row=1, column=0, padx = 10, pady=5, sticky="w")        
 
-        # Frame for regression model head
+        # --------------------------------------Frame for regression model head
         self.regression_frame = ctk.CTkFrame(master=self.tabview.tab("Model head"), 
                                              fg_color = "transparent", border_width=0.0)
         self.regression_frame.grid_columnconfigure((0,1), weight=1)
@@ -94,28 +94,32 @@ class NetworkDesignFrame(ctk.CTkScrollableFrame):
         self.regression_nlayers = ctk.CTkOptionMenu(self.regression_frame,
                           values=["1","2","3","4","5"],
                           command=self.create_entry_regression_model)
-        self.regression_nlayers.grid(row=0, column=1, sticky="w", padx=10, pady=5)        
+        self.regression_nlayers.grid(row=1, column=0, sticky="w", padx=10, pady=5)        
         
         # Label
         
         self.regression_config_label1 = ctk.CTkLabel(self.regression_frame,
                                   text="3. Number of neurons layer ith")
-        self.regression_config_label1.grid(row=1, column=0, sticky="w", padx=10, pady=5)      
+        self.regression_config_label1.grid(row=2, column=0, sticky="w", padx=10, pady=5)      
         self.regression_config_label2 = ctk.CTkLabel(self.regression_frame,
                                   text="4. Activation function layer ith")
-        self.regression_config_label2.grid(row=1, column=1, sticky="w", padx=10, pady=5)
-        
-        # Create a frame inside frame
+        self.regression_config_label2.grid(row=2, column=1, sticky="w", padx=10, pady=5)
 
-        #self.dummy_entry_1 = ctk.CTkEntry(master=self.regression_frame,
-        #                       placeholder_text="_")
-        #self.dummy_entry_2 = ctk.CTkEntry(master=self.regression_frame,
-        #                       placeholder_text="Identity")
-        #self.dummy_entry_1.grid(row=2, column=0, sticky="e", padx=10, pady=5)   
-        #self.dummy_entry_2.grid(row=2, column=1, sticky="w", padx=10, pady=5)
-        
-        # I don't know how to destroy some widget so I put into this frame
+        # --------------------------------------Frame for GMM
+        self.gmm_frame = ctk.CTkFrame(master=self.tabview.tab("Model head"), 
+                                             fg_color = "transparent", border_width=0.0)
+        self.gmm_frame.grid_columnconfigure((0,1), weight=1)
+        #self.gmm_frame.grid(row=2, column=0, sticky="w", pady=(5, 5))
+                
+        # Number of neuron in hidden layer
+        self.gmm_hidden_size_label = ctk.CTkLabel(self.gmm_frame,
+                                  text="2. Number of neuron in hidden layer")
+        self.gmm_hidden_size_label.grid(row=0, column=0, sticky="w", padx=10, pady=5)
+        self.gmm_hidden_size = ctk.CTkEntry(master=self.gmm_frame,
+                                            placeholder_text="10")
+        self.gmm_hidden_size.grid(row=1, column=0, sticky="w", padx=10, pady=5)        
 
+        # Cr
         
         # ---------------------------------------------content of load data tab        
     def get_hidden_size(self, dummy):
@@ -147,12 +151,15 @@ class NetworkDesignFrame(ctk.CTkScrollableFrame):
             
         # Delete config if other model head option is 
         if self.globalData["model_head"] == "REG":
+                       
             self.regression_frame.grid(row=2, column=0, sticky="w", pady=(5, 5))
+            self.gmm_frame.grid_forget()
             
             self.config["REG"] = {}
         else:
             # Hide regression frame
             self.regression_frame.grid_forget()
+            self.gmm_frame.grid(row=2, column=0, sticky="w", pady=(5, 5))
             try:
                 del self.config["REG"]
             except:
@@ -182,7 +189,7 @@ class NetworkDesignFrame(ctk.CTkScrollableFrame):
             
             self.reg_neurons = []
             self.reg_activation_func = []
-            row_number = 2
+            row_number = 3
             
             
             for i in range(int(nlayers)):
