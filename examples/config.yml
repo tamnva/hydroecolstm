@@ -65,14 +65,10 @@ num_layers: 1
 REG:
   nlayers: 3 # Number of layers
   nneurons: 
-    4
-    4
     *
   # Activation function of the corresponding layers
   activation_function:
-    Sigmoid
-    Sigmoid
-    Sigmoid
+    Identity
 
 # Activation function: "ReLu", "Sigmoid", "Tanh", "Softplus", "Identity"
 activation_function_name: Identity
