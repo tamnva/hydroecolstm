@@ -87,7 +87,7 @@ class NetworkDesignFrame(ctk.CTkScrollableFrame):
         self.regression_nlayers_label.grid(row=0, column=0, sticky="w", padx=10, pady=5)
         
         self.regression_nlayers = ctk.CTkOptionMenu(self.regression_frame,
-                          values=list(map(str, range(1, 10))),
+                          values=list(map(str, range(1, 6))),
                           command=self.create_entry_regression_model)
         self.regression_nlayers.grid(row=1, column=0, sticky="w", padx=10, pady=5)        
         
@@ -113,9 +113,6 @@ class NetworkDesignFrame(ctk.CTkScrollableFrame):
         self.gmm_hidden_size = ctk.CTkEntry(master=self.gmm_frame,
                                             placeholder_text="None")
         self.gmm_hidden_size.grid(row=1, column=0, sticky="w", padx=10, pady=5)        
-
-        # Cr
-        
         # ---------------------------------------------content of load data tab        
     def get_hidden_size(self, dummy):
         # Get number of hidden layers
@@ -178,12 +175,20 @@ class NetworkDesignFrame(ctk.CTkScrollableFrame):
         
         # Now add entry according to the number of layers
         if "REG" in self.config.keys():
-            self.config["REG"]["nlayers"] = int(nlayers)
             
+            row_number = 3
+            self.config["REG"]["num_layers"] = int(nlayers)
             self.reg_neurons = []
             self.reg_activation_func = []
-            row_number = 3
-            
+            self.config["REG"]["num_neurons"] = [None for i in range(int(nlayers))]
+            self.config["REG"]["activation_function"] = ["Identity" for i in 
+                                                         range(int(nlayers))]
+
+            get_neurons = {0: self.reg_get_neurons_1, 1: self.reg_get_neurons_2,
+                           2: self.reg_get_neurons_3, 3: self.reg_get_neurons_4}
+            get_acts = {0: self.reg_get_acts_1, 1: self.reg_get_acts_2,
+                        2: self.reg_get_acts_3, 3: self.reg_get_acts_4,
+                        4: self.reg_get_acts_5}
             
             for i in range(int(nlayers)):
 
@@ -192,17 +197,62 @@ class NetworkDesignFrame(ctk.CTkScrollableFrame):
                                          placeholder_text="10")
                     entry.grid(row=row_number, column=0, sticky="e", padx=10, pady=5)
                     self.reg_neurons.append(entry)
+                    self.reg_neurons[i].bind('<KeyRelease>', get_neurons[i])
                 
-                entry = ctk.CTkEntry(master=self.regression_frame,
-                                     placeholder_text="Identity")
-                entry.grid(row=row_number, column=1, sticky="e", padx=10, pady=5)
-                self.reg_activation_func.append(entry)
+                option_menu = ctk.CTkOptionMenu(self.regression_frame,
+                                                     values=["Identity", "ReLu", "Sigmoid",
+                                                             "Tanh", "Softplus"],
+                                                     command=get_acts[i])
+                option_menu.grid(row=row_number, column=1, sticky="e", padx=10, pady=5)
+                self.reg_activation_func.append(option_menu)
                 row_number += 1
-        
-
-
-
-
+    
+    # Function to get number of input neurons each layer - Make this code clearner
+    def reg_get_neurons_1(self, dummy):
+        try: 
+            self.config["REG"]["num_neurons"][0] = int(self.reg_neurons[0].get().strip())
+            print("Num of neurons layer 1 = ",  self.config["REG"]["num_neurons"][0])
+        except:
+            tk.messagebox.showinfo(title="Error", 
+                                   message="Invalid input number of neuron for layer 1")
+    def reg_get_neurons_2(self, dummy):
+        try: 
+            self.config["REG"]["num_neurons"][1] = int(self.reg_neurons[1].get().strip())
+            print("Num of neurons layer 2 = ", self.config["REG"]["num_neurons"][1])
+        except:
+            tk.messagebox.showinfo(title="Error", 
+                                   message="Invalid input number of neuron for layer 2")
+    def reg_get_neurons_3(self, dummy):
+        try: 
+            self.config["REG"]["num_neurons"][2] = int(self.reg_neurons[2].get().strip())
+            print("Num of neurons layer 3 = ",  self.config["REG"]["num_neurons"][2])
+        except:
+            tk.messagebox.showinfo(title="Error", 
+                                   message="Invalid input number of neuron for layer 3")
+    def reg_get_neurons_4(self, dummy):
+        try: 
+            self.config["REG"]["num_neurons"][3] = int(self.reg_neurons[3].get().strip())
+            print("Num of neurons layer 4 = ",  self.config["REG"]["num_neurons"][3])
+        except:
+            tk.messagebox.showinfo(title="Error", 
+                                   message="Invalid input number of neuron for layer 4")
+    
+    # Function to get activation function of each layer - Make this code clearner
+    def reg_get_acts_1(self, dummy):
+        self.config["REG"]["activation_function"][0] = dummy
+        print("Activation function of layer 1 = ", dummy)
+    def reg_get_acts_2(self, dummy):
+        self.config["REG"]["activation_function"][1] = dummy
+        print("Activation function of layer 2 = ", dummy)
+    def reg_get_acts_3(self, dummy):
+        self.config["REG"]["activation_function"][2] = dummy
+        print("Activation function of layer 3 = ", dummy)
+    def reg_get_acts_4(self, dummy):
+        self.config["REG"]["activation_function"][3] = dummy
+        print("Activation function of layer 4 = ", dummy)
+    def reg_get_acts_5(self, dummy):
+        self.config["REG"]["activation_function"][5] = dummy
+        print("Activation function of layer 5 = ", dummy)
 
 
 

@@ -13,6 +13,8 @@ import torch
 
 config = read_config("C:/Users/nguyenta/Documents/GitHub/HydroEcoLSTM/examples/config.yml")
 
+config = read_config("C:/Users/nguyenta/Documents/config.yml")
+
 
 # Read and split data
 data = read_train_test_data(config)
@@ -33,6 +35,7 @@ y_test_scale = y_train_scaler.transform(x=data["y_test"])
 # Model
 model = Lstm_Linears(config=config)
 trainer = Train(config=config, model=model)
+
 model, y_predict = trainer(x=x_train_scale, y=y_train_scale)
 y_test_scale_sim = model(x_test_scale)
 

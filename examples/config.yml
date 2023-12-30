@@ -63,15 +63,11 @@ num_layers: 1
 # Number of neurons each layers, MUST put * in the last layer 
 # (model will take the number of target features) 
 REG:
-  num_layers: 2
+  num_layers: 1
   num_neurons: 
-    - 10
-    - 10
     - None 
   # Activation function of the corresponding layers
   activation_function:
-    - Identity
-    - Identity
     - Identity
 
 # Dropout layer on the outputs of each LSTM layer except the last layer

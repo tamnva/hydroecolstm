@@ -3,11 +3,22 @@ def config_to_text(config):
     out_text = []
     for key in config.keys():   
         # Write list object in multiple lines             
-        if type(config[key]) is list:               
+        if type(config[key]) is list:
             out_text.append(key + ":\n")
             for element in config[key]:
                 out_text.append("  - " + str(element) + "\n")
-                #out_text.append("\n")
+                
+        elif type(config[key]) is dict:
+            config_key = config[key]
+            out_text.append(key + ":\n")
+            
+            for key in config_key.keys():
+                if type(config_key[key]) is list:
+                    out_text.append("  " + key + ":\n")
+                    for element in config_key[key]:
+                        out_text.append("    - " + str(element) + "\n")
+                else:
+                    out_text.append("  " + key +": " + str(config_key[key]) + "\n")
         else:
             try:
                 # Convert time in config to YYYY-MM-DD HH:MM
@@ -50,6 +61,9 @@ def sort_key(config):
     if "test_period" in config.keys():
         config_sort["test_period"] = config["test_period"]
 
+    if "REG" in config.keys():
+        config_sort["REG"] = config["REG"]
+
     if "scaler_input_dynamic_features" in config.keys():
         config_sort["scaler_input_dynamic_features"] = config["scaler_input_dynamic_features"]        
 
@@ -64,10 +78,7 @@ def sort_key(config):
 
     if "num_layers" in config.keys():
         config_sort["num_layers"] = config["num_layers"]        
-
-    if "activation_function_name" in config.keys():
-        config_sort["activation_function_name"] = config["activation_function_name"]
-
+        
     if "n_epochs" in config.keys():
         config_sort["n_epochs"] = config["n_epochs"] 
 
@@ -99,6 +110,15 @@ def sort_key(config):
         config_sort["forecast_period"] = config["forecast_period"] 
 
     if "object_id_forecast" in config.keys():
-        config_sort["object_id_forecast"] = config["object_id_forecast"]  
+        config_sort["object_id_forecast"] = config["object_id_forecast"]
             
     return config_sort
+
+def write_yml_file(config, out_file):
+    # Convert config to text
+    output_text = config_to_text(config=sort_key(config))
+        
+    # Write config to config file
+    with open(out_file, "w") as config_file:
+        for line in output_text:
+            config_file.write(line)

@@ -7,7 +7,7 @@ import torch
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk
 
-from .utility import config_to_text, sort_key
+from .utility import config_to_text, sort_key, write_yml_file
 
 
 
@@ -171,7 +171,7 @@ class VisualizeFrame(ctk.CTkScrollableFrame):
         
         # Save config
         out_file = Path(self.config["output_dir"][0], "config.yml")
-        self.write_yml_file(config=self.config, out_file=out_file)
+        write_yml_file(config=self.config, out_file=out_file)
         print("config was saved as config.yml")
 
         # Save model_state_dicts to model_state_dict.pt file
@@ -183,12 +183,3 @@ class VisualizeFrame(ctk.CTkScrollableFrame):
         torch.save(self.globalData, 
                    Path(self.config["output_dir"][0], "globalData.pt"))
         print("globalData was saved as globalData.pt")
-        
-    def write_yml_file(self, config, out_file):
-        # Convert config to text
-        output_text = config_to_text(config=sort_key(self.config))
-        
-        # Write config to config file
-        with open(out_file, "w") as config_file:
-            for line in output_text:
-                config_file.write(line)
