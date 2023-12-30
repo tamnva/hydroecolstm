@@ -37,6 +37,7 @@ class MainGUI(ctk.CTk):
         config["REG"]["activation_function"] = ["Identity"]
         config["REG"]["num_neurons"] = [None]
         config["REG"]["num_layers"] = 1
+        config["hidden_size"] = 30
 
         # Initialize global data
         globalData = {}

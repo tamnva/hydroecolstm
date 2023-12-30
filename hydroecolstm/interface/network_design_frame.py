@@ -38,13 +38,12 @@ class NetworkDesignFrame(ctk.CTkScrollableFrame):
         self.hidden_size_label = ctk.CTkLabel(self.tabview.tab("Model class"), 
                                                    text="1. Number of hidden units of the LSTM layer")
         self.hidden_size_label.pack(anchor="w", pady = (4,4))
-        self.hidden_size = ctk.CTkTextbox(master=self.tabview.tab("Model class"), 
-                                          height=10, width = 140)
-        self.hidden_size.bind('<KeyRelease>', self.get_hidden_size)
-        self.hidden_size.insert("0.0", "30") 
+        
+        self.hidden_size = ctk.CTkEntry(master=self.tabview.tab("Model class"),
+                                        placeholder_text="30")
         self.hidden_size.pack(anchor="w", pady = (4,4))
-        
-        
+        self.hidden_size.bind('<KeyRelease>', self.get_hidden_size)
+
         self.nlayers_label = ctk.CTkLabel(self.tabview.tab("Model class"), 
                                                text="2. Number of LSTM layers")
         self.nlayers_label.pack(anchor="w", pady = (4,4))
@@ -123,10 +122,12 @@ class NetworkDesignFrame(ctk.CTkScrollableFrame):
         # ---------------------------------------------content of load data tab        
     def get_hidden_size(self, dummy):
         # Get number of hidden layers
-        get_input_text = self.hidden_size.get("0.0", "end")
-        # convert input to integer
-        self.config["hidden_size"] = int(get_input_text)
-        print(self.config["hidden_size"])
+        try:
+            get_input_text = int(self.hidden_size.get().strip())
+            self.config["hidden_size"] = get_input_text
+            print("hidden size = ", self.config["hidden_size"])
+        except:
+            pass
              
     # Get number of lstm layers
     def get_num_layers(self, nlayer: str):
@@ -232,7 +233,7 @@ class NetworkDesignFrame(ctk.CTkScrollableFrame):
     def reg_get_neurons_3(self, dummy):
         try: 
             self.config["REG"]["num_neurons"][2] = int(self.reg_neurons[2].get().strip())
-            print("Num of neurons layer 3 = ",  self.config["REG"]["num_neurons"][2])
+            print("Num of neurons layer 3 = ", self.config["REG"]["num_neurons"][2])
         except:
             tk.messagebox.showinfo(title="Error", 
                                    message="Invalid input number of neuron for layer 3")
