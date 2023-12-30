@@ -53,12 +53,12 @@ class NetworkDesignFrame(ctk.CTkScrollableFrame):
         self.nlayers.pack(anchor="w", pady = (4,4))
         
         self.dropout_label = ctk.CTkLabel(self.tabview.tab("Model class"), 
-                                               text="3. Activation function of Dense (Linear) Layer:")
+                                               text="3. Drop out rate")
         self.dropout_label.pack(anchor="w", pady = (4,4))
         self.dropout = ctk.CTkEntry(master=self.tabview.tab("Model class"),
                                         placeholder_text="0.30")
         self.dropout.pack(anchor="w", pady = (4,4))
-        self.hidden_size.bind('<KeyRelease>', self.get_dropout)
+        self.dropout.bind('<KeyRelease>', self.get_dropout)
 
 
         # ----------------------------------------------------------Model heads
@@ -138,9 +138,10 @@ class NetworkDesignFrame(ctk.CTkScrollableFrame):
             pass
 
     # Get number of lstm layers
-    def get_dropout(self, nlayer: str):
+    def get_dropout(self, dummy: str):
         try:
-            self.config["dropout"] = float(nlayer)
+            print(dummy)
+            self.config["dropout"] = float(self.dropout.get().strip())
             print("Dropout rate = ", self.config["dropout"])
         except:
             pass
