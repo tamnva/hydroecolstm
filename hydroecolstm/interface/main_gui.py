@@ -38,6 +38,7 @@ class MainGUI(ctk.CTk):
         config["REG"]["num_neurons"] = [None]
         config["REG"]["num_layers"] = 1
         config["hidden_size"] = 30
+        config["dropout"] = 0.30
 
         # Initialize global data
         globalData = {}

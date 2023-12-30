@@ -52,14 +52,14 @@ class NetworkDesignFrame(ctk.CTkScrollableFrame):
                                              command=self.get_num_layers) 
         self.nlayers.pack(anchor="w", pady = (4,4))
         
-        self.activation_function_label = ctk.CTkLabel(self.tabview.tab("Model class"), 
+        self.dropout_label = ctk.CTkLabel(self.tabview.tab("Model class"), 
                                                text="3. Activation function of Dense (Linear) Layer:")
-        self.activation_function_label.pack(anchor="w", pady = (4,4))
-        self.activation_function_option= ctk.CTkOptionMenu(self.tabview.tab("Model class"),
-                                             values=["Identity", "ReLu", "Sigmoid",
-                                                     "Tanh", "Softplus"],
-                                             command=self.get_activation_function_name) 
-        self.activation_function_option.pack(anchor="w", pady = (4,4))
+        self.dropout_label.pack(anchor="w", pady = (4,4))
+        self.dropout = ctk.CTkEntry(master=self.tabview.tab("Model class"),
+                                        placeholder_text="0.30")
+        self.dropout.pack(anchor="w", pady = (4,4))
+        self.hidden_size.bind('<KeyRelease>', self.get_dropout)
+
 
         # ----------------------------------------------------------Model heads
         self.intro_label = ctk.CTkLabel(self.tabview.tab("Model head"), 
@@ -131,14 +131,19 @@ class NetworkDesignFrame(ctk.CTkScrollableFrame):
              
     # Get number of lstm layers
     def get_num_layers(self, nlayer: str):
-        self.config["num_layers"] = int(nlayer)
-        print("num_layers = ", self.config["num_layers"])
-        
-    def get_activation_function_name(self, act: str):
-        self.config["activation_function_name"] = act
-        
-        print("activation_function_name = ", 
-              self.config["activation_function_name"])
+        try:
+            self.config["num_layers"] = int(nlayer)
+            print("num_layers = ", self.config["num_layers"])
+        except:
+            pass
+
+    # Get number of lstm layers
+    def get_dropout(self, nlayer: str):
+        try:
+            self.config["dropout"] = float(nlayer)
+            print("Dropout rate = ", self.config["dropout"])
+        except:
+            pass
 
     def get_model_head_name(self, model_head_name: str):
         model_head_names = {"Regression (REG)" : "REG",

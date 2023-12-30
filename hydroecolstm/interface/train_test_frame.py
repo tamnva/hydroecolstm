@@ -45,15 +45,6 @@ class TrainTestFrame(ctk.CTkScrollableFrame):
         self.learning_rate.pack(anchor='w')
         self.learning_rate.bind('<KeyRelease>', self.get_learning_rate)        
         
-        self.dropout_label = ctk.CTkLabel(self.tabview.tab("Trainer"), 
-                                          text="3. Dropout")
-        self.dropout_label.pack(anchor='w', pady=(4, 4))
-        self.dropout= ctk.CTkTextbox(master=self.tabview.tab("Trainer"),
-                                          height=30)
-        self.dropout.insert("0.0", "0.30") 
-        self.dropout.pack(anchor='w')
-        self.dropout.bind('<KeyRelease>', self.get_dropout)
-
         self.warmup_length_label = ctk.CTkLabel(self.tabview.tab("Trainer"), 
                                          text="4. Warm-up length")
         self.warmup_length_label.pack(anchor='w', pady=(4, 4))
@@ -109,12 +100,6 @@ class TrainTestFrame(ctk.CTkScrollableFrame):
         get_learning_rate = self.learning_rate.get("0.0", "end")
         self.config["learning_rate"] = float(get_learning_rate)
         print(f"Learning rate = {self.config['learning_rate']}")
-
-    # Get dropout
-    def get_dropout(self, dummy):
-        get_dropout = self.dropout.get("0.0", "end")
-        self.config["dropout"] = float(get_dropout)
-        print(f"Dropout = {self.config['dropout']}")
 
     # Get warm up length
     def get_warmup_length(self, dummy):
