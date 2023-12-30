@@ -1,13 +1,13 @@
 
 import customtkinter as ctk
 
-from .data_frame import DataFrame
-from .network_design_frame import NetworkDesignFrame
-from .project_summary_frame import ProjectSummaryFrame
-from .sidebar_frame import SidebarFrame
-from .train_test_frame import TrainTestFrame
-from .visualize_frame import VisualizeFrame
-from .forecast_frame import ForecastFrame
+from hydroecolstm.interface.data_frame import DataFrame
+from hydroecolstm.interface.network_design_frame import NetworkDesignFrame
+from hydroecolstm.interface.project_summary_frame import ProjectSummaryFrame
+from hydroecolstm.interface.sidebar_frame import SidebarFrame
+from hydroecolstm.interface.train_test_frame import TrainTestFrame
+from hydroecolstm.interface.visualize_frame import VisualizeFrame
+from hydroecolstm.interface.forecast_frame import ForecastFrame
 
 class MainGUI(ctk.CTk):
     def __init__(self):

@@ -7,7 +7,7 @@ import torch
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk
 
-from .utility import config_to_text, sort_key, write_yml_file
+from hydroecolstm.interface.utility import config_to_text, sort_key, write_yml_file
 
 
 

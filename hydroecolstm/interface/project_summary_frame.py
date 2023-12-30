@@ -1,6 +1,6 @@
 
 import customtkinter as ctk
-from .utility import config_to_text, sort_key
+from hydroecolstm.interface.utility import config_to_text, sort_key
 
 class ProjectSummaryFrame(ctk.CTkScrollableFrame):
     def __init__(self, container=None, config=None):

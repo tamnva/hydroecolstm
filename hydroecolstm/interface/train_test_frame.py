@@ -2,7 +2,7 @@ import tkinter as tk
 import customtkinter as ctk
 from hydroecolstm.model.lstm_linears import Lstm_Linears
 from hydroecolstm.model.train import Train
-from .utility import write_yml_file
+from hydroecolstm.interface.utility import write_yml_file
 
 class TrainTestFrame(ctk.CTkScrollableFrame):
     def __init__(self, container=None, config=None, globalData=None):

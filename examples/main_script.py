@@ -13,9 +13,6 @@ import torch
 
 config = read_config("C:/Users/nguyenta/Documents/GitHub/HydroEcoLSTM/examples/config.yml")
 
-config = read_config("C:/Users/nguyenta/Documents/config.yml")
-
-
 # Read and split data
 data = read_train_test_data(config)
 
@@ -75,7 +72,3 @@ for key in y_test_scale_sim.keys():
 from hydroecolstm.interface.main_gui import show_gui
 show_gui()
 
-# Read configuration file
-#x = Path("C:/Users/nguyenta/Documents/GitHub/HydroEcoLSTM")
-#x = Path(x, "examples", "config.yml")
-#read_config(x)
