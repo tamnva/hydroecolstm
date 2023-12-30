@@ -26,9 +26,6 @@ class NetworkDesignFrame(ctk.CTkScrollableFrame):
         self.tabview.tab("Model class").rowconfigure((0,1,2,3,4,5,6,7), weight=1)
         self.tabview.add("Model head")
         self.tabview.tab("Model head").grid_columnconfigure((0), weight=1)
-        #self.tabview.tab("Model head").rowconfigure((0,1,2,3,4,5,6,7), weight=1)
-        #self.tabview.add("RNN")
-        #self.tabview.tab("RNN").grid_columnconfigure((0,1), weight=1)
                    
         # ---------------------------------------------content of load data tab
         self.intro_label = ctk.CTkLabel(self.tabview.tab("Model class"), 
@@ -73,9 +70,7 @@ class NetworkDesignFrame(ctk.CTkScrollableFrame):
         self.model_head_type =\
             ctk.CTkOptionMenu(self.tabview.tab("Model head"),
                               values=["Regression (REG)",
-                                      "Gaussian Mixture Model (GMM)",
-                                      "Countable Mixture of Asymmetric Laplacians (CMAL)",
-                                      "Uncountable Mixture of Asymmetric Laplacians (UMAL)"],
+                                      "Gaussian Mixture Model (GMM)"],
                               command=self.get_model_head_name)
         
         self.model_head_type.grid(row=1, column=0, padx = 10, pady=5, sticky="w")        
@@ -92,7 +87,7 @@ class NetworkDesignFrame(ctk.CTkScrollableFrame):
         self.regression_nlayers_label.grid(row=0, column=0, sticky="w", padx=10, pady=5)
         
         self.regression_nlayers = ctk.CTkOptionMenu(self.regression_frame,
-                          values=["1","2","3","4","5"],
+                          values=list(map(str, range(1, 10))),
                           command=self.create_entry_regression_model)
         self.regression_nlayers.grid(row=1, column=0, sticky="w", padx=10, pady=5)        
         
@@ -113,10 +108,10 @@ class NetworkDesignFrame(ctk.CTkScrollableFrame):
                 
         # Number of neuron in hidden layer
         self.gmm_hidden_size_label = ctk.CTkLabel(self.gmm_frame,
-                                  text="2. Number of neuron in hidden layer")
+                                  text="2. Work in progress (comming soon)...")
         self.gmm_hidden_size_label.grid(row=0, column=0, sticky="w", padx=10, pady=5)
         self.gmm_hidden_size = ctk.CTkEntry(master=self.gmm_frame,
-                                            placeholder_text="10")
+                                            placeholder_text="None")
         self.gmm_hidden_size.grid(row=1, column=0, sticky="w", padx=10, pady=5)        
 
         # Cr
@@ -142,9 +137,7 @@ class NetworkDesignFrame(ctk.CTkScrollableFrame):
 
     def get_model_head_name(self, model_head_name: str):
         model_head_names = {"Regression (REG)" : "REG",
-                            "Gaussian Mixture Model (GMM)": "GMM",
-                            "Countable Mixture of Asymmetric Laplacians (CMAL)": "CMAL",
-                            "Uncountable Mixture of Asymmetric Laplacians (UMAL)": "UMAL"}
+                            "Gaussian Mixture Model (GMM)": "GMM"}
         
         self.globalData["model_head"] = model_head_names[model_head_name]
         print("Model head name = ", self.globalData["model_head"])
