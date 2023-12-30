@@ -39,6 +39,9 @@ class MainGUI(ctk.CTk):
         config["REG"]["num_layers"] = 1
         config["hidden_size"] = 30
         config["dropout"] = 0.30
+        config["n_epochs"] = 5
+        config["learning_rate"] = 0.01
+        config["warmup_length"] = 20
 
         # Initialize global data
         globalData = {}

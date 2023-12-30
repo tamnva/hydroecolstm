@@ -23,7 +23,8 @@ setup(
                       'tkcalendar',
                       'CTkListbox',
                       'CTkToolTip',
-                      'PyYAML'
+                      'PyYAML',
+                      'pathlib'
                       ],
 
     classifiers=[

@@ -140,7 +140,6 @@ class NetworkDesignFrame(ctk.CTkScrollableFrame):
     # Get number of lstm layers
     def get_dropout(self, dummy: str):
         try:
-            print(dummy)
             self.config["dropout"] = float(self.dropout.get().strip())
             print("Dropout rate = ", self.config["dropout"])
         except:

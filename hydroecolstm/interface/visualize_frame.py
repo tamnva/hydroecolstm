@@ -7,7 +7,7 @@ import torch
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk
 
-from hydroecolstm.interface.utility import config_to_text, sort_key, write_yml_file
+from hydroecolstm.interface.utility import write_yml_file
 
 
 
@@ -37,12 +37,14 @@ class VisualizeFrame(ctk.CTkScrollableFrame):
         self.plot_frame.grid(row=3, column=0, sticky="w", padx=(20,20), pady=(20,20))  
 
 
-        self.object_id = ctk.CTkTextbox(master=self.select_input_frame, height=30)
+        self.object_id = ctk.CTkTextbox(master=self.select_input_frame, height=30,
+                                        border_width=1.5)
         self.object_id.insert("0.0", "object_id") 
         self.object_id.grid(row=0, column=0, sticky="w", padx=(5,5), pady=(5,5))
         self.object_id.bind('<KeyRelease>', self.get_object_id)
 
-        self.target_feature = ctk.CTkTextbox(master=self.select_input_frame, height=30)
+        self.target_feature = ctk.CTkTextbox(master=self.select_input_frame, height=30,
+                                             border_width=1.5)
         self.target_feature.insert("0.0", "target_feature") 
         self.target_feature.grid(row=1, column=0, sticky="w", padx=(5,5), pady=(5,5))
         self.target_feature.bind('<KeyRelease>', self.get_target_feature)

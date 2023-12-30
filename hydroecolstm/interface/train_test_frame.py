@@ -30,32 +30,32 @@ class TrainTestFrame(ctk.CTkScrollableFrame):
         self.nepoch_label = ctk.CTkLabel(self.tabview.tab("Trainer"), 
                                          text="1. Number of epochs")
         self.nepoch_label.pack(anchor='w')
-        self.nepoch = ctk.CTkTextbox(master=self.tabview.tab("Trainer"), 
-                                               height=30)
-        self.nepoch.insert("0.0", "50") 
+        
+        self.nepoch = ctk.CTkEntry(master=self.tabview.tab("Trainer"),
+                             placeholder_text="5")
+               
         self.nepoch.pack(anchor='w')
         self.nepoch.bind('<KeyRelease>', self.get_nepoch)
         
         self.learning_rate_label = ctk.CTkLabel(self.tabview.tab("Trainer"), 
                                                 text="2. Learning rate")
         self.learning_rate_label.pack(anchor='w', pady=(4, 4))
-        self.learning_rate= ctk.CTkTextbox(master=self.tabview.tab("Trainer"),
-                                          height=30)
-        self.learning_rate.insert("0.0", "0.01") 
+        self.learning_rate= ctk.CTkEntry(master=self.tabview.tab("Trainer"),
+                             placeholder_text="0.01")
         self.learning_rate.pack(anchor='w')
         self.learning_rate.bind('<KeyRelease>', self.get_learning_rate)        
         
         self.warmup_length_label = ctk.CTkLabel(self.tabview.tab("Trainer"), 
-                                         text="4. Warm-up length")
+                                         text="3. Warm-up length")
         self.warmup_length_label.pack(anchor='w', pady=(4, 4))
-        self.warmup_length= ctk.CTkTextbox(master=self.tabview.tab("Trainer"),
-                                          height=30)
-        self.warmup_length.insert("0.0", "20") 
+        self.warmup_length= ctk.CTkEntry(master=self.tabview.tab("Trainer"),
+                             placeholder_text="20") 
+        
         self.warmup_length.pack(anchor='w')
         self.warmup_length.bind('<KeyRelease>', self.get_warmup_length)
         
         self.optim_label = ctk.CTkLabel(self.tabview.tab("Trainer"), 
-                                        text="5. Optimization method")
+                                        text="4. Optimization method")
         self.optim_label.pack(anchor='w', pady=(4, 4))      
         self.optim = ctk.CTkOptionMenu(self.tabview.tab("Trainer"),
                                                    values=['Adam'],
@@ -63,7 +63,7 @@ class TrainTestFrame(ctk.CTkScrollableFrame):
         self.optim.pack(anchor='w')
         
         self.loss_functionlabel = ctk.CTkLabel(self.tabview.tab("Trainer"), 
-                                               text="6. Loss function")
+                                               text="5. Loss function")
         self.loss_functionlabel.pack(anchor='w', pady=(4, 4))      
         self.loss = ctk.CTkOptionMenu(self.tabview.tab("Trainer"),
                                                    values=['Root Mean Square Error (RMSE)',
@@ -75,7 +75,7 @@ class TrainTestFrame(ctk.CTkScrollableFrame):
         self.loss.pack(anchor='w')
         
         self.run_label = ctk.CTkLabel(self.tabview.tab("Trainer"), 
-                                      text="7. Run train test")
+                                      text="6. Run train test")
         self.run_label.pack(anchor='w', pady=(4, 4))      
         self.run = ctk.CTkButton(self.tabview.tab("Trainer"), anchor='w', 
                                          command=self.run_train_test,
@@ -91,21 +91,28 @@ class TrainTestFrame(ctk.CTkScrollableFrame):
         
     # Get number of epochs
     def get_nepoch(self, dummy):
-        get_n_epochs = self.nepoch.get("0.0", "end")
-        self.config["n_epochs"] = int(get_n_epochs)
-        print(f"Number of epochs = {self.config['n_epochs']}")
+        try:
+            self.config["n_epochs"] = int(self.nepoch.get().strip())
+            print(f"Number of epochs = {self.config['n_epochs']}")
+        except:
+            pass
         
     # Get learning_rate
     def get_learning_rate(self, dummy):
-        get_learning_rate = self.learning_rate.get("0.0", "end")
-        self.config["learning_rate"] = float(get_learning_rate)
-        print(f"Learning rate = {self.config['learning_rate']}")
+        try:
+            self.config["learning_rate"]  = float(self.learning_rate.get().strip())
+            print(f"Learning rate = {self.config['learning_rate']}")
+        except:
+            pass
 
     # Get warm up length
     def get_warmup_length(self, dummy):
-        get_warmup_length = self.warmup_length.get("0.0", "end")
-        self.config["warmup_length"] = int(get_warmup_length)
-        print(f"Warm-up length = {self.config['warmup_length']}")       
+        try:
+            self.config["warmup_length"] =  int(self.warmup_length.get().strip()) 
+            print(f"Warm-up length = {self.config['warmup_length']}")  
+        except:
+            pass
+     
         
     # Get number of lstm layers
     def get_objective_function_name(self, method: str):
