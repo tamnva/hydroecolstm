@@ -16,6 +16,10 @@ class LossFunction:
 
         avg_loss = sum(sum(loss.values()))/((len(loss))*loss[next(iter(loss))].shape[0])
         
+        # Raise value error nan loss
+        # if torch.isnan(avg_loss):
+        #    raise ValueError("nan values found when calculating loss value")
+            
         return loss, avg_loss
     
     def MSE(self, ytrue:torch.Tensor, ypredict:torch.Tensor):

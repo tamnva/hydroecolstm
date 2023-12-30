@@ -3,12 +3,12 @@ import customtkinter as ctk
 import tkcalendar as tkc
 from hydroecolstm.data.read_data import read_forecast_data
 import tkinter as tk
-#import numpy as np
+
 from CTkListbox import CTkListbox
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk
 
-class ForecastFrame(ctk.CTkFrame):
+class ForecastFrame(ctk.CTkScrollableFrame):
     def __init__(self, container=None, config=None, globalData=None):
         super().__init__(container)
         
@@ -124,12 +124,14 @@ class ForecastFrame(ctk.CTkFrame):
         self.plot_frame = ctk.CTkCanvas(master=self.tabview.tab("2. Outputs"), height=400)
         self.plot_frame.grid(row=3, column=0, sticky="w", padx=(20,20), pady=(20,20))  
 
-        self.object_id = ctk.CTkTextbox(master=self.select_input_frame, height=30)
+        self.object_id = ctk.CTkTextbox(master=self.select_input_frame, height=30,
+                                        border_width=1.5)
         self.object_id.insert("0.0", "object_id") 
         self.object_id.grid(row=0, column=0, sticky="w", padx=(5,5), pady=(5,5))
         self.object_id.bind('<KeyRelease>', self.get_object_id)
 
-        self.target_feature = ctk.CTkTextbox(master=self.select_input_frame, height=30)
+        self.target_feature = ctk.CTkTextbox(master=self.select_input_frame, height=30, 
+                                             border_width=1.5)
         self.target_feature.insert("0.0", "target_feature") 
         self.target_feature.grid(row=1, column=0, sticky="w", padx=(5,5), pady=(5,5))
         self.target_feature.bind('<KeyRelease>', self.get_target_feature)

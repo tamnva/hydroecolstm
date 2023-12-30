@@ -1,8 +1,9 @@
 #from pathlib import Path
 from hydroecolstm.utility.scaler import Scaler, get_scaler_name
-from hydroecolstm.data.read_data import read_train_test_data, read_forecast_data
+from hydroecolstm.data.read_data import read_train_test_data #, read_forecast_data
 from hydroecolstm.data.read_config import read_config
-from hydroecolstm.model.lstms import LSTM_DL
+from hydroecolstm.model.lstm_linears import Lstm_Linears
+from hydroecolstm.model.train import Train
 import matplotlib.pyplot as plt
 import torch
 
@@ -11,7 +12,6 @@ import torch
 #-----------------------------------------------------------------------------#
 
 config = read_config("C:/Users/nguyenta/Documents/GitHub/HydroEcoLSTM/examples/config.yml")
-
 
 # Read and split data
 data = read_train_test_data(config)
@@ -30,10 +30,11 @@ y_train_scale = y_train_scaler.transform(x=data["y_train"])
 y_test_scale = y_train_scaler.transform(x=data["y_test"])
 
 # Model
-my_model = LSTM_DL(config=config)
-model, y_predict = my_model.train(x_train=x_train_scale, y_train=y_train_scale)
-y_test_scale_sim=my_model.forward(x_test_scale)
+model = Lstm_Linears(config=config)
+trainer = Train(config=config, model=model)
 
+model, y_predict = trainer(x=x_train_scale, y=y_train_scale)
+y_test_scale_sim = model(x_test_scale)
 
 # Plot
 for object_id in y_test_scale.keys():
@@ -52,12 +53,12 @@ out_file = "C:/Users/nguyenta/Documents/save_model.pt"
 torch.save(model.state_dict(), out_file)
 
 # Load model
-model_load = LSTM_DL(config=config)
-model_load.model.load_state_dict(torch.load(out_file))
-model_load.model.eval()
+model = Lstm_Linears(config=config)
+model.load_state_dict(torch.load(out_file))
+model.eval()
 
 # Result with model retrieve from saved model should identical to model
-y_test_scale_sim_load = model_load.forward(x_test_scale)
+y_test_scale_sim_load = model(x_test_scale)
 
 # Max min should be 0
 for key in y_test_scale_sim.keys():
@@ -65,14 +66,9 @@ for key in y_test_scale_sim.keys():
                                    y_test_scale_sim_load[key]),
           " Min diff = ", torch.min(y_test_scale_sim[key]-
                                     y_test_scale_sim_load[key]))                                                                     
-
 #-----------------------------------------------------------------------------#
 #             Work with GUI, use the two lines below to call the GUI          #
 #-----------------------------------------------------------------------------#
 from hydroecolstm.interface.main_gui import show_gui
 show_gui()
 
-# Read configuration file
-#x = Path("C:/Users/nguyenta/Documents/GitHub/HydroEcoLSTM")
-#x = Path(x, "examples", "config.yml")
-#read_config(x)

@@ -7,11 +7,11 @@ import torch
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk
 
-from .utility import config_to_text, sort_key
+from hydroecolstm.interface.utility import write_yml_file
 
 
 
-class VisualizeFrame(ctk.CTkFrame):
+class VisualizeFrame(ctk.CTkScrollableFrame):
     def __init__(self, container=None, config=None, globalData=None):
         super().__init__(container)
         
@@ -37,12 +37,14 @@ class VisualizeFrame(ctk.CTkFrame):
         self.plot_frame.grid(row=3, column=0, sticky="w", padx=(20,20), pady=(20,20))  
 
 
-        self.object_id = ctk.CTkTextbox(master=self.select_input_frame, height=30)
+        self.object_id = ctk.CTkTextbox(master=self.select_input_frame, height=30,
+                                        border_width=1.5)
         self.object_id.insert("0.0", "object_id") 
         self.object_id.grid(row=0, column=0, sticky="w", padx=(5,5), pady=(5,5))
         self.object_id.bind('<KeyRelease>', self.get_object_id)
 
-        self.target_feature = ctk.CTkTextbox(master=self.select_input_frame, height=30)
+        self.target_feature = ctk.CTkTextbox(master=self.select_input_frame, height=30,
+                                             border_width=1.5)
         self.target_feature.insert("0.0", "target_feature") 
         self.target_feature.grid(row=1, column=0, sticky="w", padx=(5,5), pady=(5,5))
         self.target_feature.bind('<KeyRelease>', self.get_target_feature)
@@ -171,11 +173,11 @@ class VisualizeFrame(ctk.CTkFrame):
         
         # Save config
         out_file = Path(self.config["output_dir"][0], "config.yml")
-        self.write_yml_file(config=self.config, out_file=out_file)
+        write_yml_file(config=self.config, out_file=out_file)
         print("config was saved as config.yml")
 
         # Save model_state_dicts to model_state_dict.pt file
-        torch.save(self.globalData["model"].model.state_dict(), 
+        torch.save(self.globalData["model"].state_dict(), 
                    Path(self.config["output_dir"][0], "model_state_dict.pt"))
         print("Model state_dict was saved as model_state_dict.pt")
         
@@ -183,12 +185,3 @@ class VisualizeFrame(ctk.CTkFrame):
         torch.save(self.globalData, 
                    Path(self.config["output_dir"][0], "globalData.pt"))
         print("globalData was saved as globalData.pt")
-        
-    def write_yml_file(self, config, out_file):
-        # Convert config to text
-        output_text = config_to_text(config=sort_key(self.config))
-        
-        # Write config to config file
-        with open(out_file, "w") as config_file:
-            for line in output_text:
-                config_file.write(line)
