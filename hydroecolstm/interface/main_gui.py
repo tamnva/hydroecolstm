@@ -34,6 +34,9 @@ class MainGUI(ctk.CTk):
         config["warmup_length"] = 20
         config["objective_function_name"] = "RMSE"
         config["REG"] = {}
+        config["REG"]["activation_function"] = ["Identity"]
+        config["REG"]["num_neurons"] = [None]
+        config["REG"]["num_layers"] = 1
 
         # Initialize global data
         globalData = {}
@@ -44,8 +47,6 @@ class MainGUI(ctk.CTk):
         globalData["object_id_forecast_no"] = 0
         globalData["target_feature_forecast_no"] = 0
         globalData["model_head"] = "REG"
-
-
         
         super().__init__()
         

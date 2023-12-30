@@ -100,6 +100,13 @@ class NetworkDesignFrame(ctk.CTkScrollableFrame):
                                   text="4. Activation function layer ith")
         self.regression_config_label2.grid(row=2, column=1, sticky="w", padx=10, pady=5)
 
+        self.option_menu = ctk.CTkOptionMenu(self.regression_frame,
+                                             values=["Identity", "ReLu", "Sigmoid",
+                                                     "Tanh", "Softplus"],
+                                             command=self.reg_get_acts_1)
+        self.option_menu.grid(row=3, column=1, sticky="e", padx=10, pady=5)
+        self.reg_activation_func = [self.option_menu]
+                
         # --------------------------------------Frame for GMM
         self.gmm_frame = ctk.CTkFrame(master=self.tabview.tab("Model head"), 
                                              fg_color = "transparent", border_width=0.0)
