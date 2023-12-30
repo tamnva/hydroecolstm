@@ -175,7 +175,7 @@ class VisualizeFrame(ctk.CTkScrollableFrame):
         print("config was saved as config.yml")
 
         # Save model_state_dicts to model_state_dict.pt file
-        torch.save(self.globalData["model"].model.state_dict(), 
+        torch.save(self.globalData["model"].state_dict(), 
                    Path(self.config["output_dir"][0], "model_state_dict.pt"))
         print("Model state_dict was saved as model_state_dict.pt")
         

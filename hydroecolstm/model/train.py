@@ -4,10 +4,10 @@ import torch
 from hydroecolstm.utility.loss_function import LossFunction
 
 # LSTM + Linears
-class Training():
+class Train():
     def __init__(self, config, model, **kwargs):
         
-        super(Training, self).__init__()
+        super(Train, self).__init__()
 
         # Training parameters
         self.lr = config["learning_rate"]
@@ -17,7 +17,8 @@ class Training():
         self.loss_function = LossFunction()
         self.model = model
     
-    def train(self, x: Dict[str, torch.Tensor], y: Dict[str, torch.Tensor]):
+    # Train function
+    def __call__(self, x: Dict[str, torch.Tensor], y: Dict[str, torch.Tensor]):
         
         # Optimization function
         optim = torch.optim.Adam(self.model.parameters(), lr=self.lr)
