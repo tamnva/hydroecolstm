@@ -1,7 +1,7 @@
 import tkinter as tk
 import customtkinter as ctk
 from hydroecolstm.model.lstm_linears import Lstm_Linears
-from hydroecolstm.model.lstm_ea_lstm import Ea_Lstm_Linears
+from hydroecolstm.model.ea_lstm import Ea_Lstm_Linears
 from hydroecolstm.model.train import Train
 from hydroecolstm.interface.utility import write_yml_file
 
