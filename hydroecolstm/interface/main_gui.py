@@ -42,6 +42,7 @@ class MainGUI(ctk.CTk):
         config["n_epochs"] = 5
         config["learning_rate"] = 0.01
         config["warmup_length"] = 20
+        config["model_class"] = "LSTM"
 
         # Initialize global data
         globalData = {}

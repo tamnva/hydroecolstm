@@ -1,6 +1,7 @@
 import tkinter as tk
 import customtkinter as ctk
 from hydroecolstm.model.lstm_linears import Lstm_Linears
+from hydroecolstm.model.ea_lstm import Ea_Lstm_Linears
 from hydroecolstm.model.train import Train
 from hydroecolstm.interface.utility import write_yml_file
 
@@ -146,7 +147,11 @@ class TrainTestFrame(ctk.CTkScrollableFrame):
                                message="Trainning will start after closing this box")
         
         try:
-            self.globalData["model"] = Lstm_Linears(config=self.config)
+            if self.config["model_class"] == "LSTM":
+                self.globalData["model"] = Lstm_Linears(config=self.config)
+            else:
+                self.globalData["model"] = Ea_Lstm_Linears(config=self.config)
+                
             # Train the model
             self.globalData["Train"] = Train(config=self.config, model=self.globalData["model"])
             

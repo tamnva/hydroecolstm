@@ -29,14 +29,17 @@ class NetworkDesignFrame(ctk.CTkScrollableFrame):
                    
         # ---------------------------------------------content of load data tab
         self.intro_label = ctk.CTkLabel(self.tabview.tab("Model class"), 
-                                                   text="Model class = Long Short-Term Memory layer + " +
-                                                   "Dense (Linear) Layer",
-                                                   font=ctk.CTkFont(weight="bold"))
-        self.intro_label.pack(anchor="c", pady = (10,10))
+                                                   text="1. Select model class type")
+        self.intro_label.pack(anchor="w", pady = (10,10))
         
-        
+        self.model_class_type =\
+            ctk.CTkOptionMenu(self.tabview.tab("Model class"),
+                              values=["LSTM","EA-LSTM"], command=self.get_model_class)
+                
+        self.model_class_type.pack(anchor="w",  pady = 5)
+                
         self.hidden_size_label = ctk.CTkLabel(self.tabview.tab("Model class"), 
-                                                   text="1. Number of hidden units of the LSTM layer")
+                                                   text="2. Number of hidden units of the LSTM layer")
         self.hidden_size_label.pack(anchor="w", pady = (4,4))
         
         self.hidden_size = ctk.CTkEntry(master=self.tabview.tab("Model class"),
@@ -45,7 +48,7 @@ class NetworkDesignFrame(ctk.CTkScrollableFrame):
         self.hidden_size.bind('<KeyRelease>', self.get_hidden_size)
 
         self.nlayers_label = ctk.CTkLabel(self.tabview.tab("Model class"), 
-                                               text="2. Number of LSTM layers")
+                                               text="3. Number of LSTM layers")
         self.nlayers_label.pack(anchor="w", pady = (4,4))
         self.nlayers= ctk.CTkOptionMenu(self.tabview.tab("Model class"),
                                              values=list(map(str,list(range(1,21,1)))),
@@ -53,7 +56,7 @@ class NetworkDesignFrame(ctk.CTkScrollableFrame):
         self.nlayers.pack(anchor="w", pady = (4,4))
         
         self.dropout_label = ctk.CTkLabel(self.tabview.tab("Model class"), 
-                                               text="3. Drop out rate")
+                                               text="4. Drop out rate")
         self.dropout_label.pack(anchor="w", pady = (4,4))
         self.dropout = ctk.CTkEntry(master=self.tabview.tab("Model class"),
                                         placeholder_text="0.30")
@@ -168,7 +171,15 @@ class NetworkDesignFrame(ctk.CTkScrollableFrame):
             except:
                 pass
  
+    def get_model_class(self, model_class: str):
+        self.config["model_class"] = model_class
+        print("Model class name = ", self.config["model_class"])
         
+        if model_class == "EA-LSTM":
+            tk.messagebox.showinfo(title="Message box", 
+                                   message="This model class takes a lot of time to train" +
+                                   " need to improve the forward pass for this model class")         
+            
     def create_entry_regression_model(self, nlayers: str):
         print("number of layer", int(nlayers))
         
