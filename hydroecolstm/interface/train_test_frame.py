@@ -3,7 +3,7 @@ import customtkinter as ctk
 from hydroecolstm.model.lstm_linears import Lstm_Linears
 from hydroecolstm.model.ea_lstm import Ea_Lstm_Linears
 from hydroecolstm.model.train import Train
-from hydroecolstm.interface.utility import write_yml_file
+#from hydroecolstm.interface.utility import write_yml_file
 
 class TrainTestFrame(ctk.CTkScrollableFrame):
     def __init__(self, container=None, config=None, globalData=None):
@@ -24,8 +24,6 @@ class TrainTestFrame(ctk.CTkScrollableFrame):
         self.tabview.pack(fill='both',expand=1)
         self.tabview.add("Trainer")
         self.tabview.tab("Trainer").grid_columnconfigure((1,1), weight=1)
-        #self.tabview.add("RNN")
-        #self.tabview.tab("RNN").grid_columnconfigure((0,1), weight=1)
         
         # ---------------------------------------------content of load data tab
         self.nepoch_label = ctk.CTkLabel(self.tabview.tab("Trainer"), 
@@ -132,13 +130,13 @@ class TrainTestFrame(ctk.CTkScrollableFrame):
         print(self.config["optim_method"])
      
     def run_train_test(self):
-        #
+        # Set progress to zero
         self.progressbar.set(0)
-        print(self.config)
         
+        '''
         write_yml_file(config=self.config, out_file="C:/Users/nguyenta/Documents/config.yml")
         print("config was saved as config.yml")
-        
+        '''
         
         self.run.configure(fg_color='gray')
         self.run.configure(state="disabled")

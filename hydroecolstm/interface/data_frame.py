@@ -6,10 +6,15 @@ from pandastable import Table
 import tkcalendar as tkc
 from CTkListbox import CTkListbox
 from CTkToolTip import CTkToolTip
+import numpy as np
 
 from hydroecolstm.utility.scaler import Scaler, get_scaler_name
 from hydroecolstm.data.read_data import read_train_test_data
 
+
+from matplotlib.figure import Figure
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk
+       
 class DataFrame(ctk.CTkScrollableFrame):
     def __init__(self, container=None, config=None, globalData=None):
         super().__init__(container)
@@ -32,7 +37,7 @@ class DataFrame(ctk.CTkScrollableFrame):
         self.tabview.add("2. Filter data")
         self.tabview.tab("2. Filter data").grid_columnconfigure((0,1), weight=1)
         self.tabview.add("3. Transform data")
-        self.tabview.tab("3. Transform data").grid_columnconfigure((0), weight=1)
+        self.tabview.tab("3. Transform data").grid_columnconfigure((0,1), weight=1)
         
         # ---------------------------------------------content of load data tab
         # ---------------------------------------------------------Dynamic data
@@ -226,12 +231,12 @@ class DataFrame(ctk.CTkScrollableFrame):
         #-----------------------------------------------------3. Transform data
         self.transform_dd_label = ctk.CTkLabel(self.tabview.tab("3. Transform data"),
                                                text="1. Transformer for dynamic features")
-        self.transform_dd_label.pack(anchor="w")
+        self.transform_dd_label.grid(row=0, column=0, pady = 3, padx = 10, sticky = "w")
         
         self.transform_dd_option = ctk.CTkOptionMenu(self.tabview.tab("3. Transform data"),
                                                    values=['MinMaxScaler', 'Z-score', 'None'],
                                                    command=self.transform_dynamic_data_option)
-        self.transform_dd_option.pack(anchor="w")
+        self.transform_dd_option.grid(row=1, column=0, pady = 3, padx = 10, sticky = "w")
         CTkToolTip(self.transform_dd_option, delay=0.1, bg_color = 'orange',
                    text_color = 'black', anchor = 'w', 
                    message= 'Click here to select which method should be used for \n' + 
@@ -239,12 +244,12 @@ class DataFrame(ctk.CTkScrollableFrame):
 
         self.transform_ss_label = ctk.CTkLabel(self.tabview.tab("3. Transform data"),
                                                text="2. Transformer for static features")
-        self.transform_ss_label.pack(anchor="w")
+        self.transform_ss_label.grid(row=2, column=0, pady = 3, padx = 10, sticky = "w")
         
         self.transform_ss_option = ctk.CTkOptionMenu(self.tabview.tab("3. Transform data"),
                                                   values=['MinMaxScaler', 'Z-score', 'None'],
                                                    command=self.transform_static_data_option) 
-        self.transform_ss_option.pack(anchor="w")
+        self.transform_ss_option.grid(row=3, column=0, pady = 3, padx = 10, sticky = "w")
         CTkToolTip(self.transform_ss_option, delay=0.1, bg_color = 'orange',
                    text_color = 'black', anchor = 'w', 
                    message= 'Click here to select which method should be used for \n' + 
@@ -252,12 +257,12 @@ class DataFrame(ctk.CTkScrollableFrame):
 
         self.transform_tar_label = ctk.CTkLabel(self.tabview.tab("3. Transform data"),
                                                text="3. Transformer for target features")
-        self.transform_tar_label.pack(anchor="w")
+        self.transform_tar_label.grid(row=4, column=0, pady = 3, padx = 10, sticky = "w")
         
         self.transform_tar_option = ctk.CTkOptionMenu(self.tabview.tab("3. Transform data"),
                                                       values=['MinMaxScaler', 'Z-score', 'None'],
                                                       command=self.transform_target_data_option) 
-        self.transform_tar_option.pack(anchor="w")
+        self.transform_tar_option.grid(row=5, column=0, pady = (3,35), padx = 10, sticky = "w")
         CTkToolTip(self.transform_tar_option, delay=0.1, bg_color = 'orange',
                    text_color = 'black', anchor = 'w', 
                    message= 'Click here to select which method should be used for \n' + 
@@ -265,27 +270,28 @@ class DataFrame(ctk.CTkScrollableFrame):
         
         self.execute_label = ctk.CTkLabel(self.tabview.tab("3. Transform data"),
                                                text="4. Execute data transformation")
-        self.execute_label.pack(anchor="w", pady=(50,5))
+        self.execute_label.grid(row=6, column=0, pady = 3, padx = 10, sticky = "w")
         
         self.execute = ctk.CTkButton(self.tabview.tab("3. Transform data"),
                                                    text="Execute",
                                                    command=self.transform_data) 
-        self.execute.pack(anchor="w")
+        self.execute.grid(row=7, column=0, pady = 3, padx = 10, sticky = "w")
         CTkToolTip(self.execute, delay=0.1, bg_color = 'orange',
                    text_color = 'black', anchor = 'w', 
                    message= 'Click here to execute data transformation') 
         
         self.show_result_label = ctk.CTkLabel(self.tabview.tab("3. Transform data"),
                                                text="5. Display/Visualize transform data")
-        self.show_result_label.pack(anchor="w")
+        self.show_result_label.grid(row=8, column=0, pady = 3, padx = 10, sticky = "w")
         
         self.show_result = ctk.CTkButton(self.tabview.tab("3. Transform data"),
                                                    text="Display/Visualize",
                                                    command=self.display_orig_trans_data) 
-        self.show_result.pack(anchor="w")
+        self.show_result.grid(row=9, column=0, pady = 3, padx = 10, sticky = "w")
         CTkToolTip(self.show_result, delay=0.1, bg_color = 'orange',
                    text_color = 'black', anchor = 'w', 
                    message= 'Click here to view the original and transform data of the first object id') 
+
     #-----------------------------------------------------functions for widgets
     # get dynamic data file name
     def get_dynamic_file(self):
