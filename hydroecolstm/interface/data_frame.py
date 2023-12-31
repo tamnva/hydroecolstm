@@ -50,7 +50,7 @@ class DataFrame(ctk.CTkScrollableFrame):
                    text_color = 'black', anchor='e',  wraplength=500, 
                    message='Click here to select dynamic (timeseries) data file. ' + 
                    'The data file must be in .csv format with header, seperator' + 
-                   'is <,>. This data file must contains at least two colums, ' +
+                   ' is <,>. This data file must contains at least two colums, ' +
                    'one with the name <object_id> and the other column with the ' +
                    'name <time> in format yyyy-mm-dd hh:mm.The object_id column will '+ 
                    'link object in dynamic/timeseries data file with static data file. ' +
@@ -101,7 +101,7 @@ class DataFrame(ctk.CTkScrollableFrame):
                    text_color = 'black', anchor='w',  wraplength=500, 
                    message='Click here to select static (catchment attributes) data file. ' + 
                    'the data file must be in .csv format with header, seperator ' + 
-                   'is <,>. This data file must contains at a column name ' +
+                   ' is <,>. This data file must contains at a column name ' +
                    '<object_id> to connect static with dynamic data. ' +
                    'Template of this file can be seen in this Github repo ./example_1')
         
@@ -130,7 +130,11 @@ class DataFrame(ctk.CTkScrollableFrame):
                                                variable=self.check_static_data)
         
         self.checkbox_static_data.grid(row=4, column=1, padx = 10, pady=(5,5), sticky="e")
-
+        CTkToolTip(self.checkbox_static_data, delay=0.1, bg_color = 'orange',
+                   text_color = 'black', anchor = 'w', 
+                   message= 'If you check this box, data from the selected \n' +
+                       'static data file will be used, uncheck means data will \n' +
+                       'not be used')
         #--------------------------------------------content of filter data tab
         # Select input features
         self.select_input_feature_label = ctk.CTkLabel(self.tabview.tab("2. Filter data"),
@@ -140,11 +144,19 @@ class DataFrame(ctk.CTkScrollableFrame):
                                                multiple_selection=True, border_width=1.5,
                                                text_color="black")
         self.select_input_feature.grid(row=1, column=0, padx = 10, pady=(5,5), sticky="w")    
+        CTkToolTip(self.select_input_feature_label, delay=0.1, bg_color = 'orange',
+                   text_color = 'black', anchor = 'w', 
+                   message= 'Select input features for the neural network. \n' +
+                       'You can select as many input features as you want')
         
         # Select target features
         self.select_target_feature_label = ctk.CTkLabel(self.tabview.tab("2. Filter data"),
                                                        text="2. Select target features")
         self.select_target_feature_label.grid(row=0, column=1, padx = 10, pady=(5,5), sticky="e")
+        CTkToolTip(self.select_target_feature_label, delay=0.1, bg_color = 'orange',
+                   text_color = 'black', anchor = 'w', 
+                   message= 'Select target features (model outputs). \n' +
+                       'You can select as many target features as you want')
         self.select_target_feature = CTkListbox(master=self.tabview.tab("2. Filter data"), 
                                                 multiple_selection=True, border_width=1.5,
                                                text_color="black")
@@ -154,6 +166,10 @@ class DataFrame(ctk.CTkScrollableFrame):
         self.object_id_label = ctk.CTkLabel(self.tabview.tab("2. Filter data"),
                                                    text="3. Select object id")
         self.object_id_label.grid(row=2, column=0, padx = 10, pady=(5,5), sticky="w")
+        CTkToolTip(self.object_id_label, delay=0.1, bg_color = 'orange',
+                   text_color = 'black', anchor = 'w', 
+                   message= 'Select object id (basin id) that you want to put into the model. \n' +
+                       'You can select as many object ids as you want')
         self.object_id = CTkListbox(master=self.tabview.tab("2. Filter data"), 
                                            multiple_selection=True, border_width=1.5,
                                            text_color="black")
@@ -203,7 +219,10 @@ class DataFrame(ctk.CTkScrollableFrame):
                                          text="Filter and split data",
                                          command=self.read_train_and_test_data)
         self.data_filter.grid(row=9, column=1, padx = 10, pady=(5,5), sticky="en")
-        
+        CTkToolTip(self.data_filter, delay=0.1, bg_color = 'orange',
+                   text_color = 'black', anchor = 'w', 
+                   message= 'Click this button to start spliting your data into \n' +
+                       'training, testing datasets')        
         #-----------------------------------------------------3. Transform data
         self.transform_dd_label = ctk.CTkLabel(self.tabview.tab("3. Transform data"),
                                                text="1. Transformer for dynamic features")
@@ -213,6 +232,10 @@ class DataFrame(ctk.CTkScrollableFrame):
                                                    values=['MinMaxScaler', 'Z-score', 'None'],
                                                    command=self.transform_dynamic_data_option)
         self.transform_dd_option.pack(anchor="w")
+        CTkToolTip(self.transform_dd_option, delay=0.1, bg_color = 'orange',
+                   text_color = 'black', anchor = 'w', 
+                   message= 'Click here to select which method should be used for \n' + 
+                   ' transforming the dynamic data. None means the data will not be transformed \n') 
 
         self.transform_ss_label = ctk.CTkLabel(self.tabview.tab("3. Transform data"),
                                                text="2. Transformer for static features")
@@ -222,6 +245,10 @@ class DataFrame(ctk.CTkScrollableFrame):
                                                   values=['MinMaxScaler', 'Z-score', 'None'],
                                                    command=self.transform_static_data_option) 
         self.transform_ss_option.pack(anchor="w")
+        CTkToolTip(self.transform_ss_option, delay=0.1, bg_color = 'orange',
+                   text_color = 'black', anchor = 'w', 
+                   message= 'Click here to select which method should be used for \n' + 
+                   ' transforming the static data. None means the data will not be transformed \n') 
 
         self.transform_tar_label = ctk.CTkLabel(self.tabview.tab("3. Transform data"),
                                                text="3. Transformer for target features")
@@ -231,15 +258,23 @@ class DataFrame(ctk.CTkScrollableFrame):
                                                       values=['MinMaxScaler', 'Z-score', 'None'],
                                                       command=self.transform_target_data_option) 
         self.transform_tar_option.pack(anchor="w")
+        CTkToolTip(self.transform_tar_option, delay=0.1, bg_color = 'orange',
+                   text_color = 'black', anchor = 'w', 
+                   message= 'Click here to select which method should be used for \n' + 
+                   ' transforming the target data. None means the data will not be transformed \n') 
         
         self.execute_label = ctk.CTkLabel(self.tabview.tab("3. Transform data"),
                                                text="4. Execute data transformation")
         self.execute_label.pack(anchor="w", pady=(50,5))
         
-        self.transform_tar_option = ctk.CTkButton(self.tabview.tab("3. Transform data"),
+        self.execute = ctk.CTkButton(self.tabview.tab("3. Transform data"),
                                                    text="Execute",
                                                    command=self.transform_data) 
-        self.transform_tar_option.pack(anchor="w")
+        self.execute.pack(anchor="w")
+        CTkToolTip(self.execute, delay=0.1, bg_color = 'orange',
+                   text_color = 'black', anchor = 'w', 
+                   message= 'Press here to execute data transformation') 
+        
         self.show_result_label = ctk.CTkLabel(self.tabview.tab("3. Transform data"),
                                                text="5. Display/Visualize transform data")
         self.show_result_label.pack(anchor="w")
@@ -248,6 +283,9 @@ class DataFrame(ctk.CTkScrollableFrame):
                                                    text="Display/Visualize",
                                                    command=self.display_orig_trans_data) 
         self.show_result.pack(anchor="w")
+        CTkToolTip(self.execute, delay=0.1, bg_color = 'orange',
+                   text_color = 'black', anchor = 'w', 
+                   message= 'Press here to view the original and transform data of the first object id') 
     #-----------------------------------------------------functions for widgets
     # get dynamic data file name
     def get_dynamic_file(self):
