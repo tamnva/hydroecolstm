@@ -3,7 +3,6 @@ from typing import Dict
 from torch import nn
 import torch
 from hydroecolstm.model.linears import Linears
-from hydroecolstm.utility.loss_function import LossFunction
 
 # LSTM + Linears
 class Lstm_Linears(nn.Module):
@@ -44,44 +43,6 @@ class Lstm_Linears(nn.Module):
             y_predict[key] = self.linear(y_lstm)  
         
         # return output
-        return y_predict
-    
-    def train(self, x: Dict[str, torch.Tensor], y: Dict[str, torch.Tensor], config):
-
-        # Training parammeter
-        # Training parameters
-        learning_rate = config["learning_rate"]
-        objective_function_name = config["objective_function_name"]
-        n_epochs = config["n_epochs"]
-        nskip = config["warmup_length"]
-        loss_function = LossFunction()
-        
-        # Optimization function
-        optim = torch.optim.Adam(self.model.parameters(), lr=learning_rate)
-                
-        # Train the model
-        for epoch in range(n_epochs):
-            
-            # Get model output
-            y_predict = self.model(x)
-
-            # Reset the gradients to zero
-            optim.zero_grad()
-            
-            # Caculate loss function
-            loss, loss_avg =\
-                loss_function(y_true=y, y_predict=y_predict, nskip=nskip,
-                              objective_function_name=objective_function_name)
-          
-            # Error back propagation LSTM.state_dict()
-            loss_avg.backward()
-            
-            # Update weights and biases
-            optim.step()
-            
-            # Print to console
-            print(f"Epoch [{epoch+1}/{self.n_epochs}], avg_loss = {loss_avg:.8f}")
-            
         return y_predict
     
     # get input size

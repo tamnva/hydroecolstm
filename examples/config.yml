@@ -1,119 +1,44 @@
-#----------------------------------------------------------------------------#
-#           Configuration for training and testing the LSTM network          #
-#                   Line with OPTIONAL DATA can be removed                   #
-#----------------------------------------------------------------------------#
-# Input time series data (including target features)
-dynamic_data_file: 
-  - C:/Users/nguyenta/Documents/GitHub/HydroEcoLSTM/examples/time_series.csv
-
-# Input cathment attributes file (*OPTIONAL DATA)
-static_data_file: 
-  - C:/Users/nguyenta/Documents/GitHub/HydroEcoLSTM/examples/static_attributes.csv
-
-# Output directory
-output_dir:
-  - C:/Users/nguyenta/Documents
-
-# Object ID/basin(s) used for training/testing
+dynamic_data_file:
+  - C:/Users/nguyenta/Documents/GitHub/hydroecolstm/examples/time_series.csv
+input_dynamic_features:
+  - precipitation_mm_d
+  - temperature_min_degC
+  - temperature_mean_degC
+  - temperature_max_degC
+  - rel_sun_dur
+target_features:
+  - discharge_vol_m3_s
 object_id:
   - 2009
   - 2011
-
-# Input dynamic/timeseries feature(s)
-input_dynamic_features:
-  - precipitation_mm_d
-  - temperature_mean_degC
-  - rel_sun_dur
-
-# Input static feature(s)/catchment attribute(s) (OPTIONAL DATA)
-input_static_features:
-  - p_mean
-  - aridity
-  - pet_mean
-  - p_seasonality
-
-# Target/output feature(s)
-target_features:
-  - discharge_vol_m3_s
-
-# Scaler for target features: "MinMaxScaler", "Z-score", "None"
-scaler_target_features:
-  - MinMaxScaler
-
-# Scaler for static features
-scaler_input_dynamic_features:
-  - MinMaxScaler
-
-# Scaler for static features (*OPTIONAL DATA)
-scaler_input_static_features:
-  - MinMaxScaler
-
-# Training period (YYYY-MM-DD HH:MM)
-train_period:
-  - 2010-01-01 11:15
-  - 2020-12-31 11:15
-
-# Hidden size of the LSTM
-hidden_size: 30
-
-# Number of layers
-num_layers: 1
-
-# Model head: Regression (REG), GMM, CMAL, UMAL
-# Number of neurons each layers, MUST put * in the last layer 
-# (model will take the number of target features) 
+train_period: 
+  - 2000-01-01 00:00
+  - 2010-01-01 00:00
+test_period: 
+  - 2000-01-01 00:00
+  - 2010-01-01 00:00
 REG:
-  num_layers: 1
-  num_neurons: 
-    - None 
-  # Activation function of the corresponding layers
   activation_function:
     - Identity
-
-# Dropout layer on the outputs of each LSTM layer except the last layer
-# Therefore, this parameter is only used if  num_layers > 1
-dropout: 0.4
-
-# Validation period (YYYY-MM-DD HH:MM)
-test_period:
-  - 1982-01-01 11:15
-  - 2009-12-31 11:15
-
-# Number of epochs
-n_epochs: 250
-
-# Learning rate
-learning_rate: 0.005
-
-# Warm-up length (the number of timesteps used for warm up)
-warmup_length: 12
-
-# objective function 1-NSE, MSE, RMSE, MAE
-objective_function_name: MAE
-
-# optimization method (current version only Adam is used)
-optim_method: Adam
-
-#----------------------------------------------------------------------------#
-# Configuration for forward run (OPTIONAL DATA)                              #
-# e.g., ungauged basins or prediction with the trained model                 #
-#----------------------------------------------------------------------------#
-
-# Input time series data (link to data file or same as above "dynamic_data_file")
-dynamic_data_file_forecast: 
-  - dynamic_data_file
-
-# Input time series data (link to data file or same as above "static_data_file")
-# *OPTIONAL DATA
-static_data_file_forecast: 
-  - static_data_file
-
-# Object id/basin ids for forecasting
-object_id_forecast:
-  - 2009
-  - 2011
-
-# Forecast period (YYYY-MM-DD HH:MM)
-forecast_period:
-  - 1982-01-01 11:15
-  - 2009-12-31 00:00
+    - Identity
+    - Identity
+  num_neurons:
+    - 10
+    - 20
+    - None
+  num_layers: 3
+scaler_input_dynamic_features:
+  - MinMaxScaler
+scaler_input_static_features:
+  - MinMaxScaler
+scaler_target_features:
+  - MinMaxScaler
+hidden_size: 30
+num_layers: 1
+n_epochs: 50
+learning_rate: 0.02
+dropout: 0.3
+warmup_length: 20
+objective_function_name: RMSE
+output_dir:
+  - C:/Users/nguyenta/Documents/GitHub/hydroecolstm/examples
