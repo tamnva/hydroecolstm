@@ -3,6 +3,7 @@ from hydroecolstm.utility.scaler import Scaler, get_scaler_name
 from hydroecolstm.data.read_data import read_train_test_data #, read_forecast_data
 from hydroecolstm.data.read_config import read_config
 from hydroecolstm.model.lstm_linears import Lstm_Linears
+from hydroecolstm.model.ea_lstm import Ea_Lstm_Linears
 from hydroecolstm.model.train import Train
 import matplotlib.pyplot as plt
 import torch
@@ -30,7 +31,7 @@ y_train_scale = y_train_scaler.transform(x=data["y_train"])
 y_test_scale = y_train_scaler.transform(x=data["y_test"])
 
 # Model
-# model = EALSTM(config=config)
+# model = Ea_Lstm_Linears(config=config)
 model = Lstm_Linears(config=config)
 trainer = Train(config=config, model=model)
 

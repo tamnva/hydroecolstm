@@ -30,9 +30,6 @@ class Ea_Lstm_Linears(nn.Module):
         self.linears_num_layers = config["REG"]["num_layers"]
         self.linears_activation_function = config["REG"]["activation_function"]
         self.linears_num_neurons = self.find_num_neurons(config=config) 
-                      
-        self.c_0 = torch.randn(self.hidden_size).unsqueeze(0)
-        self.h_0 = torch.randn(self.hidden_size).unsqueeze(0)
 
         # Model structure
         self.i = nn.Sequential(nn.Linear(self.static_size, self.hidden_size), nn.Sigmoid())  
@@ -45,28 +42,24 @@ class Ea_Lstm_Linears(nn.Module):
         
     # TODO: This forward function takes too much times, need to improve
     def forward(self, x):
+        # Initial hidden, cell states
+        c_t = torch.randn(self.hidden_size).unsqueeze(0)
+        h_t = torch.randn(self.hidden_size).unsqueeze(0)
+
+        # Forward run
         output = {}
-       
-        for key in x.keys():
-            
-            c_t = self.c_0
-            h_t = self.h_0
+        for key in x.keys(): 
+            output[key] = torch.zeros(size=(x[key].shape[0],self.output_size))
             for i in range(x[key].shape[0]):
                 i_t = self.i(x[key][i:i+1,self.dynamic_size:])
                 f_t = self.f(x[key][i:i+1,:self.dynamic_size], h_t)
                 g_t = self.g(x[key][i:i+1,:self.dynamic_size], h_t)             
                 o_t = self.o(x[key][i:i+1,:self.dynamic_size], h_t)
-                out = self.linear(o_t)
+                output[key][i,:] = self.linear(o_t)
                 
                 c_t = f_t*c_t + i_t*g_t
                 h_t = o_t*torch.tanh(c_t)
-                
-                
-                if i == 0:
-                    output[key] = out
-                else:
-                    output[key] = torch.cat((output[key], out))
- 
+
         return output
     
     # Find number of neuron in each linear layers, including the input layer
