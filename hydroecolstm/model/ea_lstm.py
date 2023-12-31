@@ -1,6 +1,7 @@
 
 from torch import nn
 import torch
+from hydroecolstm.model.linears import Linears
 
 
 # LSTM + Linears
@@ -16,17 +17,20 @@ class MultiLinear(nn.Module):
         output = self.activation_function(self.Linear_1(x_1) + self.Linear_2(x_2))
         return output
 
-class EALSTM(nn.Module):
+class Ea_Lstm_Linears(nn.Module):
     def __init__(self, config):
         
-        super(EALSTM, self).__init__()
+        super(Ea_Lstm_Linears, self).__init__()
                 
         self.static_size = len(config["input_static_features"])
         self.dynamic_size = len(config["input_dynamic_features"])
         self.num_layers = config["num_layers"]
         self.hidden_size = config["hidden_size"]
         self.output_size = len(config["target_features"])
-
+        self.linears_num_layers = config["REG"]["num_layers"]
+        self.linears_activation_function = config["REG"]["activation_function"]
+        self.linears_num_neurons = self.find_num_neurons(config=config) 
+                      
         self.c_0 = torch.randn(self.hidden_size).unsqueeze(0)
         self.h_0 = torch.randn(self.hidden_size).unsqueeze(0)
 
@@ -35,12 +39,16 @@ class EALSTM(nn.Module):
         self.f = MultiLinear(self.dynamic_size, self.hidden_size, self.hidden_size, nn.Sigmoid())
         self.g = MultiLinear(self.dynamic_size, self.hidden_size, self.hidden_size, nn.Tanh())
         self.o = MultiLinear(self.dynamic_size, self.hidden_size, self.hidden_size, nn.Sigmoid())
-        self.linear = nn.Sequential(nn.Linear(self.hidden_size, self.output_size), nn.Identity())  
+        self.linear = Linears(num_layers=self.linears_num_layers, 
+                              activation_function=self.linears_activation_function,
+                              num_neurons=self.linears_num_neurons)
         
+    # TODO: This forward function takes too much times, need to improve
     def forward(self, x):
         output = {}
        
         for key in x.keys():
+            
             c_t = self.c_0
             h_t = self.h_0
             for i in range(x[key].shape[0]):
@@ -58,5 +66,18 @@ class EALSTM(nn.Module):
                     output[key] = out
                 else:
                     output[key] = torch.cat((output[key], out))
-                
+ 
         return output
+    
+    # Find number of neuron in each linear layers, including the input layer
+    def find_num_neurons(self, config) -> int:
+        # First number of neurons from the input layers ()
+        num_neurons = [self.hidden_size]
+
+        if "REG" in config:
+            if len(config["REG"]["num_neurons"]) > 1:
+                for i in range(len(config["REG"]["num_neurons"])-1):
+                    num_neurons.append(config["REG"]["num_neurons"][i])
+        num_neurons.append(self.output_size)
+
+        return num_neurons

@@ -30,6 +30,7 @@ y_train_scale = y_train_scaler.transform(x=data["y_train"])
 y_test_scale = y_train_scaler.transform(x=data["y_test"])
 
 # Model
+# model = EALSTM(config=config)
 model = Lstm_Linears(config=config)
 trainer = Train(config=config, model=model)
 
