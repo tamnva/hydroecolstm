@@ -17,61 +17,46 @@ class MultiLinear(nn.Module):
         return output
 
 class EALSTM(nn.Module):
-    def __init__(self, static_size, dynamic_size, num_layers,
-                 hidden_size, **kwargs):
+    def __init__(self, config):
         
         super(EALSTM, self).__init__()
-      
-        self.c_0 = torch.randn(hidden_size).unsqueeze(0)
-        self.h_0 = torch.randn(hidden_size).unsqueeze(0)
-        
-        self.static_size = static_size
-        self.dynamic_size = dynamic_size
-        self.num_layers = num_layers
-        self.hidden_size = hidden_size
+                
+        self.static_size = len(config["input_static_features"])
+        self.dynamic_size = len(config["input_dynamic_features"])
+        self.num_layers = config["num_layers"]
+        self.hidden_size = config["hidden_size"]
+        self.output_size = len(config["target_features"])
 
-        # Model structure parametery
-        # Input gate
+        self.c_0 = torch.randn(self.hidden_size).unsqueeze(0)
+        self.h_0 = torch.randn(self.hidden_size).unsqueeze(0)
+
+        # Model structure
         self.i = nn.Sequential(nn.Linear(self.static_size, self.hidden_size), nn.Sigmoid())  
         self.f = MultiLinear(self.dynamic_size, self.hidden_size, self.hidden_size, nn.Sigmoid())
         self.g = MultiLinear(self.dynamic_size, self.hidden_size, self.hidden_size, nn.Tanh())
         self.o = MultiLinear(self.dynamic_size, self.hidden_size, self.hidden_size, nn.Sigmoid())
+        self.linear = nn.Sequential(nn.Linear(self.hidden_size, self.output_size), nn.Identity())  
         
     def forward(self, x):
-        o_t = {}
-        c_t = {}
-        h_t = {}
-        
+        output = {}
+       
         for key in x.keys():
             c_t = self.c_0
             h_t = self.h_0
-            i in range(x[key].shape[0])
+            for i in range(x[key].shape[0]):
                 i_t = self.i(x[key][i:i+1,self.dynamic_size:])
-                f_t = self.f(x[key][i:i+1,:self.dynamic_size], self.h_t)
-                g_t = self.g(x[key][i:i+1,:self.dynamic_size], self.h_t)
-                o_t[key] = self.o(x[key][i:i+1,:self.dynamic_size], self.h_t)
-        
-                c_t = f_t*self.c_t + i_t*g_t
-                h_t = o_t[key]*torch.tanh(c_t)
-        
-        return o_t[key]
-        
-        
-        
-        
-
-static_size=2
-dynamic_size=3
-num_layers=1
-hidden_size=4
-model = EALSTM(static_size, dynamic_size, num_layers,hidden_size)
-x = torch.randn(5, dynamic_size + static_size)
-
-output, _ = model(x)
-
-
-rnn = nn.LSTM(2, 3)
-input = torch.randn(10, 2)
-h0 = torch.randn(1, 3)
-c0 = torch.randn(1, 3)
-output, (hn, cn) = rnn(input, (h0, c0))
+                f_t = self.f(x[key][i:i+1,:self.dynamic_size], h_t)
+                g_t = self.g(x[key][i:i+1,:self.dynamic_size], h_t)             
+                o_t = self.o(x[key][i:i+1,:self.dynamic_size], h_t)
+                out = self.linear(o_t)
+                
+                c_t = f_t*c_t + i_t*g_t
+                h_t = o_t*torch.tanh(c_t)
+                
+                
+                if i == 0:
+                    output[key] = out
+                else:
+                    output[key] = torch.cat((output[key], out))
+                
+        return output

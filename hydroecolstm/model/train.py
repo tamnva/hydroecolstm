@@ -47,27 +47,3 @@ class Train():
             print(f"Epoch [{epoch+1}/{self.n_epochs}], avg_loss = {loss_avg:.8f}")
             
         return self.model, y_predict
-    
-    # get input size
-    def get_input_size(self, config) -> int:
-        if "input_static_features" in config:
-            input_size = (len(config["input_dynamic_features"]) + 
-                          len(config["input_static_features"]))
-        else:
-            input_size = len(config["input_dynamic_features"])
-        return input_size
-    
-    # Find number of neuron in each linear layers, including the input layer
-    def find_num_neurons(self, config) -> int:
-        # First number of neurons from the input layers ()
-        num_neurons = [self.hidden_size]
-
-        if "REG" in config:
-            if len(config["REG"]["num_neurons"]) > 1:
-                for i in range(len(config["REG"]["num_neurons"])-1):
-                    num_neurons.append(config["REG"]["num_neurons"][i])
-        num_neurons.append(self.output_size)
-
-        return num_neurons
-                    
-            
