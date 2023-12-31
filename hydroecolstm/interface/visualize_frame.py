@@ -71,11 +71,7 @@ class VisualizeFrame(ctk.CTkScrollableFrame):
                                           command=self.save_project_event,
                                           text="Save project") 
         self.save_project.grid(row=3, column=2, sticky="w", padx=(5,5), pady=(0,0))
-        #self.load_project = ctk.CTkButton(self.select_input_frame, anchor='w',
-        #                                  command=self.load_project_event, 
-        #                                  text="Load project") 
-        #self.load_project.grid(row=3, column=3, sticky="e", padx=(5,5), pady=(20,20))
-    
+
     # Get dropout
     def next_object_id(self):
         try:
@@ -153,7 +149,7 @@ class VisualizeFrame(ctk.CTkScrollableFrame):
         except:
             x = 4 + np.random.normal(0, 2, 24)
             y = 4 + np.random.normal(0, 2, len(x))
-            figure = Figure(figsize=(15, 4), dpi=100)
+            figure = Figure(figsize=(3, 4), dpi=100)
             figure_canvas = FigureCanvasTkAgg(figure, self.plot_frame )
             NavigationToolbar2Tk(figure_canvas, self.plot_frame )
             axes = figure.add_subplot()            
