@@ -21,56 +21,56 @@ class NetworkDesignFrame(ctk.CTkScrollableFrame):
         self.tabview = ctk.CTkTabview(master=self, width = 750, border_width=1.5,
                                       fg_color = "transparent")
         self.tabview.pack(fill='both',expand=1)
-        self.tabview.add("Model class")
-        self.tabview.tab("Model class").grid_columnconfigure((0,1), weight=1)
-        self.tabview.tab("Model class").rowconfigure((0,1,2,3,4,5,6,7), weight=1)
-        self.tabview.add("Model head")
-        self.tabview.tab("Model head").grid_columnconfigure((0), weight=1)
+        self.tabview.add("1. Model class")
+        self.tabview.tab("1. Model class").grid_columnconfigure((0,1), weight=1)
+        self.tabview.tab("1. Model class").rowconfigure((0,1,2,3,4,5,6,7), weight=1)
+        self.tabview.add("2. Model head")
+        self.tabview.tab("2. Model head").grid_columnconfigure((0), weight=1)
                    
         # ---------------------------------------------content of load data tab
-        self.intro_label = ctk.CTkLabel(self.tabview.tab("Model class"), 
-                                                   text="1. Select model class type")
+        self.intro_label = ctk.CTkLabel(self.tabview.tab("1. Model class"), 
+                                                   text="1. Select 1. Model class type")
         self.intro_label.pack(anchor="w", pady = (10,10))
         
         self.model_class_type =\
-            ctk.CTkOptionMenu(self.tabview.tab("Model class"),
+            ctk.CTkOptionMenu(self.tabview.tab("1. Model class"),
                               values=["LSTM","EA-LSTM"], command=self.get_model_class)
                 
         self.model_class_type.pack(anchor="w",  pady = 5)
                 
-        self.hidden_size_label = ctk.CTkLabel(self.tabview.tab("Model class"), 
+        self.hidden_size_label = ctk.CTkLabel(self.tabview.tab("1. Model class"), 
                                                    text="2. Number of hidden units of the LSTM layer")
         self.hidden_size_label.pack(anchor="w", pady = (4,4))
         
-        self.hidden_size = ctk.CTkEntry(master=self.tabview.tab("Model class"),
+        self.hidden_size = ctk.CTkEntry(master=self.tabview.tab("1. Model class"),
                                         placeholder_text="30")
         self.hidden_size.pack(anchor="w", pady = (4,4))
         self.hidden_size.bind('<KeyRelease>', self.get_hidden_size)
 
-        self.nlayers_label = ctk.CTkLabel(self.tabview.tab("Model class"), 
+        self.nlayers_label = ctk.CTkLabel(self.tabview.tab("1. Model class"), 
                                                text="3. Number of LSTM layers")
         self.nlayers_label.pack(anchor="w", pady = (4,4))
-        self.nlayers= ctk.CTkOptionMenu(self.tabview.tab("Model class"),
+        self.nlayers= ctk.CTkOptionMenu(self.tabview.tab("1. Model class"),
                                              values=list(map(str,list(range(1,21,1)))),
                                              command=self.get_num_layers) 
         self.nlayers.pack(anchor="w", pady = (4,4))
         
-        self.dropout_label = ctk.CTkLabel(self.tabview.tab("Model class"), 
+        self.dropout_label = ctk.CTkLabel(self.tabview.tab("1. Model class"), 
                                                text="4. Drop out rate")
         self.dropout_label.pack(anchor="w", pady = (4,4))
-        self.dropout = ctk.CTkEntry(master=self.tabview.tab("Model class"),
+        self.dropout = ctk.CTkEntry(master=self.tabview.tab("1. Model class"),
                                         placeholder_text="0.30")
         self.dropout.pack(anchor="w", pady = (4,4))
         self.dropout.bind('<KeyRelease>', self.get_dropout)
 
 
-        # ----------------------------------------------------------Model heads
-        self.intro_label = ctk.CTkLabel(self.tabview.tab("Model head"), 
+        # ----------------------------------------------------------2. Model heads
+        self.intro_label = ctk.CTkLabel(self.tabview.tab("2. Model head"), 
                                                    text="1. Select model head")
         self.intro_label.grid(row=0, column=0, padx = 10, pady=(5,5), sticky="w")
         
         self.model_head_type =\
-            ctk.CTkOptionMenu(self.tabview.tab("Model head"),
+            ctk.CTkOptionMenu(self.tabview.tab("2. Model head"),
                               values=["Regression (REG)",
                                       "Gaussian Mixture Model (GMM)"],
                               command=self.get_model_head_name)
@@ -78,7 +78,7 @@ class NetworkDesignFrame(ctk.CTkScrollableFrame):
         self.model_head_type.grid(row=1, column=0, padx = 10, pady=5, sticky="w")        
 
         # --------------------------------------Frame for regression model head
-        self.regression_frame = ctk.CTkFrame(master=self.tabview.tab("Model head"), 
+        self.regression_frame = ctk.CTkFrame(master=self.tabview.tab("2. Model head"), 
                                              fg_color = "transparent", border_width=0.0)
         self.regression_frame.grid_columnconfigure((0,1), weight=1)
         self.regression_frame.grid(row=2, column=0, sticky="w", pady=(5, 5))
@@ -110,7 +110,7 @@ class NetworkDesignFrame(ctk.CTkScrollableFrame):
         self.reg_activation_func = [self.option_menu]
                 
         # --------------------------------------Frame for GMM
-        self.gmm_frame = ctk.CTkFrame(master=self.tabview.tab("Model head"), 
+        self.gmm_frame = ctk.CTkFrame(master=self.tabview.tab("2. Model head"), 
                                              fg_color = "transparent", border_width=0.0)
         self.gmm_frame.grid_columnconfigure((0,1), weight=1)
         #self.gmm_frame.grid(row=2, column=0, sticky="w", pady=(5, 5))

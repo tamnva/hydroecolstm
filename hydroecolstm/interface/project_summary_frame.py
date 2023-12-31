@@ -1,5 +1,6 @@
 
 import customtkinter as ctk
+from CTkToolTip import CTkToolTip
 from hydroecolstm.interface.utility import config_to_text, sort_key
 
 class ProjectSummaryFrame(ctk.CTkScrollableFrame):
@@ -20,6 +21,12 @@ class ProjectSummaryFrame(ctk.CTkScrollableFrame):
                                   fg_color = "transparent",
                                   text_color="black")
         self.update_summary.pack(pady=0, padx=0)
+        CTkToolTip(self.update_summary, delay=0.1, bg_color = 'orange',
+                   text_color = 'black', anchor = 'w', 
+                   message= 'Click here to update the project summary. \n' + 
+                   'You could copy and save this to config.yml file for \n' +
+                   'running hydroecolstm without the graphical user interface') 
+        
 
         self.summary_textbox = ctk.CTkTextbox(master=self,corner_radius=0, 
                                               height=2500, 

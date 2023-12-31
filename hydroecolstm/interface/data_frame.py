@@ -273,7 +273,7 @@ class DataFrame(ctk.CTkScrollableFrame):
         self.execute.pack(anchor="w")
         CTkToolTip(self.execute, delay=0.1, bg_color = 'orange',
                    text_color = 'black', anchor = 'w', 
-                   message= 'Press here to execute data transformation') 
+                   message= 'Click here to execute data transformation') 
         
         self.show_result_label = ctk.CTkLabel(self.tabview.tab("3. Transform data"),
                                                text="5. Display/Visualize transform data")
@@ -283,9 +283,9 @@ class DataFrame(ctk.CTkScrollableFrame):
                                                    text="Display/Visualize",
                                                    command=self.display_orig_trans_data) 
         self.show_result.pack(anchor="w")
-        CTkToolTip(self.execute, delay=0.1, bg_color = 'orange',
+        CTkToolTip(self.show_result, delay=0.1, bg_color = 'orange',
                    text_color = 'black', anchor = 'w', 
-                   message= 'Press here to view the original and transform data of the first object id') 
+                   message= 'Click here to view the original and transform data of the first object id') 
     #-----------------------------------------------------functions for widgets
     # get dynamic data file name
     def get_dynamic_file(self):
