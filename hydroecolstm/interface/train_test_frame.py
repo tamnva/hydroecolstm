@@ -116,7 +116,7 @@ class TrainTestFrame(ctk.CTkScrollableFrame):
     # Get number of lstm layers
     def get_objective_function_name(self, method: str):
         obj_name = {'Root Mean Square Error (RMSE)': "RMSE",
-                    "Nash–Sutcliffe Efficiency (1-NSE)": "NSE",
+                    "Nash–Sutcliffe Efficiency (1-NSE)": "1-NSE",
                     #"Kling-Gupta Efficiency (1-KGE)": "KGE",
                     'Mean Absolute Error (MAE)': "MAE",
                     'Mean Squared Error (MSE)': "MSE"} 
