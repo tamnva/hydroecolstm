@@ -53,6 +53,9 @@ train_period:
   - 2010-01-01 11:15
   - 2020-12-31 11:15
 
+# Model class LSTM or EA_LSTM
+model_class: LSTM
+
 # Hidden size of the LSTM
 hidden_size: 30
 
@@ -60,7 +63,7 @@ hidden_size: 30
 num_layers: 1
 
 # Model head: Regression (REG), GMM, CMAL, UMAL
-# Number of neurons each layers, MUST put * in the last layer 
+# Number of neurons each layers, MUST put None in the last layer 
 # (model will take the number of target features) 
 REG:
   num_layers: 1
