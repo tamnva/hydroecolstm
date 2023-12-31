@@ -46,5 +46,5 @@ def run_train(config_file):
     data["y_train_simulated"] = y_scaler.inverse(y_train_scale_simulated)
     data["y_test_simulated"] = y_scaler.inverse(y_test_simulated_scale)
     
-    return model, x_scaler, y_scaler, data
+    return model, x_scaler, y_scaler, data, config
 

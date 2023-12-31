@@ -11,11 +11,13 @@ from hydroecolstm.utility.plot import plot
 config_file = "C:/Users/nguyenta/Documents/GitHub/HydroEcoLSTM/examples/config.yml"
 
 # Train the model => return model, x_scaler, y_scaler, data
-model, x_scaler, y_scaler, data = run_train(config_file)
+model, x_scaler, y_scaler, data, config = run_train(config_file)
 
 # Visualize result: train_test_period = "train" or "test"
-plot(data, object_id="2011", train_test_period="train",
-     target_feature="discharge_vol_m3_s")
+for object_id in config["object_id"]:
+    plt = plot(data, object_id=str(object_id), train_test_period="test", 
+               target_feature="discharge_vol_m3_s")
+    plt.show()
 
                                     
 #-----------------------------------------------------------------------------#
