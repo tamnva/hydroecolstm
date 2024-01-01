@@ -3,7 +3,7 @@ import customtkinter as ctk
 from hydroecolstm.model.lstm_linears import Lstm_Linears
 from hydroecolstm.model.ea_lstm import Ea_Lstm_Linears
 from hydroecolstm.model.train import Train
-#from hydroecolstm.interface.utility import write_yml_file
+from CTkToolTip import CTkToolTip
 
 class TrainTestFrame(ctk.CTkScrollableFrame):
     def __init__(self, container=None, config=None, globalData=None):
@@ -35,6 +35,9 @@ class TrainTestFrame(ctk.CTkScrollableFrame):
                
         self.nepoch.pack(anchor='w')
         self.nepoch.bind('<KeyRelease>', self.get_nepoch)
+        CTkToolTip(self.nepoch, delay=0.1, bg_color = 'orange',
+                   text_color = 'black', anchor='w',  wraplength=500, 
+                   message='Number of training epochs. Input should be numeric ') 
         
         self.learning_rate_label = ctk.CTkLabel(self.tabview.tab("Trainer"), 
                                                 text="2. Learning rate")
@@ -42,13 +45,18 @@ class TrainTestFrame(ctk.CTkScrollableFrame):
         self.learning_rate= ctk.CTkEntry(master=self.tabview.tab("Trainer"),
                              placeholder_text="0.01")
         self.learning_rate.pack(anchor='w')
-        self.learning_rate.bind('<KeyRelease>', self.get_learning_rate)        
+        self.learning_rate.bind('<KeyRelease>', self.get_learning_rate)
         
         self.warmup_length_label = ctk.CTkLabel(self.tabview.tab("Trainer"), 
                                          text="3. Warm-up length")
         self.warmup_length_label.pack(anchor='w', pady=(4, 4))
         self.warmup_length= ctk.CTkEntry(master=self.tabview.tab("Trainer"),
                              placeholder_text="20") 
+        CTkToolTip(self.warmup_length, delay=0.1, bg_color = 'orange',
+                   text_color = 'black', anchor='w',  wraplength=500, 
+                   message='The number of timesteps used for warm-up.' +
+                   ' For example, the first n simulated outputs will be skipped'+
+                   ' when calculating the objective function.') 
         
         self.warmup_length.pack(anchor='w')
         self.warmup_length.bind('<KeyRelease>', self.get_warmup_length)
