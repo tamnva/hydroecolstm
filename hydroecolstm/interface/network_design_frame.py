@@ -35,6 +35,14 @@ class NetworkDesignFrame(ctk.CTkScrollableFrame):
         self.model_class_type =\
             ctk.CTkOptionMenu(self.tabview.tab("1. Model class"),
                               values=["LSTM","EA-LSTM"], command=self.get_model_class)
+        CTkToolTip(self.model_class_type, delay=0.1, bg_color = 'orange',
+                   text_color = 'black', anchor='w',  wraplength=500, 
+                   message='The flow of data from input = output is as follows: \n' + 
+                   'Input => Model class => Model head => Ouput \n' +
+                   'Model classes are: LSTM and EA-LSTM. Traditional LSTM, \n' +
+                   'dynamic and static inputs are concanated and feed into the LSTM. \n' +
+                   'while in EA-LSTM static input is feed into the input gate only. \n' +
+                   'See more in here https://doi.org/10.5194/hess-23-5089-2019')
                 
         self.model_class_type.pack(anchor="w",  pady = 5)
                 

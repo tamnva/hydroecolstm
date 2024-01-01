@@ -1,18 +1,18 @@
 dynamic_data_file:
-  - C:/Users/nguyenta/Documents/GitHub/hydroecolstm/examples/time_series.csv
+  - C:/Users/nguyenta/Documents/GitHub/hydroecolstm/examples/data/time_series.csv
 input_dynamic_features:
   - precipitation_mm_d
-  - temperature_min_degC
-  - temperature_max_degC
+  - temperature_mean_degC
+  - rel_sun_dur
 target_features:
   - discharge_vol_m3_s
 object_id:
   - 2009
 train_period: 
-  - 2000-01-01 00:00
+  - 1800-01-01 00:00
   - 2006-01-01 00:00
 test_period: 
-  - 2000-01-01 00:00
+  - 1800-01-01 00:00
   - 2006-01-01 00:00
 REG:
   activation_function:
@@ -28,8 +28,8 @@ scaler_target_features:
   - MinMaxScaler
 hidden_size: 30
 num_layers: 1
-n_epochs: 100
+n_epochs: 50
 learning_rate: 0.01
-dropout: 0.03
-warmup_length: 100
-objective_function_name: 1-NSE
+dropout: 0.3
+warmup_length: 20
+objective_function_name: RMSE
