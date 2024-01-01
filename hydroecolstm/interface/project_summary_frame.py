@@ -25,9 +25,7 @@ class ProjectSummaryFrame(ctk.CTkFrame):
         self.update_summary.grid(row=0, column=0, pady=0, padx=0)
         CTkToolTip(self.update_summary, delay=0.1, bg_color = 'orange',
                    text_color = 'black', anchor = 'w', 
-                   message= 'Click here to update the project summary. \n' + 
-                   'You could copy and save this to config.yml file for \n' +
-                   'running hydroecolstm without the graphical user interface') 
+                   message= 'Click here to update the project summary') 
         
         self.summary_textbox = ctk.CTkTextbox(master=self,corner_radius=0, 
                                               height=2000,
