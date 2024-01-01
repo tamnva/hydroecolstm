@@ -29,7 +29,7 @@ class NetworkDesignFrame(ctk.CTkScrollableFrame):
                    
         # ---------------------------------------------content of load data tab
         self.intro_label = ctk.CTkLabel(self.tabview.tab("1. Model class"), 
-                                                   text="1. Select 1. Model class type")
+                                                   text="1. Select model class type")
         self.intro_label.pack(anchor="w", pady = (10,10))
         
         self.model_class_type =\
@@ -51,7 +51,7 @@ class NetworkDesignFrame(ctk.CTkScrollableFrame):
                                                text="3. Number of LSTM layers")
         self.nlayers_label.pack(anchor="w", pady = (4,4))
         self.nlayers= ctk.CTkOptionMenu(self.tabview.tab("1. Model class"),
-                                             values=list(map(str,list(range(1,21,1)))),
+                                             values=list(map(str,list(range(1,6,1)))),
                                              command=self.get_num_layers) 
         self.nlayers.pack(anchor="w", pady = (4,4))
         

@@ -106,7 +106,7 @@ class DataFrame(ctk.CTkScrollableFrame):
                    text_color = 'black', anchor='w',  wraplength=500, 
                    message='Click here to select static (catchment attributes) data file. ' + 
                    'the data file must be in .csv format with header, seperator ' + 
-                   ' is <,>. This data file must contains at a column name ' +
+                   ' is <,>. This data file must contains a column name ' +
                    '<object_id> to connect static with dynamic data. ' +
                    'Template of this file can be seen in this Github repo ./example_1')
         
