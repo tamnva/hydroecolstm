@@ -140,12 +140,7 @@ class TrainTestFrame(ctk.CTkScrollableFrame):
     def run_train_test(self):
         # Set progress to zero
         self.progressbar.set(0)
-        
-        '''
-        write_yml_file(config=self.config, out_file="C:/Users/nguyenta/Documents/config.yml")
-        print("config was saved as config.yml")
-        '''
-        
+
         self.run.configure(fg_color='gray')
         self.run.configure(state="disabled")
         
@@ -161,15 +156,6 @@ class TrainTestFrame(ctk.CTkScrollableFrame):
             # Train the model
             self.globalData["Train"] = Train(config=self.config, model=self.globalData["model"])
             
-            '''
-            # Train the model
-            import torch
-            torch.save(self.globalData, "C:/Users/nguyenta/Documents/globalData.pt")
-            
-            globalData = torch.load("C:/Users/nguyenta/Documents/globalData.pt")
-            print("global data was save")
-            '''
-            
             self.globalData["model"], self.globalData["y_train_scale_predict"] =\
                 self.globalData["Train"](x=self.globalData["x_train_scale"],y=self.globalData["y_train_scale"])
             
@@ -181,7 +167,6 @@ class TrainTestFrame(ctk.CTkScrollableFrame):
         except:
             None
 
-            
         self.progressbar.set(1.0)        
         self.run.configure(state="normal")
         self.run.configure(fg_color=['#3a7ebf', '#1f538d'])
