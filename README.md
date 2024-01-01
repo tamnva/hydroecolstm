@@ -14,8 +14,9 @@ import hydroecolstm
 hydroecolstm.interface.show_gui()
 
 # Example of static and dynamic data in this folder
-# static data (catchment attributes) 'examples/static_attributes.csv'
-# dynamic data (time series input and target features) 'examples/time_series.csv'
+# static data (catchment attributes) 'examples/data/static_attributes.csv'
+# dynamic data (time series input and target features) 'examples/data/time_series.csv'
+
 ```
 
 ### 3. The GUI
