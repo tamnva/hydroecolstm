@@ -120,9 +120,6 @@ class ForecastFrame(ctk.CTkScrollableFrame):
         self.object_id_label = ctk.CTkLabel(self.tabview.tab("2. Outputs"), 
                                             text="2. Plotting area")
         self.object_id_label.grid(row=2, column=0, sticky="w", padx=(5,5), pady=(20,5))
-        
-        self.plot_frame = ctk.CTkCanvas(master=self.tabview.tab("2. Outputs"), height=400)
-        self.plot_frame.grid(row=3, column=0, sticky="w", padx=(20,20), pady=(20,20))  
 
         self.object_id = ctk.CTkTextbox(master=self.select_input_frame, height=30,
                                         border_width=1.5)
@@ -155,7 +152,6 @@ class ForecastFrame(ctk.CTkScrollableFrame):
                               padx=(5,20), pady=(10,10))
 
     # Get dropout
-    
     def import_button_event(self):
         
         if self.import_checkbox.get() == 1:
@@ -197,7 +193,6 @@ class ForecastFrame(ctk.CTkScrollableFrame):
     def run_forecast(self):
         
         try:
-            #print("trying")
             # Get forecast period
             self.config['forecast_period'] = [self.start_forecast.get_date(),
                                               self.end_forecast.get_date()]
@@ -208,19 +203,7 @@ class ForecastFrame(ctk.CTkScrollableFrame):
             object_id_forecast = [all_items[i] for i in select_index]
             self.config['object_id_forecast'] = object_id_forecast
             
-            #print("forecast object id= ", self.config['object_id_forecast'])
-            #print("forecast period= ", self.config['forecast_period'] )
-            # Get forecast data
-            #print("Reading forecast data")
-            #print(self.config)
-            #import pickle
-            #with open('C:/Users/nguyenta/Documents/config.pickle', 'wb') as outfile:
-            #    pickle.dump(self.config, outfile)
-            #with open('C:/Users/nguyenta/Documents/config.pickle', 'rb') as handle:
-            #    config = pickle.load(handle)
-    
             predict_data = read_forecast_data(self.config)
-            #print("Done reading forecast data")
             
             self.globalData["x_forecast"] = predict_data["x_forecast"]
             self.globalData["y_forecast"] = predict_data["y_forecast"]
@@ -230,21 +213,15 @@ class ForecastFrame(ctk.CTkScrollableFrame):
             del predict_data
             
             # Scale forecast data
-            #print("Transforming data")
             self.globalData["x_forecast_scale"] =\
                 self.globalData["x_scaler"].transform(x=self.globalData["x_forecast"])
 
             self.globalData["y_forecast_scale"] =\
                 self.globalData["y_scaler"].transform(x=self.globalData["y_forecast"])
-            #print("Done transforming data")
             
             # Run forward model
-            #print("Run forward model with forecast data")
             self.globalData["y_forecast_scale_predict"] =\
                 self.globalData["model"].forward(self.globalData["x_forecast_scale"])
-            #print("Done run forward model")
-            # Scale forecast data
-            #print(self.globalData["y_forecast_scale_predict"])
             
             tk.messagebox.showinfo(title="Message box", 
                                    message="Finished forward run")
@@ -264,7 +241,6 @@ class ForecastFrame(ctk.CTkScrollableFrame):
                                   [self.globalData["object_id_forecast_no"]])
             self.globalData["object_id_forecast_plot"] = str(self.config["object_id_forecast"]
                                                     [self.globalData["object_id_forecast_no"]])
-            #print(self.globalData["object_id_plot"])
                 
             self.globalData["object_id_forecast_no"] += 1
         except:
@@ -311,17 +287,15 @@ class ForecastFrame(ctk.CTkScrollableFrame):
     def plot_figure(self):
         
         # Remove and create frame again to update figure
-        self.plot_frame.destroy()
+        try:
+            self.plot_frame.destroy()
+        except:
+            pass
+        
         self.plot_frame = ctk.CTkFrame(master=self.tabview.tab("2. Outputs"), height=400)
         self.plot_frame.grid(row=3, column=0, sticky="w", padx=(20,20), pady=(20,20))
         
         try:   
-            #import pickle
-            #with open('C:/Users/nguyenta/Documents/globalData.pickle', 'wb') as outfile:
-            #    pickle.dump(self.globalData, outfile)
-            #print("Save global data")
-            #with open('C:/Users/nguyenta/Documents/globalData.pickle', 'rb') as handle:
-            #    globalData = pickle.load(handle)
              
             time = self.globalData["time_forecast"][self.globalData["object_id_forecast_plot"]]
             

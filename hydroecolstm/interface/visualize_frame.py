@@ -32,10 +32,7 @@ class VisualizeFrame(ctk.CTkScrollableFrame):
         self.select_input_frame.columnconfigure((0,1,3,4), weight=0)
 
         self.object_id_label = ctk.CTkLabel(self, text="2. Plotting area")
-        self.object_id_label.grid(row=2, column=0, sticky="w", padx=(5,5))
-        self.plot_frame = ctk.CTkCanvas(master=self, height=400)
-        self.plot_frame.grid(row=3, column=0, sticky="w", padx=(20,20), pady=(20,20))  
-
+        self.object_id_label.grid(row=2, column=0, sticky="w", padx=(5,5)) 
 
         self.object_id = ctk.CTkTextbox(master=self.select_input_frame, height=30,
                                         border_width=1.5)
@@ -118,7 +115,11 @@ class VisualizeFrame(ctk.CTkScrollableFrame):
     def plot_figure(self):
         
         # Remove and create frame again to update figure
-        self.plot_frame.destroy()
+        try:
+            self.plot_frame.destroy()
+        except:
+            pass
+        
         self.plot_frame = ctk.CTkFrame(master=self, height=400)
         self.plot_frame.grid(row=3, column=0, sticky="w", padx=(20,20), pady=(20,20))
         
@@ -147,20 +148,8 @@ class VisualizeFrame(ctk.CTkScrollableFrame):
             figure_canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=1)
             
         except:
-            x = 4 + np.random.normal(0, 2, 24)
-            y = 4 + np.random.normal(0, 2, len(x))
-            figure = Figure(figsize=(3, 4), dpi=100)
-            figure_canvas = FigureCanvasTkAgg(figure, self.plot_frame )
-            NavigationToolbar2Tk(figure_canvas, self.plot_frame )
-            axes = figure.add_subplot()            
-            axes.plot(x, color = 'blue', label = "Predicted (test data)", 
-                      alpha=0.9, linewidth=0.75)
-            axes.plot(y, 'ro', label = "Observed (test data)", 
-                      alpha=0.9, markersize=2.5 )
-            axes.legend()
-            axes.set_title("Test plot")
-                
-            figure_canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=1) 
+            tk.messagebox.showinfo(title="Message box", 
+                                   message="Error: Cannot show plot")
             
     def save_project_event(self):    
         
