@@ -94,7 +94,7 @@ class TrainTestFrame(ctk.CTkScrollableFrame):
             self.config["n_epochs"] = int(self.nepoch.get().strip())
             print(f"Number of epochs = {self.config['n_epochs']}")
         except:
-            pass
+            tk.messagebox.showinfo(title="Error", message="Input should be integer")
         
     # Get learning_rate
     def get_learning_rate(self, dummy):
@@ -102,7 +102,7 @@ class TrainTestFrame(ctk.CTkScrollableFrame):
             self.config["learning_rate"]  = float(self.learning_rate.get().strip())
             print(f"Learning rate = {self.config['learning_rate']}")
         except:
-            pass
+            tk.messagebox.showinfo(title="Error", message="Input should be numeric")
 
     # Get warm up length
     def get_warmup_length(self, dummy):
@@ -110,7 +110,7 @@ class TrainTestFrame(ctk.CTkScrollableFrame):
             self.config["warmup_length"] =  int(self.warmup_length.get().strip()) 
             print(f"Warm-up length = {self.config['warmup_length']}")  
         except:
-            pass
+            tk.messagebox.showinfo(title="Error", message="Input should be integer")
      
         
     # Get number of lstm layers
