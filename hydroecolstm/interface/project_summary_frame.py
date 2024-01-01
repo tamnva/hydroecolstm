@@ -18,10 +18,10 @@ class ProjectSummaryFrame(ctk.CTkFrame):
     # create widgets for sidebar frame
     def __create_widgets(self):     
         self.update_summary = ctk.CTkButton(self, text="Project Summary", 
-                                  font=ctk.CTkFont(size=20, weight="bold"),
-                                  command=self.update_project_summary, 
-                                  fg_color = "transparent",
-                                  text_color="black")
+                                            font=ctk.CTkFont(size=20, weight="bold"),
+                                            command=self.update_project_summary, 
+                                            fg_color = "transparent",
+                                            text_color="black")
         self.update_summary.grid(row=0, column=0, pady=0, padx=0)
         CTkToolTip(self.update_summary, delay=0.1, bg_color = 'orange',
                    text_color = 'black', anchor = 'w', 

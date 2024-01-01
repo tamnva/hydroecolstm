@@ -6,15 +6,10 @@ from pandastable import Table
 import tkcalendar as tkc
 from CTkListbox import CTkListbox
 from CTkToolTip import CTkToolTip
-import numpy as np
 
 from hydroecolstm.utility.scaler import Scaler, get_scaler_name
 from hydroecolstm.data.read_data import read_train_test_data
-
-
-from matplotlib.figure import Figure
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk
-       
+   
 class DataFrame(ctk.CTkScrollableFrame):
     def __init__(self, container=None, config=None, globalData=None):
         super().__init__(container)

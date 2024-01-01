@@ -37,12 +37,12 @@ class NetworkDesignFrame(ctk.CTkScrollableFrame):
                               values=["LSTM","EA-LSTM"], command=self.get_model_class)
         CTkToolTip(self.model_class_type, delay=0.1, bg_color = 'orange',
                    text_color = 'black', anchor='w',  wraplength=500, 
-                   message='The flow of data from input = output is as follows: \n' + 
-                   'Input => Model class => Model head => Ouput \n' +
-                   'Model classes are: LSTM and EA-LSTM. Traditional LSTM, \n' +
-                   'dynamic and static inputs are concanated and feed into the LSTM. \n' +
-                   'while in EA-LSTM static input is feed into the input gate only. \n' +
-                   'See more in here https://doi.org/10.5194/hess-23-5089-2019')
+                   message='The flow of data from input => output is as follows:' + 
+                   ' Input => Model class => Model head => Ouput.' +
+                   ' Model classes are: LSTM and EA-LSTM. Traditional LSTM,' +
+                   ' dynamic and static inputs are concanated and feed into the LSTM.' +
+                   ' while in EA-LSTM static input is feed into the input gate only.' +
+                   ' See more in here https://doi.org/10.5194/hess-23-5089-2019')
                 
         self.model_class_type.pack(anchor="w",  pady = 5)
                 
@@ -53,6 +53,11 @@ class NetworkDesignFrame(ctk.CTkScrollableFrame):
         self.hidden_size = ctk.CTkEntry(master=self.tabview.tab("1. Model class"),
                                         placeholder_text="30")
         self.hidden_size.pack(anchor="w", pady = (4,4))
+        CTkToolTip(self.hidden_size, delay=0.1, bg_color = 'orange',
+                   text_color = 'black', anchor='w',  wraplength=500, 
+                   message='The number of hidden neurons of the LSTM (or EA-LSTM).' +
+                   ' Most problems should work with any values between 20 to 516')
+        
         self.hidden_size.bind('<KeyRelease>', self.get_hidden_size)
 
         self.nlayers_label = ctk.CTkLabel(self.tabview.tab("1. Model class"), 
@@ -62,15 +67,24 @@ class NetworkDesignFrame(ctk.CTkScrollableFrame):
                                              values=list(map(str,list(range(1,6,1)))),
                                              command=self.get_num_layers) 
         self.nlayers.pack(anchor="w", pady = (4,4))
+        CTkToolTip(self.nlayers, delay=0.1, bg_color = 'orange',
+                   text_color = 'black', anchor='w',  wraplength=500, 
+                   message='The number of layers of the LSTM (or EA-LSTM).' +
+                   ' 1 should work for most of the problems')
         
         self.dropout_label = ctk.CTkLabel(self.tabview.tab("1. Model class"), 
-                                               text="4. Drop out rate")
+                                               text="4. Dropout rate")
         self.dropout_label.pack(anchor="w", pady = (4,4))
         self.dropout = ctk.CTkEntry(master=self.tabview.tab("1. Model class"),
                                         placeholder_text="0.30")
         self.dropout.pack(anchor="w", pady = (4,4))
         self.dropout.bind('<KeyRelease>', self.get_dropout)
-
+        CTkToolTip(self.dropout, delay=0.1, bg_color = 'orange',
+                   text_color = 'black', anchor='w',  wraplength=500, 
+                   message='This value is only used if the number of layers > 1.' +
+                   ' During training, randomly zeroes some of the elements of the' +
+                   ' input tensor to the i_th layer with probability p using samples' +
+                   ' from a Bernoulli distribution')
 
         # ----------------------------------------------------------2. Model heads
         self.intro_label = ctk.CTkLabel(self.tabview.tab("2. Model head"), 
@@ -84,7 +98,13 @@ class NetworkDesignFrame(ctk.CTkScrollableFrame):
                               command=self.get_model_head_name)
         
         self.model_head_type.grid(row=1, column=0, padx = 10, pady=5, sticky="w")        
-
+        CTkToolTip(self.model_head_type, delay=0.1, bg_color = 'orange',
+                   text_color = 'black', anchor='w',  wraplength=500, 
+                   message='Output from the model class (e.g., LSTM or EA-LSTM)' +
+                   ' is input to the model head. Here model head could be REG or GMM.' +
+                   ' REG is multi Linear layers (see PyTorch for nn.Linear) with user' +
+                   ' choice activation function.')
+        
         # --------------------------------------Frame for regression model head
         self.regression_frame = ctk.CTkFrame(master=self.tabview.tab("2. Model head"), 
                                              fg_color = "transparent", border_width=0.0)
@@ -100,12 +120,23 @@ class NetworkDesignFrame(ctk.CTkScrollableFrame):
                           values=list(map(str, range(1, 6))),
                           command=self.create_entry_regression_model)
         self.regression_nlayers.grid(row=1, column=0, sticky="w", padx=10, pady=5)        
+        CTkToolTip(self.regression_nlayers, delay=0.1, bg_color = 'orange',
+                   text_color = 'black', anchor='w',  wraplength=500, 
+                   message='Select number of linear layers. 1 should works for' +
+                   ' most of the problems')
         
         # Label
         
         self.regression_config_label1 = ctk.CTkLabel(self.regression_frame,
                                   text="3. Number of neurons layer ith")
-        self.regression_config_label1.grid(row=2, column=0, sticky="w", padx=10, pady=5)      
+        self.regression_config_label1.grid(row=2, column=0, sticky="w", padx=10, pady=5) 
+        CTkToolTip(self.regression_config_label1, delay=0.1, bg_color = 'orange',
+                   text_color = 'black', anchor='w',  wraplength=500, 
+                   message='The last layer is the output layer. Therefore, the number of'+
+                   ' neurons for this layer is the number of target features, users'+
+                   ' DO NOT need to input the number of neurons for the last layer' +
+                   ' If there is only 1 layer, this layer is also the last layer') 
+        
         self.regression_config_label2 = ctk.CTkLabel(self.regression_frame,
                                   text="4. Activation function layer ith")
         self.regression_config_label2.grid(row=2, column=1, sticky="w", padx=10, pady=5)
@@ -245,29 +276,25 @@ class NetworkDesignFrame(ctk.CTkScrollableFrame):
             self.config["REG"]["num_neurons"][0] = int(self.reg_neurons[0].get().strip())
             print("Num of neurons layer 1 = ",  self.config["REG"]["num_neurons"][0])
         except:
-            tk.messagebox.showinfo(title="Error", 
-                                   message="Invalid input number of neuron for layer 1")
+            tk.messagebox.showinfo(title="Error", message="Input should be integer")
     def reg_get_neurons_2(self, dummy):
         try: 
             self.config["REG"]["num_neurons"][1] = int(self.reg_neurons[1].get().strip())
             print("Num of neurons layer 2 = ", self.config["REG"]["num_neurons"][1])
         except:
-            tk.messagebox.showinfo(title="Error", 
-                                   message="Invalid input number of neuron for layer 2")
+            tk.messagebox.showinfo(title="Error", message="Input should be integer")
     def reg_get_neurons_3(self, dummy):
         try: 
             self.config["REG"]["num_neurons"][2] = int(self.reg_neurons[2].get().strip())
             print("Num of neurons layer 3 = ", self.config["REG"]["num_neurons"][2])
         except:
-            tk.messagebox.showinfo(title="Error", 
-                                   message="Invalid input number of neuron for layer 3")
+            tk.messagebox.showinfo(title="Error", message="Input should be integer")
     def reg_get_neurons_4(self, dummy):
         try: 
             self.config["REG"]["num_neurons"][3] = int(self.reg_neurons[3].get().strip())
             print("Num of neurons layer 4 = ",  self.config["REG"]["num_neurons"][3])
         except:
-            tk.messagebox.showinfo(title="Error", 
-                                   message="Invalid input number of neuron for layer 4")
+            tk.messagebox.showinfo(title="Error", message="Input should be integer")
     
     # Function to get activation function of each layer - Make this code clearner
     def reg_get_acts_1(self, dummy):
