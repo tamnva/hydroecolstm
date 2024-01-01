@@ -154,11 +154,6 @@ class VisualizeFrame(ctk.CTkScrollableFrame):
         
         output_dir = tk.filedialog.askdirectory()
         self.config["output_dir"] = [output_dir]
-        
-        # Save config
-        out_file = Path(self.config["output_dir"][0], "config.yml")
-        write_yml_file(config=self.config, out_file=out_file)
-        print("config was saved as config.yml")
 
         # Save model_state_dicts to model_state_dict.pt file
         torch.save(self.globalData["model"].state_dict(), 
