@@ -169,7 +169,7 @@ class NetworkDesignFrame(ctk.CTkScrollableFrame):
             self.config["hidden_size"] = get_input_text
             print("hidden size = ", self.config["hidden_size"])
         except:
-            pass
+            tk.messagebox.showinfo(title="Error", message="Input should be integer")
              
     # Get number of lstm layers
     def get_num_layers(self, nlayer: str):
@@ -185,7 +185,7 @@ class NetworkDesignFrame(ctk.CTkScrollableFrame):
             self.config["dropout"] = float(self.dropout.get().strip())
             print("Dropout rate = ", self.config["dropout"])
         except:
-            pass
+            tk.messagebox.showinfo(title="Error", message="Input should be numeric")
 
     def get_model_head_name(self, model_head_name: str):
         model_head_names = {"Regression (REG)" : "REG",
