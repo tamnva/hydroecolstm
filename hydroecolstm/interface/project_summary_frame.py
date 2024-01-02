@@ -51,9 +51,12 @@ class ProjectSummaryFrame(ctk.CTkFrame):
                                         fg_color = "transparent",
                                         text_color="black")
         CTkToolTip(self.save_buton, delay=0.1, bg_color = 'orange',
-                   text_color = 'black', anchor = 'w', 
+                   text_color = 'black', anchor = 'w',  wraplength=500, 
                    message= 'Click here to save project summary as' +
-                   ' configuration file to run later without graphical interface')
+                   ' configuration file (here, you can give the file name)' +
+                   ' or save all (all data created by this tool + the model +' +
+                   ' configuration file (here you cannot give the file name,' +
+                   ' just select the folder and files with predefined names will be saved')
 
         self.save_buton.grid(row=2, column=0,pady=(10,7), padx=0)
         
