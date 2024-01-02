@@ -16,6 +16,7 @@ hydroecolstm.interface.show_gui()
 # Example of static and dynamic data in this folder
 # static data (catchment attributes) 'examples/data/static_attributes.csv'
 # dynamic data (time series input and target features) 'examples/data/time_series.csv'
+# example Pyhon script for running without GUI 'examples/example_run.py'
 
 ```
 
@@ -24,5 +25,5 @@ hydroecolstm.interface.show_gui()
 - After lanching the GUI, you should see the following window (the latest version in the "development" branch could look different)
 
 <p align="center">
-  <img src="examples/intro_figure.gif" width=100% title="hover text">
+  <img src="examples/figures/intro_figure.gif" width=100% title="hover text">
 </p>

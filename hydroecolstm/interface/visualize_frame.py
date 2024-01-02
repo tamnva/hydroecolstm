@@ -6,10 +6,6 @@ import torch
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk
 
-from hydroecolstm.interface.utility import write_yml_file
-
-
-
 class VisualizeFrame(ctk.CTkScrollableFrame):
     def __init__(self, container=None, config=None, globalData=None):
         super().__init__(container)
@@ -79,10 +75,7 @@ class VisualizeFrame(ctk.CTkScrollableFrame):
             self.object_id.insert("0.0", self.config["object_id"]
                                   [self.globalData["object_id_no"]])
             self.globalData["object_id_plot"] = str(self.config["object_id"]
-                                                    [self.globalData["object_id_no"]])
-                
-            #print(self.globalData["object_id_plot"])
-                
+                                                    [self.globalData["object_id_no"]])             
             self.globalData["object_id_no"] += 1
         except:
             None
