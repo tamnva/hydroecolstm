@@ -1,6 +1,11 @@
 
 import customtkinter as ctk
+import tkinter as tk
 from CTkToolTip import CTkToolTip
+from CTkMessagebox import CTkMessagebox
+import torch
+from pathlib import Path
+
 from hydroecolstm.interface.utility import config_to_text, sort_key
 from hydroecolstm.interface.utility import write_yml_file
 
@@ -42,7 +47,7 @@ class ProjectSummaryFrame(ctk.CTkFrame):
         self.save_buton = ctk.CTkButton(self, border_color="grey",
                                         border_width=1.5,
                                         command=self.save_yml,
-                                        text = "Save as .yml", 
+                                        text = "Save", 
                                         fg_color = "transparent",
                                         text_color="black")
         CTkToolTip(self.save_buton, delay=0.1, bg_color = 'orange',
@@ -62,13 +67,46 @@ class ProjectSummaryFrame(ctk.CTkFrame):
     
 
     def save_yml(self):
+        
+        # Ask which one user want to save
+        msg = CTkMessagebox(title="Save", message="Please select save option",
+                    option_1="Cancel", 
+                    option_3="Save all",
+                    option_2="Save config")
+        response = msg.get()
+
         try:
-            file_name = ctk.filedialog.asksaveasfilename(
-                title="Save project summary as .yml file",
-                filetypes=(('yml files', '*.yml'),
-                           ('All files', '*.*')))
-            write_yml_file(config=self.config, out_file=file_name)
-            print("Saved project summary as ", file_name)
+            if response == "Save config":
+                
+                # Save config as .yml
+                file_name = ctk.filedialog.asksaveasfilename(
+                    title="Save project summary as .yml file",
+                    filetypes=(('yml files', '*.yml'),
+                               ('All files', '*.*')))
+                write_yml_file(config=self.config, out_file=file_name)
+                print("Saved project summary as ", file_name)
+                
+            elif response == "Save all":
+                # Save config as .yml             
+                output_dir = tk.filedialog.askdirectory()
+                self.config["output_dir"] = [output_dir]
+                print("Saved project summary as config.yml file")
+                
+                write_yml_file(config=self.config, out_file=
+                               Path(self.config["output_dir"][0], "config.yml"))
+        
+                # Save model_state_dicts to model_state_dict.pt file
+                torch.save(self.globalData["model"].state_dict(), 
+                           Path(self.config["output_dir"][0], "model_state_dict.pt"))
+                print("Model state_dict was saved as model_state_dict.pt")
+                
+                # Save global data
+                torch.save(self.globalData, 
+                           Path(self.config["output_dir"][0], "globalData.pt"))
+                print("globalData was saved as globalData.pt")
+            else:
+                pass
+                
         except:
-            print("Error: Cannot save project summary")            
+            print("Error: Cannot save model or data")            
             

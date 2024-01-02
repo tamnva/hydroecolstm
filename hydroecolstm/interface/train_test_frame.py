@@ -156,16 +156,21 @@ class TrainTestFrame(ctk.CTkScrollableFrame):
             # Train the model
             self.globalData["Train"] = Train(config=self.config, model=self.globalData["model"])
             
-            self.globalData["model"], self.globalData["y_train_scale_predict"] =\
-                self.globalData["Train"](x=self.globalData["x_train_scale"],y=self.globalData["y_train_scale"])
+            self.globalData["model"], y_train_scale_simulated =\
+                self.globalData["Train"](x=self.globalData["x_train_scale"], y=self.globalData["y_train_scale"])
             
             # Run forward test the model
-            self.globalData["y_test_scale_predict"] = self.globalData["model"](self.globalData["x_test_scale"])
+            y_test_scale_simulated = self.globalData["model"](self.globalData["x_test_scale"])
                 
             # Inverse transform back to the original scale
-            
+            self.globalData["y_train_simulated"] =\
+                self.globalData["y_scaler"].inverse(y_train_scale_simulated)
+            self.globalData["y_test_simulated"] =\
+                self.globalData["y_scaler"].inverse(y_test_scale_simulated)              
+                            
             tk.messagebox.showinfo(title="Message box",
                                    message="Finished training/testing")
+            
         except:
             None
 

@@ -1,8 +1,6 @@
 
 import customtkinter as ctk
 import tkinter as tk
-from pathlib import Path
-import torch
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk
 
@@ -59,11 +57,6 @@ class VisualizeFrame(ctk.CTkScrollableFrame):
                                  command=self.plot_figure, text="Update plot")
         self.update_plot.grid(row=3, column=0, columnspan=2, sticky="we", padx=(5,5), pady=(20,20))
 
-        self.save_project = ctk.CTkButton(self.select_input_frame, anchor='w',
-                                          command=self.save_project_event,
-                                          text="Save project") 
-        self.save_project.grid(row=3, column=2, sticky="w", padx=(5,5), pady=(0,0))
-
     # Get dropout
     def next_object_id(self):
         try:
@@ -118,11 +111,11 @@ class VisualizeFrame(ctk.CTkScrollableFrame):
         try:
             time = self.globalData["time_test"][self.globalData["object_id_plot"]]
             
-            obs = self.globalData["y_test_scale"][self.globalData["object_id_plot"]]  
+            obs = self.globalData["y_test"][self.globalData["object_id_plot"]]  
             obs = obs[:, self.config["target_features"].\
                       index(self.globalData["target_feature_plot"])]  
                 
-            predict = self.globalData["y_test_scale_predict"]\
+            predict = self.globalData["y_test_simulated"]\
                 [self.globalData["object_id_plot"]].detach().numpy()
             predict = predict[:, self.config["target_features"].\
                               index(self.globalData["target_feature_plot"])]    
@@ -142,18 +135,3 @@ class VisualizeFrame(ctk.CTkScrollableFrame):
         except:
             tk.messagebox.showinfo(title="Message box", 
                                    message="Error: Cannot show plot")
-            
-    def save_project_event(self):    
-        
-        output_dir = tk.filedialog.askdirectory()
-        self.config["output_dir"] = [output_dir]
-
-        # Save model_state_dicts to model_state_dict.pt file
-        torch.save(self.globalData["model"].state_dict(), 
-                   Path(self.config["output_dir"][0], "model_state_dict.pt"))
-        print("Model state_dict was saved as model_state_dict.pt")
-        
-        # Save global data
-        torch.save(self.globalData, 
-                   Path(self.config["output_dir"][0], "globalData.pt"))
-        print("globalData was saved as globalData.pt")

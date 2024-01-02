@@ -216,15 +216,17 @@ class ForecastFrame(ctk.CTkScrollableFrame):
             self.globalData["x_forecast_scale"] =\
                 self.globalData["x_scaler"].transform(x=self.globalData["x_forecast"])
 
-            self.globalData["y_forecast_scale"] =\
-                self.globalData["y_scaler"].transform(x=self.globalData["y_forecast"])
-            
             # Run forward model
-            self.globalData["y_forecast_scale_predict"] =\
+            y_forecast_scale_simulated =\
                 self.globalData["model"].forward(self.globalData["x_forecast_scale"])
             
             tk.messagebox.showinfo(title="Message box", 
                                    message="Finished forward run")
+            
+            # Inverse transform y forcast to original scale
+            self.globalData["y_forecast_simulated"] =\
+                self.globalData["y_scaler"].inverse(y_forecast_scale_simulated)
+            
         except:
             tk.messagebox.showinfo(title="Message box", 
                                    message="Error: Cannot run with forecast data")
@@ -299,11 +301,11 @@ class ForecastFrame(ctk.CTkScrollableFrame):
              
             time = self.globalData["time_forecast"][self.globalData["object_id_forecast_plot"]]
             
-            obs = self.globalData["y_forecast_scale"][self.globalData["object_id_forecast_plot"]]  
+            obs = self.globalData["y_forecast"][self.globalData["object_id_forecast_plot"]]  
             obs = obs[:, self.config["target_features"].\
                       index(self.globalData["target_feature_forecast_plot"])]  
                 
-            predict = self.globalData["y_forecast_scale_predict"]\
+            predict = self.globalData["y_forecast_simulated"]\
                 [self.globalData["object_id_forecast_plot"]].detach().numpy()
             predict = predict[:, self.config["target_features"].\
                               index(self.globalData["target_feature_forecast_plot"])]    

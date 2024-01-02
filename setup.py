@@ -17,14 +17,15 @@ setup(
     install_requires=['pandas',
                       'numpy',
                       'torch',
-                      'customtkinter',
-                      'CTkToolTip',
                       'pandastable',
                       'tkcalendar',
-                      'CTkListbox',
-                      'CTkToolTip',
                       'PyYAML',
-                      'pathlib'
+                      'pathlib',
+                      'tkinter',
+                      'customtkinter',
+                      'CTkToolTip',
+                      'CTkMessagebox',
+                      'CTkListbox'
                       ],
 
     classifiers=[
