@@ -58,9 +58,12 @@ def sort_key(config):
     if "train_period" in config.keys():
         config_sort["train_period"] = config["train_period"]
 
-    if "test_period" in config.keys():
-        config_sort["test_period"] = config["test_period"]
+    if "model_class" in config.keys():
+        config_sort["model_class"] = config["model_class"]
 
+    if "REG" in config.keys():
+        config_sort["REG"] = config["REG"]
+        
     if "REG" in config.keys():
         config_sort["REG"] = config["REG"]
 
@@ -106,6 +109,9 @@ def sort_key(config):
     if "static_data_file_forecast" in config.keys():
         config_sort["static_data_file_forecast"] = config["static_data_file_forecast"]        
 
+    if "dynamic_data_file_forecast" in config.keys():
+        config_sort["dynamic_data_file_forecast"] = config["dynamic_data_file_forecast"]        
+        
     if "forecast_period" in config.keys():
         config_sort["forecast_period"] = config["forecast_period"] 
 

@@ -1,0 +1,59 @@
+dynamic_data_file:
+  - C:/Users/nguyenta/Documents/GitHub/hydroecolstm/examples/data/time_series.csv
+static_data_file:
+  - C:/Users/nguyenta/Documents/GitHub/hydroecolstm/examples/data/static_attributes.csv
+input_static_features:
+  - p_mean
+  - pet_mean
+  - aridity
+  - p_seasonality
+input_dynamic_features:
+  - precipitation_mm_d
+  - temperature_mean_degC
+  - rel_sun_dur
+target_features:
+  - discharge_vol_m3_s
+model_class: LSTM
+object_id:
+  - 2009
+  - 2011
+  - 2016
+  - 2018
+  - 2019
+  - 2020
+train_period: 
+  - 2000-01-01 00:00
+  - 2006-12-31 00:00
+test_period: 
+  - 2000-01-01 00:00
+  - 2006-12-31 00:00
+REG:
+  activation_function:
+    - Identity
+  num_neurons:
+    - None
+  num_layers: 1
+scaler_input_dynamic_features:
+  - MinMaxScaler
+scaler_input_static_features:
+  - MinMaxScaler
+scaler_target_features:
+  - MinMaxScaler
+hidden_size: 50
+num_layers: 1
+n_epochs: 200
+learning_rate: 0.01
+dropout: 0.3015
+warmup_length: 365
+objective_function_name: 1-NSE
+static_data_file_forecast:
+  - static_data_file
+dynamic_data_file_forecast:
+  - dynamic_data_file
+forecast_period: 
+  - 2000-01-01 00:00
+  - 2006-12-31 00:00
+object_id_forecast:
+  - 2024
+  - 2029
+  - 2030

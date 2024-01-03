@@ -8,7 +8,7 @@ from hydroecolstm.utility.plot import plot
 #                                Run the model                                #
 #-----------------------------------------------------------------------------#
 # Configuration file
-config_file = "C:/Users/nguyenta/Documents/GitHub/HydroEcoLSTM/examples/config.yml"
+config_file = "C:/Users/nguyenta/Documents/GitHub/HydroEcoLSTM/examples/experiments/config.yml"
 
 # Train the model => return model, x_scaler, y_scaler, data
 model, x_scaler, y_scaler, data, config = run_train(config_file)
