@@ -24,9 +24,12 @@ def config_to_text(config):
                 # Convert time in config to YYYY-MM-DD HH:MM
                 if (config[key].shape[0] == 2):
                     out_text.append(key +": \n")
-                    out_text.append("  - " + str(config["train_period"][0])[:16] + "\n")
-                    out_text.append("  - " + str(config["train_period"][1])[:16] + "\n")
-                    #out_text.append("\n")
+                    if key == "train_period":
+                        out_text.append("  - " + str(config["train_period"][0])[:16] + "\n")
+                        out_text.append("  - " + str(config["train_period"][1])[:16] + "\n")
+                    else:
+                        out_text.append("  - " + str(config["test_period"][0])[:16] + "\n")
+                        out_text.append("  - " + str(config["test_period"][1])[:16] + "\n")                        
             except:
                 # Non list object writte in 1 line
                 out_text.append(key +": " + str(config[key]) + "\n")
