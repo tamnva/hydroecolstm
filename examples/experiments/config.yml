@@ -13,7 +13,7 @@ input_dynamic_features:
   - rel_sun_dur
 target_features:
   - discharge_vol_m3_s
-model_class: LSTM
+model_class: EALSTM
 object_id:
   - 2009
   - 2011
@@ -41,7 +41,7 @@ scaler_target_features:
   - MinMaxScaler
 hidden_size: 50
 num_layers: 1
-n_epochs: 200
+n_epochs: 150
 learning_rate: 0.01
 dropout: 0.3015
 warmup_length: 365

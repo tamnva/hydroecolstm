@@ -27,7 +27,7 @@ class Train():
         for epoch in range(self.n_epochs):
             
             # Get model output
-            y_predict = self.model(x)
+            y_predict= self.model(x)
 
             # Reset the gradients to zero
             optim.zero_grad()

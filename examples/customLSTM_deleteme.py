@@ -2,7 +2,7 @@ import numbers
 import warnings
 from collections import namedtuple
 
-from typing import List, Tuple
+from typing import List, Tuple, Dict
 import torch
 import torch.jit as jit
 import torch.nn as nn
@@ -52,24 +52,122 @@ class EALSTMCell(jit.ScriptModule):
         return hy, (hy, cy)
 
 class EALSTMLayer(jit.ScriptModule):
-    def __init__(self, dynamic_input_size, static_input_size, hidden_size, 
-                 batch_first=True):
+    def __init__(self, config):
         
         super().__init__()
-        self.cell = EALSTMCell(dynamic_input_size, static_input_size, hidden_size)
+        
+        self.dynamic_input_size = len(config["input_dynamic_features"])
+        self.static_input_size = len(config["input_static_features"])
+        self.hidden_size = config["hidden_size"]
+        
+        self.cell = EALSTMCell(self.dynamic_input_size, self.static_input_size, 
+                               self.hidden_size)
 
     @jit.script_method
-    def forward(self, dynamic_input: Tensor, static_input: Tensor, 
-                state: Tuple[Tensor, Tensor]) -> Tuple[Tensor, Tuple[Tensor, Tensor]]:
-    
-        outputs = torch.jit.annotate(List[Tensor], [])
-        for i in range(len(dynamic_input)):
-            out, state = self.cell(dynamic_input[i:i+1,:], static_input, state)
-            outputs += [out]
-            
-        return torch.stack(outputs).squeeze(1), state
+    def forward(self, dynamic_input, 
+                static_input,
+                state:Tuple[Tensor, Tensor]):
+        
+        if state is None:
+            hx = torch.rand(self.hidden_size)
+            cx = torch.rand(self.hidden_size)
+            state = hx, cx
 
+        
+        for i in range(len(dynamic_input)):
+            output, state = self.cell(dynamic_input[i:i+1,:], 
+                                   static_input, state)
+            if i == 0:
+                outputs = output
+            else:
+                outputs = torch.cat((outputs, output), 0)
+                
+        return output, state
+ 
     
+ 
+
+
+
+
+#
+from hydroecolstm.utility.scaler import Scaler, get_scaler_name
+from hydroecolstm.data.read_data import read_train_test_data
+from hydroecolstm.data.read_config import read_config
+from hydroecolstm.model.lstm_linears import Lstm_Linears
+from hydroecolstm.model.ea_lstm import Ea_Lstm_Linears
+from hydroecolstm.model.train import Train
+
+
+config_file = "C:/Users/nguyenta/Documents/GitHub/HydroEcoLSTM/examples/experiments/config.yml"
+
+ # Load configuration
+config = read_config(config_file)
+
+ # Read and split data
+data = read_train_test_data(config)
+ 
+ # Scale/transformer name for static, dynamic, and target features
+x_scaler_name, y_scaler_name = get_scaler_name(config)
+ 
+ # Scaler/transformer
+x_scaler, y_scaler = Scaler(), Scaler()
+x_scaler.fit(x=data["x_train"], method=x_scaler_name)
+y_scaler.fit(x=data["y_train"], method=y_scaler_name)
+ 
+ # Scale/transform data
+x_train_scale = x_scaler.transform(x=data["x_train"])
+x_test_scale = x_scaler.transform(x=data["x_test"])
+y_train_scale = y_scaler.transform(x=data["y_train"])
+ 
+ # Create the model
+if config["model_class"] == "LSTM":
+    model = Lstm_Linears(config)
+else:
+    model = EALSTMLayer(config)#Ea_Lstm_Linears(config)
+     
+optim = torch.optim.Adam(model.parameters(), lr=0.1)    
+loss = torch.nn.MSELoss()   
+
+model = EALSTMLayer(config)
+dynamic_input_size = len(config["input_dynamic_features"])
+static_input_size = len(config["input_static_features"])
+hidden_size = config["hidden_size"]
+        
+dynamic_input = x_train_scale["2009"][:, :dynamic_input_size]
+static_input =  x_train_scale["2009"][0:1, dynamic_input_size:]
+hx = torch.rand(1, hidden_size)
+cx = torch.rand(1, hidden_size)
+
+target = torch.rand(dynamic_input.shape[0],hidden_size)
+
+#cell = EALSTMCell(dynamic_input_size, static_input_size,hidden_size)
+
+for i in range(50):
+    output, _ = model(dynamic_input, static_input, (hx, cx))
+    print(model.state_dict()["cell.weight_sh"][0:1,:])    
+    optim.zero_grad()
+    err = loss(output, target)
+    
+    err.backward()
+        
+    optim.step()
+    print("epoch = ", i, "  err = ", err)
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+trainer = Train(config, model)
+model, y_train_scale_simulated = trainer(x=x_train_scale, y=y_train_scale)
+  
+
+  
 # Example
 
 dynamic_input_size=3
@@ -83,9 +181,24 @@ cx = torch.rand(1,hidden_size)
 state=(hx,cx)
 
 model = EALSTMLayer(dynamic_input_size, static_input_size, hidden_size)
+optim = torch.optim.Adam(model.parameters(), lr=0.1)
+
+true = torch.rand(10,5)
+loss = torch.nn.MSELoss()
 
 
-output, (hx, cx) = model(dynamic_input, static_input, (hx, cx))
+for i in range(50):
+    output, _ = model(dynamic_input, static_input, (hx, cx))
+    
+    optim.zero_grad()
+    err = loss(output, true)
+    
+    err.backward()
+        
+    optim.step()
+    print("epoch = ", i, "  err = ", err)
+
+
 
 
 

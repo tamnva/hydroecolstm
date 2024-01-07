@@ -58,6 +58,9 @@ def sort_key(config):
     if "train_period" in config.keys():
         config_sort["train_period"] = config["train_period"]
 
+    if "test_period" in config.keys():
+        config_sort["test_period"] = config["test_period"]
+        
     if "model_class" in config.keys():
         config_sort["model_class"] = config["model_class"]
 

@@ -55,10 +55,11 @@ class Ea_Lstm_Linears(nn.Module):
                 f_t = self.f(x[key][i:i+1,:self.dynamic_size], h_t)
                 g_t = self.g(x[key][i:i+1,:self.dynamic_size], h_t)             
                 o_t = self.o(x[key][i:i+1,:self.dynamic_size], h_t)
-                output[key][i,:] = self.linear(o_t)
                 
                 c_t = f_t*c_t + i_t*g_t
                 h_t = o_t*torch.tanh(c_t)
+                
+                output[key][i,:] = self.linear(h_t)
 
         return output
     
