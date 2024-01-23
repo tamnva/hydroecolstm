@@ -25,7 +25,7 @@ def plot_train_valid_loss(loss, plot_window, xlabel, ylabel, title,
     
     # Default plot setting
 
-    if train_color == "": train_color = "red"
+    if train_color == "": train_color = "coral"
     if train_line_style == "": train_line_style = "dashed"
     if train_legend == "": train_legend = "Training loss"
     if valid_color == "": valid_color = "blue"
@@ -47,7 +47,7 @@ def plot_train_valid_loss(loss, plot_window, xlabel, ylabel, title,
                   loss["train_loss"], 
                   label = train_legend, 
                   linestyle = "dashed",
-                  color = "red")
+                  color = "coral")
     try:    
         axes.plot(loss["epoch"], 
                   loss["validation_loss"], 

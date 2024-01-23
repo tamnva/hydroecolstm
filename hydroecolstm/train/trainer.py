@@ -4,7 +4,7 @@ import torch
 from pathlib import Path
 from torch.utils.data import DataLoader
 
-from hydroecolstm.utility.custom_loss import CustomLoss
+from hydroecolstm.train.custom_loss import CustomLoss
 from hydroecolstm.data.custom_dataset import CustomDataset
 
 # LSTM + Linears

@@ -1,9 +1,9 @@
 
-from hydroecolstm.utility.scaler import Scaler, get_scaler_name
 from hydroecolstm.data.read_data import read_train_valid_test_data
+from hydroecolstm.data.scaler import Scaler, get_scaler_name
 from hydroecolstm.model.lstm_linears import Lstm_Linears
 from hydroecolstm.model.ea_lstm import Ea_Lstm_Linears
-from hydroecolstm.model.trainer import Trainer
+from hydroecolstm.train.trainer import Trainer
 
 config_file = "C:/Users/nguyenta/Documents/GitHub/hydroecolstm/examples/configuration_example/config.yml"
 

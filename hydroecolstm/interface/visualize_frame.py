@@ -8,7 +8,8 @@ from hydroecolstm.interface.utility import (ToplevelWindow,
                                             plot_time_series,
                                             check_size,check_linestyle,
                                             check_alpha,check_line_plot,
-                                            check_marker, check_color, check_ylim)
+                                            check_marker, check_color, 
+                                            check_ylim)
 from CTkToolTip import CTkToolTip
 
     
@@ -466,7 +467,7 @@ class VisualizeFrame(ctk.CTkScrollableFrame):
             
             # General setting for plotting observed data
             lineplot=check_line_plot(self.lineplot)
-            color_obs=check_color(self.color_obs, "red")
+            color_obs=check_color(self.color_obs, "coral")
             alpha_obs=check_alpha(self.alpha_obs, 1)
             size_obs=check_size(self.size_obs, 1)
             linestyle_obs=check_linestyle(self.linestyle_obs, 'dashed')
