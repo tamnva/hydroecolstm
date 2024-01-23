@@ -25,5 +25,5 @@ hydroecolstm.interface.show_gui()
 - After lanching the GUI, you should see the following window (the latest version in the "development" branch could look different)
 
 <p align="center">
-  <img src="examples/figures/intro_figure.gif" width=100% title="hover text">
+  <img src="docs/figures/intro_figure.gif" width=100% title="hover text">
 </p>

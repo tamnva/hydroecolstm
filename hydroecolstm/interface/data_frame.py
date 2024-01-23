@@ -8,7 +8,7 @@ from CTkListbox import CTkListbox
 from CTkToolTip import CTkToolTip
 
 from hydroecolstm.utility.scaler import Scaler, get_scaler_name
-from hydroecolstm.data.read_data import read_train_test_data
+from hydroecolstm.data.read_data import read_train_valid_test_data
    
 class DataFrame(ctk.CTkScrollableFrame):
     def __init__(self, container=None, config=None, globalData=None):
@@ -28,12 +28,11 @@ class DataFrame(ctk.CTkScrollableFrame):
                                       fg_color = "transparent")
         self.tabview.pack(fill='both',expand=1)
         self.tabview.add("1. Load data")
-        self.tabview.tab("1. Load data").grid_columnconfigure((0,1), weight=1)
+        self.tabview.tab("1. Load data").grid_columnconfigure((1,1), weight=1)
         self.tabview.add("2. Filter data")
-        self.tabview.tab("2. Filter data").grid_columnconfigure((0,1), weight=1)
+        self.tabview.tab("2. Filter data").grid_columnconfigure((1,1), weight=1)
         self.tabview.add("3. Transform data")
-        self.tabview.tab("3. Transform data").grid_columnconfigure((0,1), weight=1)
-        
+        self.tabview.tab("3. Transform data").grid_columnconfigure((1,1), weight=1)
         # ---------------------------------------------content of load data tab
         # ---------------------------------------------------------Dynamic data
         self.dynamic_label = ctk.CTkLabel(self.tabview.tab("1. Load data"), 
@@ -87,7 +86,7 @@ class DataFrame(ctk.CTkScrollableFrame):
         # ---------------------------------------------------------Static data       
         self.static_label = ctk.CTkLabel(self.tabview.tab("1. Load data"), 
                                         text="2. Static attribute data")
-        self.static_label.grid(row=0, column=1, padx = 10, pady=(5,5), sticky="e")
+        self.static_label.grid(row=0, column=2, padx = 10, pady=(5,5), sticky="w")
         
         # select static data file
         self.select_static_file = ctk.CTkButton(self.tabview.tab("1. Load data"), 
@@ -95,8 +94,8 @@ class DataFrame(ctk.CTkScrollableFrame):
                                               text="Select static data file", 
                                               command=self.get_static_file)
 
-        self.select_static_file.grid(row=1, column=1, padx = 10, 
-                                   pady=(5,5), sticky="e")
+        self.select_static_file.grid(row=1, column=2, padx = 10, 
+                                   pady=(5,5), sticky="w")
         CTkToolTip(self.select_static_file, delay=0.1, bg_color = 'orange',
                    text_color = 'black', anchor='w',  wraplength=500, 
                    message='Click here to select static (catchment attributes) data file. ' + 
@@ -108,15 +107,15 @@ class DataFrame(ctk.CTkScrollableFrame):
         # display selected data file
         self.selected_static_filename = ctk.CTkLabel(self.tabview.tab("1. Load data"),
                                                       text="No file was selected")
-        self.selected_static_filename.grid(row=2, column=1, padx = 10, pady=(5,5), sticky="e")
+        self.selected_static_filename.grid(row=2, column=2, padx = 10, pady=(5,5), sticky="w")
         
         # display visualize static data
         self.show_data = ctk.CTkButton(self.tabview.tab("1. Load data"), 
                                               anchor='e', 
                                               text="Display/visualize static data", 
                                               command=self.display_static_data)
-        self.show_data.grid(row=3, column=1, padx = 10, 
-                                   pady=(5,5), sticky="e")
+        self.show_data.grid(row=3, column=2, padx = 10, 
+                                   pady=(5,5), sticky="w")
         CTkToolTip(self.show_data, delay=0.1, bg_color = 'orange',
                    text_color = 'black', anchor = 'w', 
                    message= 'Click here to have a look at the data (using pandastable)' +
@@ -129,13 +128,13 @@ class DataFrame(ctk.CTkScrollableFrame):
                                                command=self.load_static_data, 
                                                variable=self.check_static_data)
         
-        self.checkbox_static_data.grid(row=4, column=1, padx = 10, pady=(5,5), sticky="e")
+        self.checkbox_static_data.grid(row=4, column=2, padx = 10, pady=(5,5), sticky="w")
         CTkToolTip(self.checkbox_static_data, delay=0.1, bg_color = 'orange',
                    text_color = 'black', anchor = 'w', 
                    message= 'If you check this box, data from the selected \n' +
                        'static data file will be used, uncheck means data will \n' +
                        'not be used')
-        #--------------------------------------------content of filter data tab
+        #--------------------------------------------Content of filter data tab
         # Select input features
         self.select_input_feature_label = ctk.CTkLabel(self.tabview.tab("2. Filter data"),
                                                        text="1. Select input features")
@@ -151,8 +150,8 @@ class DataFrame(ctk.CTkScrollableFrame):
         
         # Select target features
         self.select_target_feature_label = ctk.CTkLabel(self.tabview.tab("2. Filter data"),
-                                                       text="2. Select target features")
-        self.select_target_feature_label.grid(row=0, column=1, padx = 10, pady=(5,5), sticky="e")
+                                                       text="3. Select target features")
+        self.select_target_feature_label.grid(row=0, column=2, padx = 10, pady=(5,5), sticky="w")
         CTkToolTip(self.select_target_feature_label, delay=0.1, bg_color = 'orange',
                    text_color = 'black', anchor = 'w', 
                    message= 'Select target features (model outputs). \n' +
@@ -160,11 +159,11 @@ class DataFrame(ctk.CTkScrollableFrame):
         self.select_target_feature = CTkListbox(master=self.tabview.tab("2. Filter data"), 
                                                 multiple_selection=True, border_width=1.5,
                                                text_color="black")
-        self.select_target_feature.grid(row=1, column=1, padx = 10, pady=(5,5), sticky="e") 
+        self.select_target_feature.grid(row=1, column=2, padx = 10, pady=(5,5), sticky="w") 
         
         # Select object id
         self.object_id_label = ctk.CTkLabel(self.tabview.tab("2. Filter data"),
-                                                   text="3. Select object id")
+                                                   text="2. Select object id")
         self.object_id_label.grid(row=2, column=0, padx = 10, pady=(5,5), sticky="w")
         CTkToolTip(self.object_id_label, delay=0.1, bg_color = 'orange',
                    text_color = 'black', anchor = 'w', 
@@ -178,51 +177,57 @@ class DataFrame(ctk.CTkScrollableFrame):
         # Trainning period
         self.select_date_train= ctk.CTkLabel(self.tabview.tab("2. Filter data"),
                                              text="4. Training period (yyyy-mm-dd)")
-        self.select_date_train.grid(row=2, column=1, padx = 10, pady=(5,5), sticky="e")    
+        self.select_date_train.grid(row=2, column=2, padx = 10, pady=(5,5), sticky="w")    
         self.start_train = tkc.DateEntry(self.tabview.tab("2. Filter data"), 
                                          date_pattern= 'yyyy-mm-dd', width = 25,
                                          year=1800, month=1, day=1, font=ctk.CTkFont(size=16))
-        self.start_train.grid(row= 3,column=1, padx=30, pady=10, sticky='e')
+        self.start_train.grid(row= 3,column=2, padx=30, pady=10, sticky='e')
         self.end_train = tkc.DateEntry(self.tabview.tab("2. Filter data"), 
                                        date_pattern= 'yyyy-mm-dd', width = 25,
                                        year=2010, month=1, day=1, font=ctk.CTkFont(size=16))
-        self.end_train.grid(row= 4,column=1, padx=30, pady=10, sticky='e')   
+        self.end_train.grid(row= 4,column=2, padx=30, pady=10, sticky='e')   
         CTkToolTip(self.select_date_train, delay=0.1, bg_color = 'orange',
                    text_color = 'black', anchor='w', 
                    message='Select starting date (upper calender box) and \n' + 
-                   'ending date (lower calendar box) of the training period')
+                   'ending date (lower calendar box) of the training period. \n'+
+                   'Training data are used to fit model parameters.')
+
+        # start validation calander  
+        self.select_date_valid= ctk.CTkLabel(self.tabview.tab("2. Filter data"),
+                                            text="5. Validation period (yyyy-mm-dd)")
+        self.select_date_valid.grid(row=5, column=2, padx = 10, pady=(5,5), sticky="w")    
+        self.start_valid = tkc.DateEntry(self.tabview.tab("2. Filter data"), 
+                                         date_pattern= 'yyyy-mm-dd', width = 25,
+                                         year=1800, month=1, day=1, font=ctk.CTkFont(size=16))
+        CTkToolTip(self.select_date_valid, delay=0.1, bg_color = 'orange',
+                   text_color = 'black', anchor='w', 
+                   message='Select starting date (upper calender box) and \n' + 
+                   'ending date (lower calendar box) of the validtion period. \n'+
+                   'Validation data ared used for early stopping.')
+        self.start_valid.grid(row= 6,column=2, padx=30, pady=10, sticky='e')
+        self.end_valid = tkc.DateEntry(self.tabview.tab("2. Filter data"), 
+                                       date_pattern= 'yyyy-mm-dd', width = 25,
+                                       year=2018, month=1, day=1, font=ctk.CTkFont(size=16))
+        self.end_valid.grid(row= 7,column=2, padx=30, pady=10, sticky='e')   
         
         # start testing calander  
         self.select_date_test= ctk.CTkLabel(self.tabview.tab("2. Filter data"),
-                                            text="5. Testing period (yyyy-mm-dd)")
-        self.select_date_test.grid(row=5, column=1, padx = 10, pady=(5,5), sticky="e")    
+                                            text="6. Testing period (yyyy-mm-dd)")
+        self.select_date_test.grid(row=8, column=2, padx = 10, pady=(5,5), sticky="w")    
         self.start_test = tkc.DateEntry(self.tabview.tab("2. Filter data"), 
                                          date_pattern= 'yyyy-mm-dd', width = 25,
                                          year=1800, month=1, day=1, font=ctk.CTkFont(size=16))
         CTkToolTip(self.select_date_test, delay=0.1, bg_color = 'orange',
                    text_color = 'black', anchor='w', 
                    message='Select starting date (upper calender box) and \n' + 
-                   'ending date (lower calendar box) of the testing period')
-        self.start_test.grid(row= 6,column=1, padx=30, pady=10, sticky='e')
+                   'ending date (lower calendar box) of the testing period. \n' +
+                   'Testing data are used for final evaluation of the model.')
+        self.start_test.grid(row= 9,column=2, padx=30, pady=10, sticky='e')
         self.end_test = tkc.DateEntry(self.tabview.tab("2. Filter data"), 
                                        date_pattern= 'yyyy-mm-dd', width = 25,
                                        year=2018, month=1, day=1, font=ctk.CTkFont(size=16))
-        self.end_test.grid(row= 7,column=1, padx=30, pady=10, sticky='e')   
-        
-
-        # Start subsetting data
-        self.data_filter_label = ctk.CTkLabel(self.tabview.tab("2. Filter data"),
-                                              text="6. Start subseting/filtering data")
-        self.data_filter_label.grid(row=8, column=1, padx = 10, pady=(5,5), sticky="e")        
-        self.data_filter = ctk.CTkButton(self.tabview.tab("2. Filter data"),
-                                         anchor='e',
-                                         text="Filter and split data",
-                                         command=self.read_train_and_test_data)
-        self.data_filter.grid(row=9, column=1, padx = 10, pady=(5,5), sticky="en")
-        CTkToolTip(self.data_filter, delay=0.1, bg_color = 'orange',
-                   text_color = 'black', anchor = 'w', 
-                   message= 'Click this button to start spliting your data into \n' +
-                       'training, testing datasets')        
+        self.end_test.grid(row= 10,column=2, padx=30, pady=10, sticky='e')   
+               
         #-----------------------------------------------------3. Transform data
         self.transform_dd_label = ctk.CTkLabel(self.tabview.tab("3. Transform data"),
                                                text="1. Transformer for dynamic features")
@@ -234,24 +239,11 @@ class DataFrame(ctk.CTkScrollableFrame):
         self.transform_dd_option.grid(row=1, column=0, pady = 3, padx = 10, sticky = "w")
         CTkToolTip(self.transform_dd_option, delay=0.1, bg_color = 'orange',
                    text_color = 'black', anchor = 'w', 
-                   message= 'Click here to select which method should be used for \n' + 
-                   ' transforming the dynamic data. None means the data will not be transformed \n') 
+                   message= 'Click here to select method for transforming dynamic data') 
 
-        self.transform_ss_label = ctk.CTkLabel(self.tabview.tab("3. Transform data"),
-                                               text="2. Transformer for static features")
-        self.transform_ss_label.grid(row=2, column=0, pady = 3, padx = 10, sticky = "w")
-        
-        self.transform_ss_option = ctk.CTkOptionMenu(self.tabview.tab("3. Transform data"),
-                                                  values=['MinMaxScaler', 'Z-score', 'None'],
-                                                   command=self.transform_static_data_option) 
-        self.transform_ss_option.grid(row=3, column=0, pady = 3, padx = 10, sticky = "w")
-        CTkToolTip(self.transform_ss_option, delay=0.1, bg_color = 'orange',
-                   text_color = 'black', anchor = 'w', 
-                   message= 'Click here to select which method should be used for \n' + 
-                   ' transforming the static data. None means the data will not be transformed \n') 
 
         self.transform_tar_label = ctk.CTkLabel(self.tabview.tab("3. Transform data"),
-                                               text="3. Transformer for target features")
+                                               text="2. Transformer for target features")
         self.transform_tar_label.grid(row=4, column=0, pady = 3, padx = 10, sticky = "w")
         
         self.transform_tar_option = ctk.CTkOptionMenu(self.tabview.tab("3. Transform data"),
@@ -260,29 +252,41 @@ class DataFrame(ctk.CTkScrollableFrame):
         self.transform_tar_option.grid(row=5, column=0, pady = (3,35), padx = 10, sticky = "w")
         CTkToolTip(self.transform_tar_option, delay=0.1, bg_color = 'orange',
                    text_color = 'black', anchor = 'w', 
-                   message= 'Click here to select which method should be used for \n' + 
-                   ' transforming the target data. None means the data will not be transformed \n') 
+                   message= 'Click here to select method for transforming target features') 
         
+        self.transform_ss_label = ctk.CTkLabel(self.tabview.tab("3. Transform data"),
+                                       text="3. Transformer for static features")
+        self.transform_ss_label.grid(row=2, column=0, pady = 3, padx = 10, sticky = "w")
+
+        self.transform_ss_option = ctk.CTkOptionMenu(self.tabview.tab("3. Transform data"),
+                                                 values=['MinMaxScaler', 'Z-score', 'None'],
+                                                 command=self.transform_static_data_option) 
+        self.transform_ss_option.grid(row=3, column=0, pady = 3, padx = 10, sticky = "w")
+        CTkToolTip(self.transform_ss_option, delay=0.1, bg_color = 'orange',
+           text_color = 'black', anchor = 'w', 
+           message= 'Click here to select method for transforming static data') 
+
+
         self.execute_label = ctk.CTkLabel(self.tabview.tab("3. Transform data"),
-                                               text="4. Execute data transformation")
-        self.execute_label.grid(row=6, column=0, pady = 3, padx = 10, sticky = "w")
+                                               text="4. Data split and transform")
+        self.execute_label.grid(row=0, column=2, pady = 3, padx = 10, sticky = "w")
         
         self.execute = ctk.CTkButton(self.tabview.tab("3. Transform data"),
                                                    text="Execute",
-                                                   command=self.transform_data) 
-        self.execute.grid(row=7, column=0, pady = 3, padx = 10, sticky = "w")
+                                                   command=self.data_split_transform) 
+        self.execute.grid(row=1, column=2, pady = 3, padx = 10, sticky = "w")
         CTkToolTip(self.execute, delay=0.1, bg_color = 'orange',
                    text_color = 'black', anchor = 'w', 
-                   message= 'Click here to execute data transformation') 
+                   message= 'Click here to split data (train, valid, test) and transform') 
         
         self.show_result_label = ctk.CTkLabel(self.tabview.tab("3. Transform data"),
                                                text="5. Display/Visualize transform data")
-        self.show_result_label.grid(row=8, column=0, pady = 3, padx = 10, sticky = "w")
+        self.show_result_label.grid(row=2, column=2, pady = 3, padx = 10, sticky = "w")
         
         self.show_result = ctk.CTkButton(self.tabview.tab("3. Transform data"),
                                                    text="Display/Visualize",
                                                    command=self.display_orig_trans_data) 
-        self.show_result.grid(row=9, column=0, pady = 3, padx = 10, sticky = "w")
+        self.show_result.grid(row=3, column=2, pady = 3, padx = 10, sticky = "w")
         CTkToolTip(self.show_result, delay=0.1, bg_color = 'orange',
                    text_color = 'black', anchor = 'w', 
                    message= 'Click here to view the original and transform data of the first object id') 
@@ -471,12 +475,24 @@ class DataFrame(ctk.CTkScrollableFrame):
 
         except:
             None
-   
-    # Assemble all the information to config and perform read_train_and_test_data
-    def read_train_and_test_data(self):        
+ 
+    # Get transformer 
+    def transform_dynamic_data_option(self, method: str):
+        self.config["scaler_input_dynamic_features"] = [method]
+    
+    def transform_static_data_option(self, method: str):
+        self.config["scaler_input_static_features"] = [method]
+        
+    def transform_target_data_option(self, method: str):
+        self.config["scaler_target_features"] = [method]
+        
+    def data_split_transform(self):
+        # Train test split
         # get training and testing periods
         self.config['train_period'] = [self.start_train.get_date(),
                                        self.end_train.get_date()]
+        self.config['valid_period'] = [self.start_valid.get_date(),
+                                       self.end_valid.get_date()]
         self.config['test_period'] = [self.start_test.get_date(),
                                       self.end_test.get_date()]
         
@@ -487,8 +503,6 @@ class DataFrame(ctk.CTkScrollableFrame):
         
         # convert target to static and dynamic features
         if "static_data_file" in self.config:
-            #print("static in self config")
-            #print(self.config)
             self.config['input_static_features'] = []
             self.config['input_dynamic_features'] = []
             
@@ -505,10 +519,7 @@ class DataFrame(ctk.CTkScrollableFrame):
             try: 
                 del self.config['input_static_features']
             except:
-                None   
-                
-        #print("summayr config")
-        #print(self.config)
+                pass
         
         # get target features
         all_items = self.select_target_feature.get(index='all')
@@ -521,49 +532,36 @@ class DataFrame(ctk.CTkScrollableFrame):
         self.config['object_id'] = [all_items[i] for i in select_index]
         
         # Get train and test data
-        data_train_test_split = read_train_test_data(self.config)
-        self.globalData["x_train"] = data_train_test_split["x_train"]
-        self.globalData["y_train"] = data_train_test_split["y_train"]
-        self.globalData["time_train"] = data_train_test_split["time_train"]
+        data = read_train_valid_test_data(self.config)
         
-        self.globalData["x_test"] = data_train_test_split["x_test"]
-        self.globalData["y_test"] = data_train_test_split["y_test"]
-        self.globalData["time_test"] = data_train_test_split["time_test"]
+        # Update global data
+        self.globalData.update(data)
         
-        self.globalData["x_column_name"] = data_train_test_split["x_column_name"]
-        self.globalData["y_column_name"] = data_train_test_split["y_column_name"]
-        
-        del data_train_test_split
+        # Delete data variable to free memory
+        del data
          
         # Show message box
-        tk.messagebox.showinfo(title="Message box", 
-                               message="Done filtering/spliting data")
- 
-
-    # Get transformer 
-    def transform_dynamic_data_option(self, method: str):
-        self.config["scaler_input_dynamic_features"] = [method]
-    
-    def transform_static_data_option(self, method: str):
-        self.config["scaler_input_static_features"] = [method]
+        print("Done data split (train, valid, test)")
         
-    def transform_target_data_option(self, method: str):
-        self.config["scaler_target_features"] = [method]
-        
-    def transform_data(self):
+        #--------------------------------------------------------Transform data
         # Get scaler name
         self.globalData["x_scaler_method"], \
             self.globalData["y_scaler_method"] = get_scaler_name(self.config)
-
-        #print(self.globalData["x_scaler_method"])
-        #print(self.globalData["y_scaler_method"])
-        #print(self.globalData["x_train"].keys())
+        print("done get scaler")
+        
         # Scale x_train and x_test
         self.globalData["x_scaler"] = Scaler()
         self.globalData["x_scaler"].fit(x=self.globalData["x_train"], 
                                         method=self.globalData["x_scaler_method"])
+        
         self.globalData["x_train_scale"] =\
             self.globalData["x_scaler"].transform(x=self.globalData["x_train"])
+        print("done x train scale ")    
+            
+        self.globalData["x_valid_scale"] =\
+            self.globalData["x_scaler"].transform(x=self.globalData["x_valid"]) 
+        print("done x valid scale")
+            
         self.globalData["x_test_scale"] =\
             self.globalData["x_scaler"].transform(x=self.globalData["x_test"])        
         
@@ -573,12 +571,13 @@ class DataFrame(ctk.CTkScrollableFrame):
                                         method=self.globalData["y_scaler_method"])
         self.globalData["y_train_scale"] =\
             self.globalData["y_scaler"].transform(x=self.globalData["y_train"])
-        self.globalData["y_test_scale"] =\
-            self.globalData["y_scaler"].transform(x=self.globalData["y_test"])   
-            
+        print("done y scale")
+        self.globalData["y_valid_scale"] =\
+            self.globalData["y_scaler"].transform(x=self.globalData["y_valid"])   
+        print("done y valid scale")
         # Show message box
         tk.messagebox.showinfo(title="Message box", 
-                               message="Done transforming data")
+                               message="Done data split + transform")
         
     def get_first_tensor(self): 
         
@@ -607,6 +606,5 @@ class DataFrame(ctk.CTkScrollableFrame):
             self.table = Table(tk.Toplevel(self), dataframe=self.get_first_tensor(), 
                                showtoolbar=True, showstatusbar=True)
             self.table.show()
-            #print(self.get_first_tensor())
         except:
-            None        
+            pass        

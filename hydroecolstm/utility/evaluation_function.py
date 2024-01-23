@@ -1,26 +1,28 @@
 import torch
 
-class LossFunction:
-    def __call__(self, y_true:torch.Tensor, y_predict:torch.Tensor, nskip: int,
-                 objective_function_name:str) -> torch.Tensor:
+class EvaluationFunction():
+    def __init__(self, function_name:str, nskip:int):
         
-        # Loss function as list
-        loss_functions = {"MSE": self.MSE, "RMSE": self.RMSE, 
-                          "1-NSE": self.NSE, "MAE": self.MAE}
+        # Dict of all available evaluation functions
+        evaluation_functions = {"MSE": self.MSE, "RMSE": self.RMSE,
+                                "NSE": self.NSE, "MAE": self.MAE}
         
-        loss = {}
+        # Selected evaluation function
+        self.eval_function = evaluation_functions[function_name]
+        self.nskip = nskip
+        
+    def __call__(self, y_true:torch.Tensor, y_predict:torch.Tensor) -> torch.Tensor:
+        
+        # Get evaluation values for each basins (key), each target variables
+        eval_values = {}
 
         for key in y_true.keys():
-            loss[key] = loss_functions[objective_function_name](y_true[key][nskip:,],
-                                                                y_predict[key][nskip:,])
+            eval_values[key] = self.eval_function(y_true[key][self.nskip:,],
+                                                  y_predict[key][self.nskip:,])
 
-        avg_loss = sum(sum(loss.values()))/((len(loss))*loss[next(iter(loss))].shape[0])
-        
-        # Raise value error nan loss
-        # if torch.isnan(avg_loss):
-        #    raise ValueError("nan values found when calculating loss value")
+        avg_eval_values = sum(sum(eval_values.values()))/((len(eval_values))*eval_values[next(iter(eval_values))].shape[0])
             
-        return loss, avg_loss
+        return eval_values, avg_eval_values
     
     def MSE(self, ytrue:torch.Tensor, ypredict:torch.Tensor):
         mask = ~torch.isnan(ytrue)
@@ -49,7 +51,7 @@ class LossFunction:
             ssd.append(torch.sum((ytrue[:,i][mask[:,i]] - torch.nanmean(ytrue[:,i]))**2))
         
         # get 1 - nse, here I call it as nse
-        nse = torch.stack(sse)/torch.stack(ssd)
+        nse = 1.0 - torch.stack(sse)/torch.stack(ssd)
         
         if torch.isnan(nse).any():
             raise ValueError("nan values found when calculating NSE - zero division")
@@ -64,7 +66,4 @@ class LossFunction:
             mae.append(torch.mean(torch.abs(error)))
         mae = torch.stack(mae)
         
-        return mae        
-        
-        
-        
+        return mae

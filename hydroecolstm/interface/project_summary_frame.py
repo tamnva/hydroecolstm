@@ -90,22 +90,19 @@ class ProjectSummaryFrame(ctk.CTkFrame):
                 print("Saved project summary as ", file_name)
                 
             elif response == "Save all":
-                # Save config as .yml             
-                output_dir = tk.filedialog.askdirectory()
-                self.config["output_dir"] = [output_dir]
-                print("Saved project summary as config.yml file")
+                # Select dir to save      
+                output_directory = tk.filedialog.askdirectory()
                 
-                write_yml_file(config=self.config, out_file=
-                               Path(self.config["output_dir"][0], "config.yml"))
+                # Save config as .yml                 
+                write_yml_file(config=self.config, out_file=Path(output_directory, "config.yml"))
+                print("Saved project summary as config.yml file")
         
                 # Save model_state_dicts to model_state_dict.pt file
-                torch.save(self.globalData["model"].state_dict(), 
-                           Path(self.config["output_dir"][0], "model_state_dict.pt"))
+                torch.save(self.globalData["model"].state_dict(),Path(output_directory, "model_state_dict.pt"))
                 print("Model state_dict was saved as model_state_dict.pt")
                 
                 # Save global data
-                torch.save(self.globalData, 
-                           Path(self.config["output_dir"][0], "globalData.pt"))
+                torch.save(self.globalData, Path(output_directory, "globalData.pt"))
                 print("globalData was saved as globalData.pt")
             else:
                 pass

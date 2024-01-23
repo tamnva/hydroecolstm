@@ -1,5 +1,4 @@
 
-from typing import Dict
 from torch import nn
 import torch
 from hydroecolstm.model.linears import Linears
@@ -16,8 +15,8 @@ class Lstm_Linears(nn.Module):
         self.hidden_size = config["hidden_size"]
         self.num_layers = config["num_layers"]
         self.dropout = config["dropout"]*min(1.0, self.num_layers - 1.0)
-        self.linears_num_layers = config["REG"]["num_layers"]
-        self.linears_activation_function = config["REG"]["activation_function"]
+        self.linears_num_layers = config["Regression"]["num_layers"]
+        self.linears_activation_function = config["Regression"]["activation_function"]
         self.linears_num_neurons = self.find_num_neurons(config=config) 
         
         # Standard LSTM from torch
@@ -26,24 +25,41 @@ class Lstm_Linears(nn.Module):
                             num_layers=self.num_layers,
                             dropout=self.dropout,
                             **kwargs)
-        
+
+
         # Fully-connected layer connect hidden and output
         self.linear = Linears(num_layers=self.linears_num_layers, 
                               activation_function=self.linears_activation_function,
                               num_neurons=self.linears_num_neurons)
      
-    def forward(self, x: Dict[str, torch.Tensor]) -> Dict[str, torch.Tensor]:
+    # Forward mode run with torch.Tensor as usrual
+    def forward(self, x:torch.Tensor) -> torch.Tensor:
         
-        y_predict = {}
+        # get standard LSTM outputs
+        y_predict, _ = self.lstm(x)
         
-        for key in x.keys():
-            # get standard LSTM outputs
-            y_lstm, _ = self.lstm(x[key])
-            # get final output 
-            y_predict[key] = self.linear(y_lstm)  
+        # get final output 
+        y_predict = self.linear(y_predict)  
         
         # return output
         return y_predict
+
+    # In the evaluate mode run with Dict[str: tensor]
+    def evaluate(self, x:dict[str, torch.Tensor]) -> dict[str, torch.Tensor]:
+        
+        with torch.no_grad():
+            y_predict = {}
+            
+            for key in x.keys():
+                # get standard LSTM outputs
+                y_predict[key], _ = self.lstm(x[key])
+                
+                # get final output 
+                y_predict[key] = self.linear(y_predict[key])  
+        
+        # return output
+        return y_predict
+
     
     # get input size
     def get_input_size(self, config) -> int:
@@ -59,12 +75,23 @@ class Lstm_Linears(nn.Module):
         # First number of neurons from the input layers ()
         num_neurons = [self.hidden_size]
 
-        if "REG" in config:
-            if len(config["REG"]["num_neurons"]) > 1:
-                for i in range(len(config["REG"]["num_neurons"])-1):
-                    num_neurons.append(config["REG"]["num_neurons"][i])
+        if "Regression" in config:
+            if len(config["Regression"]["num_neurons"]) > 1:
+                for i in range(len(config["Regression"]["num_neurons"])-1):
+                    num_neurons.append(config["Regression"]["num_neurons"][i])
         num_neurons.append(self.output_size)
 
         return num_neurons
-                    
-            
+
+'''                  
+model = nn.LSTM(input_size=3, hidden_size=4, batch_first=True)
+input = torch.rand(2,10,3)
+out, state = model(input)
+
+newmodel = nn.Linear(in_features=4, out_features=2)
+newinput = torch.rand(2,10,4)
+test = newinput[1,:,:]
+newout = newmodel(test)
+
+nn.Linear(in_features, out_features)       
+'''     

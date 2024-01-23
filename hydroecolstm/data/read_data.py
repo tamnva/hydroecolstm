@@ -3,7 +3,7 @@ import numpy as np
 import torch
 
 # Read time series data into pandas data frame
-def read_train_test_data(config:dict=None) -> dict:
+def read_train_valid_test_data(config:dict=None) -> dict:
     
     # Read input data  
     dynamic_data = pd.read_csv(config['dynamic_data_file'][0], 
@@ -40,11 +40,16 @@ def read_train_test_data(config:dict=None) -> dict:
     y_train = _split_by_object_id(train_data[y_column_name], config["object_id"])
     time_train = _time_by_object_id(train_data, config["object_id"])
 
+    config["valid_period"] = pd.to_datetime(config["valid_period"], format = "%Y-%m-%d")
+    valid_data = dynamic_data[(dynamic_data["time"] >= config["valid_period"][0]) &
+                             (dynamic_data["time"] <= config["valid_period"][1])]
+    x_valid = _split_by_object_id(valid_data[x_column_name], config["object_id"])
+    y_valid = _split_by_object_id(valid_data[y_column_name], config["object_id"])
+    time_valid = _time_by_object_id(valid_data, config["object_id"])
     
     config["test_period"] = pd.to_datetime(config["test_period"], format = "%Y-%m-%d")
     test_data = dynamic_data[(dynamic_data["time"] >= config["test_period"][0]) &
                              (dynamic_data["time"] <= config["test_period"][1])]
-    
     x_test = _split_by_object_id(test_data[x_column_name], config["object_id"])
     y_test = _split_by_object_id(test_data[y_column_name], config["object_id"])
     time_test = _time_by_object_id(test_data, config["object_id"])
@@ -81,10 +86,14 @@ def read_train_test_data(config:dict=None) -> dict:
             rep_static_data = static_data[i,].repeat(x_train[object_id].shape[0],1)
             x_train[object_id] = torch.cat((x_train[object_id], rep_static_data), 1)
 
+            rep_static_data = static_data[i,].repeat(x_valid[object_id].shape[0],1)
+            x_valid[object_id] = torch.cat((x_valid[object_id], rep_static_data), 1)
+            
             rep_static_data = static_data[i,].repeat(x_test[object_id].shape[0],1)
             x_test[object_id] = torch.cat((x_test[object_id], rep_static_data), 1)
 
-    return {"x_train":x_train, "y_train": y_train, "time_train" : time_train, 
+    return {"x_train":x_train, "y_train": y_train, "time_train" : time_train,
+            "x_valid":x_valid, "y_valid": y_valid, "time_valid" : time_valid, 
             "x_test":x_test, "y_test": y_test, "time_test": time_test,
             "x_column_name": x_column_name, "y_column_name": y_column_name}
 
@@ -174,7 +183,7 @@ def read_forecast_data(config:dict=None) -> dict:
     else:
         static_data = None
 
-    # add static data to x_forecast and y_train
+    # add static data to x_forecast and y_forecast
     if static_data is not None:
         for i, object_id in zip(range(len(x_forecast)), x_forecast):
             rep_static_data = static_data[i,].repeat(x_forecast[object_id].shape[0],1)

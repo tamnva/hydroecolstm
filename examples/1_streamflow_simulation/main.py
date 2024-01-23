@@ -3,38 +3,32 @@
 from hydroecolstm.model_run import run_train
 from hydroecolstm.utility.plot import plot
 from hydroecolstm.data.read_config import read_config
-from hydroecolstm.utility.evaluation_function import EvaluationFunction
 
 #-----------------------------------------------------------------------------#
 #                                Run the model                                #
 #-----------------------------------------------------------------------------#
 # Configuration file
-config_file = "C:/Users/nguyenta/Documents/GitHub/hydroecolstm/examples/2_streamflow_isotope_simulation/config.yml"
-
+config_file = "C:/Users/nguyenta/Documents/GitHub/hydroecolstm/examples/configuration_example/config.yml"
 config = read_config(config_file)
+    
+# Train the model => return model, x_scaler, y_scaler, data
 model, x_scaler, y_scaler, data = run_train(config)
 
 # Plot train and valid loss with epoch
-plt = data["trainer"].loss.drop(['epoch', 'best_model'], axis=1).plot()
+data["loss"].drop(['epoch'], axis=1).plot()
 
-
-
-objective = EvaluationFunction(config["eval_function"], config['warmup_length'])
-print(objective(data['y_train'], data['y_train_simulated']))
-print(objective(data['y_valid'], data['y_valid_simulated']))
-print(objective(data['y_test'], data['y_test_simulated']))
 
 # Visualize valid and test data
 for object_id in config["object_id"]:
     for target in config["target_features"]:
         p = plot(data, object_id=str(object_id), target_feature=target)
         p.show()
-                   
+                                   
 #-----------------------------------------------------------------------------#
 #             Work with GUI, use the two lines below to call the GUI          #
 #-----------------------------------------------------------------------------#
-from hydroecolstm.interface.main_gui import show_gui
-show_gui()
+#from hydroecolstm.interface.main_gui import show_gui
+#show_gui()
 
 #-----------------------------------------------------------------------------#
 #             Ungagued basins                                                 #
@@ -60,7 +54,15 @@ for object_id in y_forecast.keys():
     plt.legend()
     plt.show()
 
+    
+objective = EvaluationFunction(config["eval_function"], config['warmup_length'])
+objective(data['y_train'], data['y_train_simulated'])
+objective(data['y_valid'], data['y_valid_simulated'])
+objective(data['y_test'], data['y_test_simulated'])
 objective(forecast_dataset['y_forecast'], y_forecast)
+
 import torch
-#data=torch.load("C:/Users/nguyenta/Documents/GitHub/hydroecolstm/examples/2_streamflow_isotope_simulation/results/data.pt")
-torch.save(data, "C:/Users/nguyenta/Documents/GitHub/hydroecolstm/examples/2_streamflow_isotope_simulation/results/data.pt")
+model.load_state_dict(torch.load(config["best_model"][0]))
+torch.save(data, "C:/Users/nguyenta/Documents/GitHub/hydroecolstm/examples/data/data.pt")
+torch.save(x_scaler, "C:/Users/nguyenta/Documents/GitHub/hydroecolstm/examples/data/x_scaler.pt")
+torch.save(y_scaler, "C:/Users/nguyenta/Documents/GitHub/hydroecolstm/examples/data/y_scaler.pt")

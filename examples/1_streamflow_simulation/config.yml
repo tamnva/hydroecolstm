@@ -1,0 +1,134 @@
+dynamic_data_file:
+  - C:/Users/nguyenta/Documents/GitHub/hydroecolstm/examples/data/time_series.csv
+
+static_data_file:
+  - C:/Users/nguyenta/Documents/GitHub/hydroecolstm/examples/data/static_attributes.csv
+
+output_directory:
+  - C:/Users/nguyenta/Documents/GitHub/hydroecolstm/examples/data
+
+input_static_features:
+  - elev_mean
+  - slope_mean
+  - p_seasonality
+  - aridity
+  - pet_mean
+
+input_dynamic_features:
+  - precipitation_mm_d
+  - temperature_mean_degC
+
+target_features:
+  - discharge_vol_m3_s
+
+object_id:
+  - 2009
+  - 2016
+  - 2018
+  - 2019
+  - 2020
+  - 2024
+  - 2030
+  - 2033
+
+train_period: 
+  - 2010-01-01 00:00
+  - 2020-12-31 00:00
+
+valid_period: 
+  - 2006-01-01 00:00
+  - 2009-12-31 00:00
+
+test_period: 
+  - 2001-01-01 00:00
+  - 2005-12-31 00:00
+
+model_class: LSTM
+
+Regression:
+  activation_function:
+    - Identity
+  num_neurons:
+    - None
+  num_layers: 1
+
+scaler_input_dynamic_features:
+  - Z-score
+scaler_input_static_features:
+  - Z-score
+scaler_target_features:
+  - MinMaxScaler
+
+hidden_size: 30
+
+num_layers: 1
+
+n_epochs: 300
+
+learning_rate: 0.005
+
+dropout: 0.3
+
+warmup_length: 30
+
+loss_function: RMSE
+
+sequence_length: 512
+
+batch_size: 8
+
+patience: 30
+
+eval_function: NSE
+
+static_data_file_forecast:
+  - static_data_file
+
+dynamic_data_file_forecast:
+  - dynamic_data_file
+
+forecast_period: 
+  - 2001-01-01 00:00
+  - 2009-12-31 00:00
+
+object_id_forecast:
+  - 2011
+  - 2029
+
+#
+#({'2009': tensor([0.8060]),
+#  '2016': tensor([0.8967]),
+#  '2018': tensor([0.8926]),
+#  '2019': tensor([0.6850]),
+#  '2020': tensor([0.8366]),
+#  '2024': tensor([0.8475]),
+#  '2030': tensor([0.8584]),
+#  '2033': tensor([0.5427])},
+# tensor(0.7957))
+
+#objective(data['y_valid'], data['y_valid_simulated'])
+#Out[143]: 
+#({'2009': tensor([0.8686]),
+#  '2016': tensor([0.8568]),
+#  '2018': tensor([0.8790]),
+#  '2019': tensor([0.7666]),
+#  '2020': tensor([0.7976]),
+#  '2024': tensor([0.8520]),
+#  '2030': tensor([0.8669]),
+#  '2033': tensor([0.6117])},
+# tensor(0.8124))
+
+#objective(data['y_test'], data['y_test_simulated'])
+#Out[144]: 
+#({'2009': tensor([0.8023]),
+#  '2016': tensor([0.8908]),
+#  '2018': tensor([0.8764]),
+#  '2019': tensor([0.6825]),
+#  '2020': tensor([0.8002]),
+#  '2024': tensor([0.8257]),
+#  '2030': tensor([0.8536]),
+#  '2033': tensor([0.5722])},
+# tensor(0.7880))
+
+#objective(forecast_dataset['y_forecast'], y_forecast)
+#Out[145]: ({'2011': tensor([0.8579]), '2029': tensor([0.5087])}, tensor(0.6833))

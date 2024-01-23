@@ -27,8 +27,8 @@ class Ea_Lstm_Linears(nn.Module):
         self.num_layers = config["num_layers"]
         self.hidden_size = config["hidden_size"]
         self.output_size = len(config["target_features"])
-        self.linears_num_layers = config["REG"]["num_layers"]
-        self.linears_activation_function = config["REG"]["activation_function"]
+        self.linears_num_layers = config["Regression"]["num_layers"]
+        self.linears_activation_function = config["Regression"]["activation_function"]
         self.linears_num_neurons = self.find_num_neurons(config=config) 
 
         # Model structure
@@ -68,10 +68,10 @@ class Ea_Lstm_Linears(nn.Module):
         # First number of neurons from the input layers ()
         num_neurons = [self.hidden_size]
 
-        if "REG" in config:
-            if len(config["REG"]["num_neurons"]) > 1:
-                for i in range(len(config["REG"]["num_neurons"])-1):
-                    num_neurons.append(config["REG"]["num_neurons"][i])
+        if "Regression" in config:
+            if len(config["Regression"]["num_neurons"]) > 1:
+                for i in range(len(config["Regression"]["num_neurons"])-1):
+                    num_neurons.append(config["Regression"]["num_neurons"][i])
         num_neurons.append(self.output_size)
 
         return num_neurons

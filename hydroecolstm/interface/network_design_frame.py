@@ -21,79 +21,20 @@ class NetworkDesignFrame(ctk.CTkScrollableFrame):
         self.tabview = ctk.CTkTabview(master=self, width = 750, border_width=1.5,
                                       fg_color = "transparent")
         self.tabview.pack(fill='both',expand=1)
-        self.tabview.add("1. Model class")
-        self.tabview.tab("1. Model class").grid_columnconfigure((0,1), weight=1)
-        self.tabview.tab("1. Model class").rowconfigure((0,1,2,3,4,5,6,7), weight=1)
-        self.tabview.add("2. Model head")
-        self.tabview.tab("2. Model head").grid_columnconfigure((0), weight=1)
-                   
-        # ---------------------------------------------content of load data tab
-        self.intro_label = ctk.CTkLabel(self.tabview.tab("1. Model class"), 
-                                                   text="1. Select model class type")
-        self.intro_label.pack(anchor="w", pady = (10,10))
+        self.tabview.add("1. Model head")
+        self.tabview.tab("1. Model head").grid_columnconfigure((0), weight=1)
+        self.tabview.add("2. Model class")
+        self.tabview.tab("2. Model class").grid_columnconfigure((0,1), weight=1)
+        self.tabview.tab("2. Model class").rowconfigure((0,1,2,3,4,5,6,7), weight=1)
         
-        self.model_class_type =\
-            ctk.CTkOptionMenu(self.tabview.tab("1. Model class"),
-                              values=["LSTM","EA-LSTM"], command=self.get_model_class)
-        CTkToolTip(self.model_class_type, delay=0.1, bg_color = 'orange',
-                   text_color = 'black', anchor='w',  wraplength=500, 
-                   message='The flow of data from input => output is as follows:' + 
-                   ' Input => Model class => Model head => Ouput.' +
-                   ' Model classes are: LSTM and EA-LSTM. Traditional LSTM,' +
-                   ' dynamic and static inputs are concanated and feed into the LSTM.' +
-                   ' while in EA-LSTM static input is feed into the input gate only.' +
-                   ' See more in here https://doi.org/10.5194/hess-23-5089-2019')
-                
-        self.model_class_type.pack(anchor="w",  pady = 5)
-                
-        self.hidden_size_label = ctk.CTkLabel(self.tabview.tab("1. Model class"), 
-                                                   text="2. Number of hidden units of the LSTM layer")
-        self.hidden_size_label.pack(anchor="w", pady = (4,4))
-        
-        self.hidden_size = ctk.CTkEntry(master=self.tabview.tab("1. Model class"),
-                                        placeholder_text="30")
-        self.hidden_size.pack(anchor="w", pady = (4,4))
-        CTkToolTip(self.hidden_size, delay=0.1, bg_color = 'orange',
-                   text_color = 'black', anchor='w',  wraplength=500, 
-                   message='The number of hidden neurons of the LSTM (or EA-LSTM).' +
-                   ' Most problems should work with any values between 20 to 516')
-        
-        self.hidden_size.bind('<KeyRelease>', self.get_hidden_size)
-
-        self.nlayers_label = ctk.CTkLabel(self.tabview.tab("1. Model class"), 
-                                               text="3. Number of LSTM layers")
-        self.nlayers_label.pack(anchor="w", pady = (4,4))
-        self.nlayers= ctk.CTkOptionMenu(self.tabview.tab("1. Model class"),
-                                             values=list(map(str,list(range(1,6,1)))),
-                                             command=self.get_num_layers) 
-        self.nlayers.pack(anchor="w", pady = (4,4))
-        CTkToolTip(self.nlayers, delay=0.1, bg_color = 'orange',
-                   text_color = 'black', anchor='w',  wraplength=500, 
-                   message='The number of layers of the LSTM (or EA-LSTM).' +
-                   ' 1 should work for most of the problems')
-        
-        self.dropout_label = ctk.CTkLabel(self.tabview.tab("1. Model class"), 
-                                               text="4. Dropout rate")
-        self.dropout_label.pack(anchor="w", pady = (4,4))
-        self.dropout = ctk.CTkEntry(master=self.tabview.tab("1. Model class"),
-                                        placeholder_text="0.30")
-        self.dropout.pack(anchor="w", pady = (4,4))
-        self.dropout.bind('<KeyRelease>', self.get_dropout)
-        CTkToolTip(self.dropout, delay=0.1, bg_color = 'orange',
-                   text_color = 'black', anchor='w',  wraplength=500, 
-                   message='This value is only used if the number of layers > 1.' +
-                   ' During training, randomly zeroes some of the elements of the' +
-                   ' input tensor to the i_th layer with probability p using samples' +
-                   ' from a Bernoulli distribution')
-
-        # ----------------------------------------------------------2. Model heads
-        self.intro_label = ctk.CTkLabel(self.tabview.tab("2. Model head"), 
+        # ----------------------------------------------------------1. Model heads
+        self.intro_label = ctk.CTkLabel(self.tabview.tab("1. Model head"), 
                                                    text="1. Select model head")
         self.intro_label.grid(row=0, column=0, padx = 10, pady=(5,5), sticky="w")
         
         self.model_head_type =\
-            ctk.CTkOptionMenu(self.tabview.tab("2. Model head"),
-                              values=["Regression (REG)",
+            ctk.CTkOptionMenu(self.tabview.tab("1. Model head"),
+                              values=["Regression",
                                       "Gaussian Mixture Model (GMM)"],
                               command=self.get_model_head_name)
         
@@ -101,12 +42,12 @@ class NetworkDesignFrame(ctk.CTkScrollableFrame):
         CTkToolTip(self.model_head_type, delay=0.1, bg_color = 'orange',
                    text_color = 'black', anchor='w',  wraplength=500, 
                    message='Output from the model class (e.g., LSTM or EA-LSTM)' +
-                   ' is input to the model head. Here model head could be REG or GMM.' +
-                   ' REG is multi Linear layers (see PyTorch for nn.Linear) with user' +
+                   ' is input to the model head. Here model head could be Regression or GMM.' +
+                   ' Regression is multi Linear layers (see PyTorch for nn.Linear) with user' +
                    ' choice activation function.')
         
         # --------------------------------------Frame for regression model head
-        self.regression_frame = ctk.CTkFrame(master=self.tabview.tab("2. Model head"), 
+        self.regression_frame = ctk.CTkFrame(master=self.tabview.tab("1. Model head"), 
                                              fg_color = "transparent", border_width=0.0)
         self.regression_frame.grid_columnconfigure((0,1), weight=1)
         self.regression_frame.grid(row=2, column=0, sticky="w", pady=(5, 5))
@@ -148,8 +89,8 @@ class NetworkDesignFrame(ctk.CTkScrollableFrame):
         self.option_menu.grid(row=3, column=1, sticky="e", padx=10, pady=5)
         self.reg_activation_func = [self.option_menu]
                 
-        # --------------------------------------Frame for GMM
-        self.gmm_frame = ctk.CTkFrame(master=self.tabview.tab("2. Model head"), 
+        # --------------------------------------------------------Frame for GMM
+        self.gmm_frame = ctk.CTkFrame(master=self.tabview.tab("1. Model head"), 
                                              fg_color = "transparent", border_width=0.0)
         self.gmm_frame.grid_columnconfigure((0,1), weight=1)
         #self.gmm_frame.grid(row=2, column=0, sticky="w", pady=(5, 5))
@@ -160,7 +101,68 @@ class NetworkDesignFrame(ctk.CTkScrollableFrame):
         self.gmm_hidden_size_label.grid(row=0, column=0, sticky="w", padx=10, pady=5)
         self.gmm_hidden_size = ctk.CTkEntry(master=self.gmm_frame,
                                             placeholder_text="None")
-        self.gmm_hidden_size.grid(row=1, column=0, sticky="w", padx=10, pady=5)        
+        self.gmm_hidden_size.grid(row=1, column=0, sticky="w", padx=10, pady=5)
+                  
+        # ---------------------------------------------Content of load data tab
+        self.intro_label = ctk.CTkLabel(self.tabview.tab("2. Model class"), 
+                                                   text="1. Select model class")
+        self.intro_label.pack(anchor="w", pady = (10,10))
+        
+        self.model_class_type =\
+            ctk.CTkOptionMenu(self.tabview.tab("2. Model class"),
+                              values=["LSTM","EA-LSTM"], command=self.get_model_class)
+        CTkToolTip(self.model_class_type, delay=0.1, bg_color = 'orange',
+                   text_color = 'black', anchor='w',  wraplength=500, 
+                   message='The flow of data from input => output is as follows:' + 
+                   ' Input => Model class => Model head => Ouput.' +
+                   ' Model classes are: LSTM and EA-LSTM. Traditional LSTM,' +
+                   ' dynamic and static inputs are concanated and feed into the LSTM.' +
+                   ' while in EA-LSTM static input is feed into the input gate only.' +
+                   ' See more in here https://doi.org/10.5194/hess-23-5089-2019')
+                
+        self.model_class_type.pack(anchor="w",  pady = 5)
+                
+        self.hidden_size_label = ctk.CTkLabel(self.tabview.tab("2. Model class"), 
+                                                   text="2. Number of hidden units of the LSTM layer")
+        self.hidden_size_label.pack(anchor="w", pady = (4,4))
+        
+        self.hidden_size = ctk.CTkEntry(master=self.tabview.tab("2. Model class"),
+                                        placeholder_text="30")
+        self.hidden_size.pack(anchor="w", pady = (4,4))
+        CTkToolTip(self.hidden_size, delay=0.1, bg_color = 'orange',
+                   text_color = 'black', anchor='w',  wraplength=500, 
+                   message='The number of hidden neurons of the LSTM (or EA-LSTM).' +
+                   ' Most problems should work with any values between 20 to 516')
+        
+        self.hidden_size.bind('<KeyRelease>', self.get_hidden_size)
+
+        self.nlayers_label = ctk.CTkLabel(self.tabview.tab("2. Model class"), 
+                                               text="3. Number of LSTM layers")
+        self.nlayers_label.pack(anchor="w", pady = (4,4))
+        self.nlayers= ctk.CTkOptionMenu(self.tabview.tab("2. Model class"),
+                                             values=list(map(str,list(range(1,6,1)))),
+                                             command=self.get_num_layers) 
+        self.nlayers.pack(anchor="w", pady = (4,4))
+        CTkToolTip(self.nlayers, delay=0.1, bg_color = 'orange',
+                   text_color = 'black', anchor='w',  wraplength=500, 
+                   message='The number of layers of the LSTM (or EA-LSTM).' +
+                   ' 1 should work for most of the problems')
+        
+        self.dropout_label = ctk.CTkLabel(self.tabview.tab("2. Model class"), 
+                                               text="4. Dropout rate")
+        self.dropout_label.pack(anchor="w", pady = (4,4))
+        self.dropout = ctk.CTkEntry(master=self.tabview.tab("2. Model class"),
+                                        placeholder_text="0.30")
+        self.dropout.pack(anchor="w", pady = (4,4))
+        self.dropout.bind('<KeyRelease>', self.get_dropout)
+        CTkToolTip(self.dropout, delay=0.1, bg_color = 'orange',
+                   text_color = 'black', anchor='w',  wraplength=500, 
+                   message='This value is only used if the number of layers > 1.' +
+                   ' During training, randomly zeroes some of the elements of the' +
+                   ' input tensor to the i_th layer with probability p using samples' +
+                   ' from a Bernoulli distribution')
+
+        
         # ---------------------------------------------content of load data tab        
     def get_hidden_size(self, dummy):
         # Get number of hidden layers
@@ -188,25 +190,25 @@ class NetworkDesignFrame(ctk.CTkScrollableFrame):
             tk.messagebox.showinfo(title="Error", message="Input should be numeric")
 
     def get_model_head_name(self, model_head_name: str):
-        model_head_names = {"Regression (REG)" : "REG",
+        model_head_names = {"Regression" : "Regression",
                             "Gaussian Mixture Model (GMM)": "GMM"}
         
         self.globalData["model_head"] = model_head_names[model_head_name]
         print("Model head name = ", self.globalData["model_head"])
             
         # Delete config if other model head option is 
-        if self.globalData["model_head"] == "REG":
+        if self.globalData["model_head"] == "Regression":
                        
             self.regression_frame.grid(row=2, column=0, sticky="w", pady=(5, 5))
             self.gmm_frame.grid_forget()
             
-            self.config["REG"] = {}
+            self.config["Regression"] = {}
         else:
             # Hide regression frame
             self.regression_frame.grid_forget()
             self.gmm_frame.grid(row=2, column=0, sticky="w", pady=(5, 5))
             try:
-                del self.config["REG"]
+                del self.config["Regression"]
             except:
                 pass
  
@@ -237,14 +239,14 @@ class NetworkDesignFrame(ctk.CTkScrollableFrame):
             pass
         
         # Now add entry according to the number of layers
-        if "REG" in self.config.keys():
+        if "Regression" in self.config.keys():
             
             row_number = 3
-            self.config["REG"]["num_layers"] = int(nlayers)
+            self.config["Regression"]["num_layers"] = int(nlayers)
             self.reg_neurons = []
             self.reg_activation_func = []
-            self.config["REG"]["num_neurons"] = [None for i in range(int(nlayers))]
-            self.config["REG"]["activation_function"] = ["Identity" for i in 
+            self.config["Regression"]["num_neurons"] = [None for i in range(int(nlayers))]
+            self.config["Regression"]["activation_function"] = ["Identity" for i in 
                                                          range(int(nlayers))]
 
             get_neurons = {0: self.reg_get_neurons_1, 1: self.reg_get_neurons_2,
@@ -273,45 +275,42 @@ class NetworkDesignFrame(ctk.CTkScrollableFrame):
     # Function to get number of input neurons each layer - Make this code clearner
     def reg_get_neurons_1(self, dummy):
         try: 
-            self.config["REG"]["num_neurons"][0] = int(self.reg_neurons[0].get().strip())
-            print("Num of neurons layer 1 = ",  self.config["REG"]["num_neurons"][0])
+            self.config["Regression"]["num_neurons"][0] = int(self.reg_neurons[0].get().strip())
+            print("Num of neurons layer 1 = ",  self.config["Regression"]["num_neurons"][0])
         except:
             tk.messagebox.showinfo(title="Error", message="Input should be integer")
     def reg_get_neurons_2(self, dummy):
         try: 
-            self.config["REG"]["num_neurons"][1] = int(self.reg_neurons[1].get().strip())
-            print("Num of neurons layer 2 = ", self.config["REG"]["num_neurons"][1])
+            self.config["Regression"]["num_neurons"][1] = int(self.reg_neurons[1].get().strip())
+            print("Num of neurons layer 2 = ", self.config["Regression"]["num_neurons"][1])
         except:
             tk.messagebox.showinfo(title="Error", message="Input should be integer")
     def reg_get_neurons_3(self, dummy):
         try: 
-            self.config["REG"]["num_neurons"][2] = int(self.reg_neurons[2].get().strip())
-            print("Num of neurons layer 3 = ", self.config["REG"]["num_neurons"][2])
+            self.config["Regression"]["num_neurons"][2] = int(self.reg_neurons[2].get().strip())
+            print("Num of neurons layer 3 = ", self.config["Regression"]["num_neurons"][2])
         except:
             tk.messagebox.showinfo(title="Error", message="Input should be integer")
     def reg_get_neurons_4(self, dummy):
         try: 
-            self.config["REG"]["num_neurons"][3] = int(self.reg_neurons[3].get().strip())
-            print("Num of neurons layer 4 = ",  self.config["REG"]["num_neurons"][3])
+            self.config["Regression"]["num_neurons"][3] = int(self.reg_neurons[3].get().strip())
+            print("Num of neurons layer 4 = ",  self.config["Regression"]["num_neurons"][3])
         except:
             tk.messagebox.showinfo(title="Error", message="Input should be integer")
     
     # Function to get activation function of each layer - Make this code clearner
     def reg_get_acts_1(self, dummy):
-        self.config["REG"]["activation_function"][0] = dummy
+        self.config["Regression"]["activation_function"][0] = dummy
         print("Activation function of layer 1 = ", dummy)
     def reg_get_acts_2(self, dummy):
-        self.config["REG"]["activation_function"][1] = dummy
+        self.config["Regression"]["activation_function"][1] = dummy
         print("Activation function of layer 2 = ", dummy)
     def reg_get_acts_3(self, dummy):
-        self.config["REG"]["activation_function"][2] = dummy
+        self.config["Regression"]["activation_function"][2] = dummy
         print("Activation function of layer 3 = ", dummy)
     def reg_get_acts_4(self, dummy):
-        self.config["REG"]["activation_function"][3] = dummy
+        self.config["Regression"]["activation_function"][3] = dummy
         print("Activation function of layer 4 = ", dummy)
     def reg_get_acts_5(self, dummy):
-        self.config["REG"]["activation_function"][5] = dummy
+        self.config["Regression"]["activation_function"][5] = dummy
         print("Activation function of layer 5 = ", dummy)
-
-
-

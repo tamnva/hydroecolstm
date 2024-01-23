@@ -1,6 +1,7 @@
 
 import customtkinter as ctk
-
+from pathlib import Path
+ 
 from hydroecolstm.interface.data_frame import DataFrame
 from hydroecolstm.interface.network_design_frame import NetworkDesignFrame
 from hydroecolstm.interface.project_summary_frame import ProjectSummaryFrame
@@ -8,6 +9,8 @@ from hydroecolstm.interface.sidebar_frame import SidebarFrame
 from hydroecolstm.interface.train_test_frame import TrainTestFrame
 from hydroecolstm.interface.visualize_frame import VisualizeFrame
 from hydroecolstm.interface.forecast_frame import ForecastFrame
+
+
 
 class MainGUI(ctk.CTk):
     def __init__(self):
@@ -31,18 +34,22 @@ class MainGUI(ctk.CTk):
         config["n_epochs"] = 50
         config["learning_rate"] = 0.01
         config["dropout"] = 0.30
-        config["warmup_length"] = 20
-        config["objective_function_name"] = "RMSE"
-        config["REG"] = {}
-        config["REG"]["activation_function"] = ["Identity"]
-        config["REG"]["num_neurons"] = [None]
-        config["REG"]["num_layers"] = 1
+        config["warmup_length"] = 20      
+        config["sequence_length"] = 720
+        config["batch_size"] = 3
+        config["patience"] = 20
+        config["loss_function"] = "RMSE"
+        config["Regression"] = {}
+        config["Regression"]["activation_function"] = ["Identity"]
+        config["Regression"]["num_neurons"] = [None]
+        config["Regression"]["num_layers"] = 1
         config["hidden_size"] = 30
         config["dropout"] = 0.30
         config["n_epochs"] = 5
         config["learning_rate"] = 0.01
         config["warmup_length"] = 20
         config["model_class"] = "LSTM"
+        config["output_directory"] = [Path.cwd()]
 
         # Initialize global data
         globalData = {}
@@ -52,10 +59,10 @@ class MainGUI(ctk.CTk):
         globalData["target_feature_no"] = 0
         globalData["object_id_forecast_no"] = 0
         globalData["target_feature_forecast_no"] = 0
-        globalData["model_head"] = "REG"
+        globalData["model_head"] = "Regression"
         
         super().__init__()
-        
+    
         #------------------------------------------------------configure window
         self.title("Hydro-ecological modelling with Long Short-Term Memory neural network")
         self.geometry(f"{1100}x{580}")
