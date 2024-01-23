@@ -74,6 +74,6 @@ patience: 10
 
 eval_function: NSE
 
-#({'Erlenbach': tensor([0.5031, 0.6748]), 'Alp': tensor([0.6731, 0.5058])}, tensor(0.5892))
-#({'Erlenbach': tensor([0.5983, 0.3814]), 'Alp': tensor([0.7563, 0.5066])}, tensor(0.5607))
-#({'Erlenbach': tensor([0.7224, 0.7292]), 'Alp': tensor([0.7377, 0.3817])}, tensor(0.6427))
+#({'Erlenbach': tensor([0.5062, 0.7320]), 'Alp': tensor([0.7561, 0.6830])}, tensor(0.6693))
+#({'Erlenbach': tensor([0.6321, 0.3005]), 'Alp': tensor([0.6916, 0.1055])}, tensor(0.4324))
+#({'Erlenbach': tensor([0.7343, 0.8321]), 'Alp': tensor([0.7607, 0.5974])}, tensor(0.7311))
