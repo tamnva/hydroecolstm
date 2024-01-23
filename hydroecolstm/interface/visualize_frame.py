@@ -376,12 +376,12 @@ class VisualizeFrame(ctk.CTkScrollableFrame):
     
     def load_config_event(self):
         try:
-            print("load config event")
             file_name=ctk.filedialog.askopenfilename(title="Select config.yml file type", 
                                                      filetypes=(('yml files', '*.yml'),
                                                                 ('All files', '*.*')))
             self.config.update(read_config(file_name))
             self.selected_config_file.configure(text= '...' + file_name[-30:])
+            print(self.config)
         except:
             pass
         
@@ -392,6 +392,7 @@ class VisualizeFrame(ctk.CTkScrollableFrame):
                                                                 ('All files', '*.*')))
             self.globalData.update(torch.load(file_name))
             self.selected_data_file.configure(text= '...' + file_name[-30:])
+            print(self.globalData.keys())
         except:
             pass
         
@@ -508,7 +509,7 @@ class VisualizeFrame(ctk.CTkScrollableFrame):
         try:
             # Data for plot
             loss=self.globalData["trainer"].loss
-            
+
             # Make plot window
             plot_window=ToplevelWindow(window_name="Plot window")
             
@@ -525,7 +526,7 @@ class VisualizeFrame(ctk.CTkScrollableFrame):
                                   self.valid_line_style.get().strip(),
                                   self.valid_legend.get().strip(),
                                   self.best_model_legend.get().strip())
-            
+            print("cannot")
         except:
             # Make plot window
             #plot_window=ToplevelWindow(window_name="Plot window")
