@@ -2,6 +2,7 @@ import matplotlib
 import customtkinter as ctk
 import tkinter as tk
 import torch
+from pandastable import Table
 from hydroecolstm.data.read_config import read_config
 from hydroecolstm.interface.utility import (ToplevelWindow, 
                                             plot_train_valid_loss,
@@ -534,4 +535,12 @@ class VisualizeFrame(ctk.CTkScrollableFrame):
             
             tk.messagebox.showinfo(title="Error", 
                                    message="Cannot plot loss")
+            
+    def show_loss_pandastable(self):
+        try:
+            self.table = Table(tk.Toplevel(self), dataframe=self.globalData['dynamic_data'], 
+                               showtoolbar=True, showstatusbar=True)
+            self.table.show()
+        except:
+            None
 
