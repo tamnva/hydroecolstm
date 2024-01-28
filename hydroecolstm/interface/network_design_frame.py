@@ -2,6 +2,9 @@
 import customtkinter as ctk
 import tkinter as tk
 from CTkToolTip import CTkToolTip
+from PIL import Image
+from pathlib import Path
+
 
 class NetworkDesignFrame(ctk.CTkScrollableFrame):
     def __init__(self, container=None, config=None, globalData=None):
@@ -11,7 +14,6 @@ class NetworkDesignFrame(ctk.CTkScrollableFrame):
         self.config = config
         self.globalData = globalData
         self.columnconfigure((0), weight=1)
-        #self.rowconfigure((0,1,2,3), weight=0)
         self.__create_widgets() 
         
     # create widgets for sidebar frame
@@ -21,19 +23,22 @@ class NetworkDesignFrame(ctk.CTkScrollableFrame):
         self.tabview = ctk.CTkTabview(master=self, width = 750, border_width=1.5,
                                       fg_color = "transparent")
         self.tabview.pack(fill='both',expand=1)
-        self.tabview.add("1. Model head")
-        self.tabview.tab("1. Model head").grid_columnconfigure((0), weight=1)
-        self.tabview.add("2. Model class")
-        self.tabview.tab("2. Model class").grid_columnconfigure((0,1), weight=1)
-        self.tabview.tab("2. Model class").rowconfigure((0,1,2,3,4,5,6,7), weight=1)
+        self.tabview.add("1. Model class")
+        self.tabview.tab("1. Model class").grid_columnconfigure((0,1), weight=1)
+        self.tabview.tab("1. Model class").rowconfigure((0,1,2,3,4,5,6,7), weight=1)
+        self.tabview.add("2. Model head")
+        self.tabview.tab("2. Model head").grid_columnconfigure((0), weight=1)
         
-        # ----------------------------------------------------------1. Model heads
-        self.intro_label = ctk.CTkLabel(self.tabview.tab("1. Model head"), 
+        ctk.CTkButton(master=self,  anchor='w', fg_color='gray',
+                      text="Show model head and classes",
+                      command=self.show_model_head_class).pack(anchor="e", pady = 10)
+        # ----------------------------------------------------------2. Model heads
+        self.intro_label = ctk.CTkLabel(self.tabview.tab("2. Model head"), 
                                                    text="1. Select model head")
         self.intro_label.grid(row=0, column=0, padx = 10, pady=(5,5), sticky="w")
         
         self.model_head_type =\
-            ctk.CTkOptionMenu(self.tabview.tab("1. Model head"),
+            ctk.CTkOptionMenu(self.tabview.tab("2. Model head"),
                               values=["Regression",
                                       "Gaussian Mixture Model (GMM)"],
                               command=self.get_model_head_name)
@@ -47,7 +52,7 @@ class NetworkDesignFrame(ctk.CTkScrollableFrame):
                    ' choice activation function.')
         
         # --------------------------------------Frame for regression model head
-        self.regression_frame = ctk.CTkFrame(master=self.tabview.tab("1. Model head"), 
+        self.regression_frame = ctk.CTkFrame(master=self.tabview.tab("2. Model head"), 
                                              fg_color = "transparent", border_width=0.0)
         self.regression_frame.grid_columnconfigure((0,1), weight=1)
         self.regression_frame.grid(row=2, column=0, sticky="w", pady=(5, 5))
@@ -90,7 +95,7 @@ class NetworkDesignFrame(ctk.CTkScrollableFrame):
         self.reg_activation_func = [self.option_menu]
                 
         # --------------------------------------------------------Frame for GMM
-        self.gmm_frame = ctk.CTkFrame(master=self.tabview.tab("1. Model head"), 
+        self.gmm_frame = ctk.CTkFrame(master=self.tabview.tab("2. Model head"), 
                                              fg_color = "transparent", border_width=0.0)
         self.gmm_frame.grid_columnconfigure((0,1), weight=1)
         #self.gmm_frame.grid(row=2, column=0, sticky="w", pady=(5, 5))
@@ -104,12 +109,12 @@ class NetworkDesignFrame(ctk.CTkScrollableFrame):
         self.gmm_hidden_size.grid(row=1, column=0, sticky="w", padx=10, pady=5)
                   
         # ---------------------------------------------Content of load data tab
-        self.intro_label = ctk.CTkLabel(self.tabview.tab("2. Model class"), 
+        self.intro_label = ctk.CTkLabel(self.tabview.tab("1. Model class"), 
                                                    text="1. Select model class")
         self.intro_label.pack(anchor="w", pady = (10,10))
         
         self.model_class_type =\
-            ctk.CTkOptionMenu(self.tabview.tab("2. Model class"),
+            ctk.CTkOptionMenu(self.tabview.tab("1. Model class"),
                               values=["LSTM","EA-LSTM"], command=self.get_model_class)
         CTkToolTip(self.model_class_type, delay=0.1, bg_color = 'orange',
                    text_color = 'black', anchor='w',  wraplength=500, 
@@ -122,11 +127,11 @@ class NetworkDesignFrame(ctk.CTkScrollableFrame):
                 
         self.model_class_type.pack(anchor="w",  pady = 5)
                 
-        self.hidden_size_label = ctk.CTkLabel(self.tabview.tab("2. Model class"), 
+        self.hidden_size_label = ctk.CTkLabel(self.tabview.tab("1. Model class"), 
                                                    text="2. Number of hidden units of the LSTM layer")
         self.hidden_size_label.pack(anchor="w", pady = (4,4))
         
-        self.hidden_size = ctk.CTkEntry(master=self.tabview.tab("2. Model class"),
+        self.hidden_size = ctk.CTkEntry(master=self.tabview.tab("1. Model class"),
                                         placeholder_text="30")
         self.hidden_size.pack(anchor="w", pady = (4,4))
         CTkToolTip(self.hidden_size, delay=0.1, bg_color = 'orange',
@@ -136,10 +141,10 @@ class NetworkDesignFrame(ctk.CTkScrollableFrame):
         
         self.hidden_size.bind('<KeyRelease>', self.get_hidden_size)
 
-        self.nlayers_label = ctk.CTkLabel(self.tabview.tab("2. Model class"), 
+        self.nlayers_label = ctk.CTkLabel(self.tabview.tab("1. Model class"), 
                                                text="3. Number of LSTM layers")
         self.nlayers_label.pack(anchor="w", pady = (4,4))
-        self.nlayers= ctk.CTkOptionMenu(self.tabview.tab("2. Model class"),
+        self.nlayers= ctk.CTkOptionMenu(self.tabview.tab("1. Model class"),
                                              values=list(map(str,list(range(1,6,1)))),
                                              command=self.get_num_layers) 
         self.nlayers.pack(anchor="w", pady = (4,4))
@@ -148,10 +153,10 @@ class NetworkDesignFrame(ctk.CTkScrollableFrame):
                    message='The number of layers of the LSTM (or EA-LSTM).' +
                    ' 1 should work for most of the problems')
         
-        self.dropout_label = ctk.CTkLabel(self.tabview.tab("2. Model class"), 
+        self.dropout_label = ctk.CTkLabel(self.tabview.tab("1. Model class"), 
                                                text="4. Dropout rate")
         self.dropout_label.pack(anchor="w", pady = (4,4))
-        self.dropout = ctk.CTkEntry(master=self.tabview.tab("2. Model class"),
+        self.dropout = ctk.CTkEntry(master=self.tabview.tab("1. Model class"),
                                         placeholder_text="0.30")
         self.dropout.pack(anchor="w", pady = (4,4))
         self.dropout.bind('<KeyRelease>', self.get_dropout)
@@ -163,7 +168,19 @@ class NetworkDesignFrame(ctk.CTkScrollableFrame):
                    ' from a Bernoulli distribution')
 
         
-        # ---------------------------------------------content of load data tab        
+    # ---------------------------------------------content of load data tab
+    def show_model_head_class(self):
+        
+        # Get link to the image
+        image = Path(__file__).parents[2]
+        button_image = ctk.CTkImage(Image.open( 
+            Path(image, "docs/images/model_head_class.png")),
+            size=(500, 500))
+        
+        # Create new window 
+        self.new_window = ctk.CTkToplevel(self, fg_color = "white")
+        ctk.CTkLabel(master=self.new_window, image=button_image, text = "").pack()
+            
     def get_hidden_size(self, dummy):
         # Get number of hidden layers
         try:

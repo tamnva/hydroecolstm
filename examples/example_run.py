@@ -12,8 +12,10 @@ from hydroecolstm.utility.evaluation_function import EvaluationFunction
 config_file = "C:/Users/nguyenta/Documents/GitHub/hydroecolstm/examples/2_streamflow_isotope_simulation/config.yml"
 config = read_config(config_file)
 model, x_scaler, y_scaler, data = run_train(config)
+
+#data.update(test)
 data["trainer"].loss.drop(['epoch', 'best_model'], axis=1).plot()
-objective = EvaluationFunction(config["eval_function"], config['warmup_length'])
+objective = EvaluationFunction("MAE", config['warmup_length'])
 print(objective(data['y_train'], data['y_train_simulated']))
 print(objective(data['y_valid'], data['y_valid_simulated']))
 print(objective(data['y_test'], data['y_test_simulated']))
@@ -57,3 +59,4 @@ for object_id in y_forecast.keys():
 objective(forecast_dataset['y_forecast'], y_forecast)
 import torch
 torch.save(data, "C:/Users/nguyenta/Documents/GitHub/hydroecolstm/examples/2_streamflow_isotope_simulation/results/data.pt")
+test = torch.load("C:/Users/nguyenta/Documents/GitHub/hydroecolstm/examples/2_streamflow_isotope_simulation/results/data.pt")

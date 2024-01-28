@@ -74,6 +74,18 @@ patience: 20
 
 eval_function: NSE
 
-#({'Erlenbach': tensor([0.4902, 0.7114]), 'Alp': tensor([0.7224, 0.7151])}, tensor(0.6598))
-#({'Erlenbach': tensor([0.6450, 0.6785]), 'Alp': tensor([0.7640, 0.4193])}, tensor(0.6267))
-#({'Erlenbach': tensor([0.7067, 0.8795]), 'Alp': tensor([0.7876, 0.5433])}, tensor(0.7293))
+
+# NSE
+#({'Erlenbach': tensor([0.5981, 0.7766]), 'Alp': tensor([0.7945, 0.7559])}, tensor(0.7313))
+#({'Erlenbach': tensor([ 0.4815, -0.0022]), 'Alp': tensor([ 0.6911, -0.1262])}, tensor(0.2610))
+#({'Erlenbach': tensor([ 0.8265, -0.0085]), 'Alp': tensor([ 0.7064, -0.3160])}, tensor(0.3021))
+
+# RMSE
+#({'Erlenbach': tensor([5.5513, 0.6248]), 'Alp': tensor([2.1224, 0.4291])}, tensor(2.1819))
+#({'Erlenbach': tensor([4.8963, 0.6052]), 'Alp': tensor([2.2476, 0.4745])}, tensor(2.0559))
+#({'Erlenbach': tensor([2.0639, 0.6794]), 'Alp': tensor([1.4189, 0.5795])}, tensor(1.1854))
+
+# MAE
+#({'Erlenbach': tensor([2.3172, 0.4850]), 'Alp': tensor([1.2288, 0.3089])}, tensor(1.0850))
+#({'Erlenbach': tensor([2.6626, 0.4949]), 'Alp': tensor([1.4438, 0.3815])}, tensor(1.2457))
+#({'Erlenbach': tensor([1.1578, 0.5245]), 'Alp': tensor([0.8880, 0.4771])}, tensor(0.7619))
