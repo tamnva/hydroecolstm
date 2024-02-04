@@ -1,29 +1,25 @@
-### 1. What is HydroEcoLSTM
+### What is HydroEcoLSTM
 
 - HydroEcoLSTM is a tool for modelling Hydro-ecological processes with Long short-term Memory (LSTM) neural network. HydroEcoLSTM is provided to users as a python packages with graphical user interface (GUI) and without GUI. 
 - This is the beta version, package documentation will be provided in later versions
+- Please click here to see the [package documentation](https://hydroecolstm.readthedocs.io/en/latest/)
 
-### 2. How to start?
+### Quick start
 
 ```python
 # Install the package from github using pip command
 pip install git+https://github.com/tamnva/hydroecolstm.git
 
-# Import the package and show the GUI
+# Import the package and show the GUI (please see below)
 import hydroecolstm
 hydroecolstm.interface.show_gui()
-
-# Example of static and dynamic data in this folder
-# static data (catchment attributes) 'examples/data/static_attributes.csv'
-# dynamic data (time series input and target features) 'examples/data/time_series.csv'
-# example Pyhon script for running without GUI 'examples/example_run.py'
-
 ```
 
-### 3. The GUI
+### The GUI
 
 - After lanching the GUI, you should see the following window (the latest version in the "development" branch could look different)
 
 <p align="center">
-  <img src="docs/figures/intro_figure.gif" width=100% title="hover text">
+  <img src="docs/images/intro_figure.gif" width=100% title="hover text">
 </p>
+
