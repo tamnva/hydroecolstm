@@ -25,16 +25,16 @@ object_id:
   - Alp
 
 train_period: 
-  - 2016-06-01 00:00
-  - 2018-05-31 00:00
-
-valid_period: 
-  - 2018-06-10 00:00
-  - 2019-05-31 00:00
+  - 2015-05-01 00:00
+  - 2018-05-01 00:00
 
 test_period: 
-  - 2015-06-19 00:00
-  - 2016-05-31 00:00
+  - 2018-05-01 00:00
+  - 2018-11-30 00:00
+
+valid_period: 
+  - 2018-12-01 00:00
+  - 2019-05-31 00:00
 
 model_class: LSTM
 
@@ -58,28 +58,34 @@ num_layers: 2
 
 n_epochs: 300
 
-learning_rate: 0.005
+learning_rate: 0.001
 
-dropout: 0.3
+dropout: 0.2
 
-warmup_length: 15
+warmup_length: 30
 
 loss_function: RMSE
 
-sequence_length: 120
+sequence_length: 200
 
 batch_size: 2
 
-patience: 10
+patience: 20
 
 eval_function: NSE
 
 
-#print(objective(data['y_train'], data['y_train_simulated']))
-#({'Erlenbach': tensor([0.4540, 0.6942]), 'Alp': tensor([0.6693, 0.6110])}, tensor(0.6071))
+# NSE
+#({'Erlenbach': tensor([0.5981, 0.7766]), 'Alp': tensor([0.7945, 0.7559])}, tensor(0.7313))
+#({'Erlenbach': tensor([ 0.4815, -0.0022]), 'Alp': tensor([ 0.6911, -0.1262])}, tensor(0.2610))
+#({'Erlenbach': tensor([ 0.8265, -0.0085]), 'Alp': tensor([ 0.7064, -0.3160])}, tensor(0.3021))
 
-#print(objective(data['y_valid'], data['y_valid_simulated']))
-#({'Erlenbach': tensor([0.5142, 0.2563]), 'Alp': tensor([0.6173, 0.2676])}, tensor(0.4139))
+# RMSE
+#({'Erlenbach': tensor([5.5513, 0.6248]), 'Alp': tensor([2.1224, 0.4291])}, tensor(2.1819))
+#({'Erlenbach': tensor([4.8963, 0.6052]), 'Alp': tensor([2.2476, 0.4745])}, tensor(2.0559))
+#({'Erlenbach': tensor([2.0639, 0.6794]), 'Alp': tensor([1.4189, 0.5795])}, tensor(1.1854))
 
-#print(objective(data['y_test'], data['y_test_simulated']))
-#({'Erlenbach': tensor([0.6598, 0.8134]), 'Alp': tensor([0.6900, 0.5840])}, tensor(0.6868))
+# MAE
+#({'Erlenbach': tensor([2.3172, 0.4850]), 'Alp': tensor([1.2288, 0.3089])}, tensor(1.0850))
+#({'Erlenbach': tensor([2.6626, 0.4949]), 'Alp': tensor([1.4438, 0.3815])}, tensor(1.2457))
+#({'Erlenbach': tensor([1.1578, 0.5245]), 'Alp': tensor([0.8880, 0.4771])}, tensor(0.7619))

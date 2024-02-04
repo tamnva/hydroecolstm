@@ -1,207 +1,13 @@
 import numbers
 import warnings
 from collections import namedtuple
+from typing import List, Tuple
 
-from typing import List, Tuple, Dict
 import torch
 import torch.jit as jit
 import torch.nn as nn
 from torch import Tensor
 from torch.nn import Parameter
-
-class EALSTMCell(jit.ScriptModule):
-    def __init__(self, dynamic_input_size, static_input_size, hidden_size):
-        super().__init__()
-        self.dynamic_input_size = dynamic_input_size
-        self.static_input_size = static_input_size
-        self.hidden_size = hidden_size
-        self.weight_sh = Parameter(torch.randn(hidden_size, static_input_size))
-        self.weight_dh = Parameter(torch.randn(3 * hidden_size, dynamic_input_size))
-        self.weight_hh = Parameter(torch.randn(3 * hidden_size, hidden_size))
-        self.bias_sh = Parameter(torch.randn(hidden_size))
-        self.bias_dh = Parameter(torch.randn(3 * hidden_size))
-        self.bias_hh = Parameter(torch.randn(3 * hidden_size))
-
-    @jit.script_method
-    def forward(self, dynamic_input: Tensor, static_input: Tensor,
-                state: Tuple[Tensor, Tensor]) -> Tuple[Tensor, Tuple[Tensor, Tensor]]:
-        
-        # Initial state
-        hx, cx = state
-        
-        # Gate input
-        gates = (torch.mm(dynamic_input, self.weight_dh.t())
-                 + self.bias_dh
-                 + torch.mm(hx, self.weight_hh.t())
-                 + self.bias_hh)
-        
-        forgetgate, cellgate, outgate = gates.chunk(3, 1)
-        ingate = torch.mm(static_input, self.weight_sh.t()) + self.bias_sh
-        
-        # Gate output
-        ingate = torch.sigmoid(ingate)
-        forgetgate = torch.sigmoid(forgetgate)
-        cellgate = torch.tanh(cellgate)
-        outgate = torch.sigmoid(outgate)
-
-        # Update state
-        cy = (forgetgate * cx) + (ingate * cellgate)
-        hy = outgate * torch.tanh(cy)
-
-        # Return state output
-        return hy, (hy, cy)
-
-class EALSTMLayer(jit.ScriptModule):
-    def __init__(self, config):
-        
-        super().__init__()
-        
-        self.dynamic_input_size = len(config["input_dynamic_features"])
-        self.static_input_size = len(config["input_static_features"])
-        self.hidden_size = config["hidden_size"]
-        
-        self.cell = EALSTMCell(self.dynamic_input_size, self.static_input_size, 
-                               self.hidden_size)
-
-    @jit.script_method
-    def forward(self, dynamic_input, 
-                static_input,
-                state:Tuple[Tensor, Tensor]):
-        
-        if state is None:
-            hx = torch.rand(self.hidden_size)
-            cx = torch.rand(self.hidden_size)
-            state = hx, cx
-
-        
-        for i in range(len(dynamic_input)):
-            output, state = self.cell(dynamic_input[i:i+1,:], 
-                                   static_input, state)
-            if i == 0:
-                outputs = output
-            else:
-                outputs = torch.cat((outputs, output), 0)
-                
-        return output, state
- 
-    
- 
-
-
-
-
-#
-from hydroecolstm.utility.scaler import Scaler, get_scaler_name
-from hydroecolstm.data.read_data import read_train_test_data
-from hydroecolstm.data.read_config import read_config
-from hydroecolstm.model.lstm_linears import Lstm_Linears
-from hydroecolstm.model.ea_lstm import Ea_Lstm_Linears
-from hydroecolstm.model.train import Train
-
-
-config_file = "C:/Users/nguyenta/Documents/GitHub/HydroEcoLSTM/examples/experiments/config.yml"
-
- # Load configuration
-config = read_config(config_file)
-
- # Read and split data
-data = read_train_test_data(config)
- 
- # Scale/transformer name for static, dynamic, and target features
-x_scaler_name, y_scaler_name = get_scaler_name(config)
- 
- # Scaler/transformer
-x_scaler, y_scaler = Scaler(), Scaler()
-x_scaler.fit(x=data["x_train"], method=x_scaler_name)
-y_scaler.fit(x=data["y_train"], method=y_scaler_name)
- 
- # Scale/transform data
-x_train_scale = x_scaler.transform(x=data["x_train"])
-x_test_scale = x_scaler.transform(x=data["x_test"])
-y_train_scale = y_scaler.transform(x=data["y_train"])
- 
- # Create the model
-if config["model_class"] == "LSTM":
-    model = Lstm_Linears(config)
-else:
-    model = EALSTMLayer(config)#Ea_Lstm_Linears(config)
-     
-optim = torch.optim.Adam(model.parameters(), lr=0.1)    
-loss = torch.nn.MSELoss()   
-
-model = EALSTMLayer(config)
-dynamic_input_size = len(config["input_dynamic_features"])
-static_input_size = len(config["input_static_features"])
-hidden_size = config["hidden_size"]
-        
-dynamic_input = x_train_scale["2009"][:, :dynamic_input_size]
-static_input =  x_train_scale["2009"][0:1, dynamic_input_size:]
-hx = torch.rand(1, hidden_size)
-cx = torch.rand(1, hidden_size)
-
-target = torch.rand(dynamic_input.shape[0],hidden_size)
-
-#cell = EALSTMCell(dynamic_input_size, static_input_size,hidden_size)
-
-for i in range(50):
-    output, _ = model(dynamic_input, static_input, (hx, cx))
-    print(model.state_dict()["cell.weight_sh"][0:1,:])    
-    optim.zero_grad()
-    err = loss(output, target)
-    
-    err.backward()
-        
-    optim.step()
-    print("epoch = ", i, "  err = ", err)
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-trainer = Train(config, model)
-model, y_train_scale_simulated = trainer(x=x_train_scale, y=y_train_scale)
-  
-
-  
-# Example
-
-dynamic_input_size=3
-static_input_size=2
-hidden_size=5
-dynamic_input = torch.rand(10, dynamic_input_size)
-static_input = torch.rand(1, static_input_size)
-
-hx = torch.rand(1,hidden_size)
-cx = torch.rand(1,hidden_size)
-state=(hx,cx)
-
-model = EALSTMLayer(dynamic_input_size, static_input_size, hidden_size)
-optim = torch.optim.Adam(model.parameters(), lr=0.1)
-
-true = torch.rand(10,5)
-loss = torch.nn.MSELoss()
-
-
-for i in range(50):
-    output, _ = model(dynamic_input, static_input, (hx, cx))
-    
-    optim.zero_grad()
-    err = loss(output, true)
-    
-    err.backward()
-        
-    optim.step()
-    print("epoch = ", i, "  err = ", err)
-
-
-
-
-
 
 """
 Some helper classes for writing custom TorchScript LSTMs.
@@ -312,9 +118,38 @@ def reverse(lst: List[Tensor]) -> List[Tensor]:
     return lst[::-1]
 
 
+class LSTMCell(jit.ScriptModule):
+    def __init__(self, input_size, hidden_size):
+        super().__init__()
+        self.input_size = input_size
+        self.hidden_size = hidden_size
+        self.weight_ih = Parameter(torch.randn(4 * hidden_size, input_size))
+        self.weight_hh = Parameter(torch.randn(4 * hidden_size, hidden_size))
+        self.bias_ih = Parameter(torch.randn(4 * hidden_size))
+        self.bias_hh = Parameter(torch.randn(4 * hidden_size))
 
+    @jit.script_method
+    def forward(
+        self, input: Tensor, state: Tuple[Tensor, Tensor]
+    ) -> Tuple[Tensor, Tuple[Tensor, Tensor]]:
+        hx, cx = state
+        gates = (
+            torch.mm(input, self.weight_ih.t())
+            + self.bias_ih
+            + torch.mm(hx, self.weight_hh.t())
+            + self.bias_hh
+        )
+        ingate, forgetgate, cellgate, outgate = gates.chunk(4, 1)
 
+        ingate = torch.sigmoid(ingate)
+        forgetgate = torch.sigmoid(forgetgate)
+        cellgate = torch.tanh(cellgate)
+        outgate = torch.sigmoid(outgate)
 
+        cy = (forgetgate * cx) + (ingate * cellgate)
+        hy = outgate * torch.tanh(cy)
+
+        return hy, (hy, cy)
 
 
 class LayerNorm(jit.ScriptModule):
@@ -397,25 +232,6 @@ class LSTMLayer(jit.ScriptModule):
             out, state = self.cell(inputs[i], state)
             outputs += [out]
         return torch.stack(outputs), state
-
-
-cell = LSTMCell(input_size=3, hidden_size=5)
-model= LSTMLayer(cell)
-
-x = torch.rand(10,3)
-h0 = torch.rand(1,5)
-c0 = torch.rand(1,5)
-
-
-out0, (h1, c1) = model(x[0,:].unsqueeze(dim=0), (h0, c0))
-out2, (h2, c2) = model(x[1,:].unsqueeze(dim=0), (h1, c1))
-out3, (h3, c3) = model(x[1,:].unsqueeze(dim=0), (h2, c2))
-
-out, (h,c) = model(x[:3,:], (h0, c0))
-
-model.state_dict()
-
-
 
 
 class ReverseLSTMLayer(jit.ScriptModule):
@@ -519,7 +335,7 @@ class StackedLSTM2(jit.ScriptModule):
         #                        inner list is for directions.
         output_states = jit.annotate(List[List[Tuple[Tensor, Tensor]]], [])
         output = input
-        #XXX: enumerate https://github.com/pytorch/pytorch/issues/14471
+        # XXX: enumerate https://github.com/pytorch/pytorch/issues/14471
         i = 0
         for rnn_layer in self.layers:
             state = states[i]

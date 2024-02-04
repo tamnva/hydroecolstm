@@ -2,13 +2,15 @@ import matplotlib
 import customtkinter as ctk
 import tkinter as tk
 import torch
+from pandastable import Table
 from hydroecolstm.data.read_config import read_config
 from hydroecolstm.interface.utility import (ToplevelWindow, 
                                             plot_train_valid_loss,
                                             plot_time_series,
                                             check_size,check_linestyle,
                                             check_alpha,check_line_plot,
-                                            check_marker, check_color, check_ylim)
+                                            check_marker, check_color, 
+                                            check_ylim)
 from CTkToolTip import CTkToolTip
 
     
@@ -375,12 +377,12 @@ class VisualizeFrame(ctk.CTkScrollableFrame):
     
     def load_config_event(self):
         try:
-            print("load config event")
             file_name=ctk.filedialog.askopenfilename(title="Select config.yml file type", 
                                                      filetypes=(('yml files', '*.yml'),
                                                                 ('All files', '*.*')))
             self.config.update(read_config(file_name))
             self.selected_config_file.configure(text= '...' + file_name[-30:])
+            print(self.config)
         except:
             pass
         
@@ -391,6 +393,7 @@ class VisualizeFrame(ctk.CTkScrollableFrame):
                                                                 ('All files', '*.*')))
             self.globalData.update(torch.load(file_name))
             self.selected_data_file.configure(text= '...' + file_name[-30:])
+            print(self.globalData.keys())
         except:
             pass
         
@@ -466,7 +469,7 @@ class VisualizeFrame(ctk.CTkScrollableFrame):
             
             # General setting for plotting observed data
             lineplot=check_line_plot(self.lineplot)
-            color_obs=check_color(self.color_obs, "red")
+            color_obs=check_color(self.color_obs, "coral")
             alpha_obs=check_alpha(self.alpha_obs, 1)
             size_obs=check_size(self.size_obs, 1)
             linestyle_obs=check_linestyle(self.linestyle_obs, 'dashed')
@@ -507,7 +510,7 @@ class VisualizeFrame(ctk.CTkScrollableFrame):
         try:
             # Data for plot
             loss=self.globalData["trainer"].loss
-            
+
             # Make plot window
             plot_window=ToplevelWindow(window_name="Plot window")
             
@@ -524,7 +527,7 @@ class VisualizeFrame(ctk.CTkScrollableFrame):
                                   self.valid_line_style.get().strip(),
                                   self.valid_legend.get().strip(),
                                   self.best_model_legend.get().strip())
-            
+            print("cannot")
         except:
             # Make plot window
             #plot_window=ToplevelWindow(window_name="Plot window")
@@ -532,4 +535,12 @@ class VisualizeFrame(ctk.CTkScrollableFrame):
             
             tk.messagebox.showinfo(title="Error", 
                                    message="Cannot plot loss")
+            
+    def show_loss_pandastable(self):
+        try:
+            self.table = Table(tk.Toplevel(self), dataframe=self.globalData['dynamic_data'], 
+                               showtoolbar=True, showstatusbar=True)
+            self.table.show()
+        except:
+            None
 

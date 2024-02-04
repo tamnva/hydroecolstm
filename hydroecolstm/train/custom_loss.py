@@ -52,18 +52,3 @@ class CustomLoss(nn.Module):
         # Root Mean Square Error
         rmse = self.MSE(y_true, y_predict, mask)**0.5
         return rmse
-        
-'''
-y = torch.rand(2,2,3)
-yhat = torch.rand(2,2,3)
-y[1,1,1] = float("nan")
-
-mask = ~torch.isnan(y)
-loss = torch.nn.L1Loss()
-
-loss(y[mask], yhat[mask])
-
-from hydroecolstm.utility.custom_loss import CustomLoss
-loss = CustomLoss("RMSE")
-loss(y,yhat)
-'''        

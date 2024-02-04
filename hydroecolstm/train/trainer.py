@@ -4,7 +4,7 @@ import torch
 from pathlib import Path
 from torch.utils.data import DataLoader
 
-from hydroecolstm.utility.custom_loss import CustomLoss
+from hydroecolstm.train.custom_loss import CustomLoss
 from hydroecolstm.data.custom_dataset import CustomDataset
 
 # LSTM + Linears
@@ -94,26 +94,24 @@ class Trainer():
                 # Save traning loss 
                 train_loss_batch.append(loss.item())
                 
-            # Set model to eval mode
-            # self.model.eval()
+            # Set model to eval mode (in this mode, dropout = 0, no normlization)
+            self.model.eval()
 
             # Loop over batches
-            with torch.no_grad():
+            for x_batch, y_batch in xy_valid_batch:
                 
-                for x_batch, y_batch in xy_valid_batch:
+                # TODO: why with 3D tensor doesn't work, remove those 2 lines
+                x_batch = x_batch.view(-1, x_batch.size(2))
+                y_batch = y_batch.view(-1, y_batch.size(2))
                 
-                    # TODO: why with 3D tensor doesn't work, remove those 2 lines
-                    x_batch = x_batch.view(-1, x_batch.size(2))
-                    y_batch = y_batch.view(-1, y_batch.size(2))
+                # Forward pass:
+                y_predict = self.model(x_batch)
                 
-                    # Forward pass:
-                    y_predict = self.model(x_batch)
+                # Get Loss
+                loss = self.loss_function(y_batch, y_predict)
                 
-                    # Get Loss
-                    loss = self.loss_function(y_batch, y_predict)
-                
-                    # Save traning loss 
-                    valid_loss_batch.append(loss.item())
+                # Save traning loss 
+                valid_loss_batch.append(loss.item())
 
             # Store average loss per epoch for training and validation
             train_loss_epoch.append(np.average(train_loss_batch))
@@ -141,6 +139,8 @@ class Trainer():
             # Load the last checkpoint with the best model
             self.model.load_state_dict(torch.load(Path(self.out_dir, 
                                                        "best_model.pt")))
+            # Set model to eval mode
+            self.model.eval()
             pass
             
         self.loss = pd.DataFrame({"epoch": list(range(1,len(train_loss_epoch)+1)),

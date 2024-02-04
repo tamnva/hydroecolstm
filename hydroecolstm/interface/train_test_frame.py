@@ -2,7 +2,7 @@ import tkinter as tk
 import customtkinter as ctk
 from hydroecolstm.model.lstm_linears import Lstm_Linears
 from hydroecolstm.model.ea_lstm import Ea_Lstm_Linears
-from hydroecolstm.model.trainer import Trainer
+from hydroecolstm.train.trainer import Trainer
 from CTkToolTip import CTkToolTip
 
 class TrainTestFrame(ctk.CTkScrollableFrame):
