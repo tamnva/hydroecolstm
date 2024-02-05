@@ -2,7 +2,7 @@
 
 - HydroEcoLSTM is a tool for modelling Hydro-ecological processes with Long short-term Memory (LSTM) neural network. HydroEcoLSTM is provided to users as a python packages with graphical user interface (GUI) and without GUI. 
 - This is the beta version, package documentation will be provided in later versions
-- Please click here to see the [package documentation](https://hydroecolstm.readthedocs.io/en/latest/)
+- Please click here to see the [package documentation](https://hydroecolstm.readthedocs.io/en/latest/).
 
 ### Quick start
 
