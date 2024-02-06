@@ -14,10 +14,10 @@ class TrainTestFrame(ctk.CTkScrollableFrame):
         self.globalData = globalData
         self.__create_widgets() 
         
-    # create widgets for sidebar frame
+    # create widgets for sidebar frame 
     def __create_widgets(self): 
         
-        # create tabs
+        # create tabs #
         self.tabview = ctk.CTkTabview(master=self, width = 750, border_width=1.5,
                                       fg_color = "transparent")
         self.tabview.pack(fill='both',expand=1)
