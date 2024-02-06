@@ -21,7 +21,6 @@ setup(
                       'tkcalendar>=1.6.1',
                       'PyYAML>=6.0.1',
                       'pathlib>=1.0.1',
-                      'tkinter>=5.2.1',
                       'customtkinter>=5.2.1',
                       'CTkToolTip>=0.8',
                       'CTkMessagebox>=2.5',
