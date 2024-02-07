@@ -6,11 +6,22 @@ Usage
 Installation
 ------------
 
-To use HydroEcoLSTM, first install it using pip:
+To use HydroEcoLSTM contains many dependencies. To advoild conflict with other
+packages, create a virtual environment to install HydroEcoLSMT and its dependencies
+
+To do that, we could install Annaconda from here (https://www.anaconda.com/). Then
+open the cmd command and create a virtual environment
 
 .. code-block:: console
 
-   (.venv) $ pip install lumache
+>>> # create virtual environment called "saqc-env"
+>>> conda create -n hydroecolstm_env
+
+>>> # activate the virtual environment
+>>> conda activate hydroecolstm_env
+
+>>> install using pip command
+>>> pip install git+https://github.com/tamnva/hydroecolstm.git
 
 Creating recipes
 ----------------
