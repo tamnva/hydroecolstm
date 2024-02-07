@@ -1,7 +1,6 @@
 # Configuration file for the Sphinx documentation builder.
 
 # Import required library
-import hydroecolstm
 import datetime
 import os
 import sys
@@ -12,11 +11,11 @@ sys.path.insert(0, os.path.abspath('../../'))
 
 # -- Project information
 project = 'HydroEcoLSTM'
-copyright = f'{datetime.datetime.now().year}, {hydroecolstm.__author__}'
-author = hydroecolstm.__author__
+copyright = f'{datetime.datetime.now().year}, Tam Nguyen'
+author = 'Tam Nguyen'
 
 release = '0.1'
-version = hydroecolstm.__version__
+version = '0.1.0'
 
 # -- General configuration
 
