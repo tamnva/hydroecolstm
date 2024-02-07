@@ -1,13 +1,22 @@
 # Configuration file for the Sphinx documentation builder.
 
-# -- Project information
+# Import required library
+import hydroecolstm
+import datetime
+import os
+import sys
 
-project = 'hydroecolstm'
-copyright = '2024, Tam V. Nguyen'
-author = 'Tam V. Nguyen'
+#source code directory, relative to this file, for sphinx-autobuild
+sys.path.insert(0, os.path.abspath('.'))
+sys.path.insert(0, os.path.abspath('../../'))
+
+# -- Project information
+project = 'HydroEcoLSTM'
+copyright = f'{datetime.datetime.now().year}, {hydroecolstm.__author__}'
+author = hydroecolstm.__author__
 
 release = '0.1'
-version = '0.1.0'
+version = hydroecolstm.__version__
 
 # -- General configuration
 
@@ -33,3 +42,4 @@ html_theme = 'sphinx_rtd_theme'
 
 # -- Options for EPUB output
 epub_show_urls = 'footnote'
+
