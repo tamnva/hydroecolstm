@@ -14,16 +14,15 @@ class DataFrame(ctk.CTkScrollableFrame):
     def __init__(self, container=None, config=None, globalData=None):
         super().__init__(container)
         
-        # setup the grid layout manager
+        # setup the grid layout manager 
         self.config = config
         self.globalData = globalData
-        self.__create_widgets()         
-        self.tableframe = tk.Frame()
+        self.__create_widgets()
         
     # create widgets for sidebar frame
     def __create_widgets(self): 
         
-        # create tabs
+        # create tabs      
         self.tabview = ctk.CTkTabview(master=self, width = 750, border_width=1.5,
                                       fg_color = "transparent")
         self.tabview.pack(fill='both',expand=1)
@@ -33,6 +32,7 @@ class DataFrame(ctk.CTkScrollableFrame):
         self.tabview.tab("2. Filter data").grid_columnconfigure((1,1), weight=1)
         self.tabview.add("3. Transform data")
         self.tabview.tab("3. Transform data").grid_columnconfigure((1,1), weight=1)
+        
         # ---------------------------------------------content of load data tab
         # ---------------------------------------------------------Dynamic data
         self.dynamic_label = ctk.CTkLabel(self.tabview.tab("1. Load data"), 

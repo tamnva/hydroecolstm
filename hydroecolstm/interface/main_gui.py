@@ -8,7 +8,7 @@ from hydroecolstm.interface.project_summary_frame import ProjectSummaryFrame
 from hydroecolstm.interface.sidebar_frame import SidebarFrame
 from hydroecolstm.interface.train_test_frame import TrainTestFrame
 from hydroecolstm.interface.visualize_frame import VisualizeFrame
-from hydroecolstm.interface.forecast_frame import ForecastFrame
+from hydroecolstm.interface.application_frame import ApplicationFrame
 
 
 
@@ -94,7 +94,7 @@ class MainGUI(ctk.CTk):
                                            globalData=globalData)
 
         # visualize frame
-        self.forecast_frame = ForecastFrame(container=self, config=config,
+        self.application_frame = ApplicationFrame(container=self, config=config,
                                            globalData=globalData)
             
         # summary frame
@@ -108,7 +108,7 @@ class MainGUI(ctk.CTk):
                                           network_frame=self.network_frame,
                                           train_test_frame=self.train_test_frame,
                                           visual_frame=self.visual_frame,
-                                          forecast_frame=self.forecast_frame)
+                                          application_frame=self.application_frame)
         
         self.sidebar_frame.grid(row=0, column=0, rowspan=4, padx = 0,
                                 pady=(20, 20), sticky="nsew") 

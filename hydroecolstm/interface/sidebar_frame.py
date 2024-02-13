@@ -4,7 +4,7 @@ from CTkToolTip import CTkToolTip
 
 class SidebarFrame(ctk.CTkFrame):
     def __init__(self, container=None, data_frame=None, network_frame=None,
-                 train_test_frame=None, visual_frame=None, forecast_frame=None):
+                 train_test_frame=None, visual_frame=None, application_frame=None):
         super().__init__(container)
         
         # setup the grid layout manager
@@ -12,7 +12,7 @@ class SidebarFrame(ctk.CTkFrame):
         self.network_frame = network_frame
         self.train_test_frame = train_test_frame
         self.visual_frame = visual_frame
-        self.forecast_frame = forecast_frame
+        self.application_frame = application_frame
         self.columnconfigure(0, weight=1)
         self.rowconfigure((0,1,2,3,4,5,6,7,8), weight=0)
         self.__create_widgets() 
@@ -66,12 +66,12 @@ class SidebarFrame(ctk.CTkFrame):
                    text_color = 'black', anchor = 'w', 
                    message= 'Click here to visualize the model outputs')
 
-        self.forecast_button = ctk.CTkButton(self,
-                                          command=self.forecast_button_event,
+        self.application_button = ctk.CTkButton(self,
+                                          command=self.application_button_event,
                                           anchor='w', 
-                                          text="5. Forecast/prediction")
-        self.forecast_button.grid(row=5, column=0, padx=0, pady=10)
-        CTkToolTip(self.forecast_button, delay=0.1, bg_color = 'orange', 
+                                          text="5. Application")
+        self.application_button.grid(row=5, column=0, padx=0, pady=10)
+        CTkToolTip(self.application_button, delay=0.1, bg_color = 'orange', 
                    text_color = 'black', anchor = 'w', 
                    message= 'Click here to make a forward run for forcast, or \n' +
                        'simulation in ungauged basins using the trained network')
@@ -100,7 +100,7 @@ class SidebarFrame(ctk.CTkFrame):
         self.net_button.configure(fg_color='gray')
         self.train_button.configure(fg_color='gray')
         self.visualize_button.configure(fg_color='gray')
-        self.forecast_button.configure(fg_color='gray')
+        self.application_button.configure(fg_color='gray')
      
     def change_scaling_event(self, new_scaling: str):
         new_scaling_float = int(new_scaling.replace("%", "")) / 100
@@ -115,7 +115,7 @@ class SidebarFrame(ctk.CTkFrame):
         self.network_frame.grid_forget()
         self.train_test_frame.grid_forget()
         self.visual_frame.grid_forget()
-        self.forecast_frame.grid_forget()
+        self.application_frame.grid_forget()
         
         # turn on data frame
         self.data_frame.grid(row=0, column=1, rowspan=4, padx = 10, 
@@ -126,14 +126,14 @@ class SidebarFrame(ctk.CTkFrame):
         self.net_button.configure(fg_color='gray')
         self.train_button.configure(fg_color='gray')
         self.visualize_button.configure(fg_color='gray')
-        self.forecast_button.configure(fg_color='gray')
+        self.application_button.configure(fg_color='gray')
         
     def network_button_event(self):
         # turn of other frames
         self.data_frame.grid_forget()
         self.train_test_frame.grid_forget()
         self.visual_frame.grid_forget()
-        self.forecast_frame.grid_forget()
+        self.application_frame.grid_forget()
         
         # turn on data frame
         self.network_frame.grid(row=0, column=1, rowspan=4, padx = 10, 
@@ -144,14 +144,14 @@ class SidebarFrame(ctk.CTkFrame):
         self.net_button.configure(fg_color=['#3a7ebf', '#1f538d'])
         self.train_button.configure(fg_color='gray')
         self.visualize_button.configure(fg_color='gray')
-        self.forecast_button.configure(fg_color='gray')
+        self.application_button.configure(fg_color='gray')
         
     def traintest_button_event(self):
         # turn of other frames
         self.data_frame.grid_forget()
         self.network_frame.grid_forget()
         self.visual_frame.grid_forget()
-        self.forecast_frame.grid_forget()
+        self.application_frame.grid_forget()
         
         # turn on data frame
         self.train_test_frame.grid(row=0, column=1, rowspan=4, padx = 10, 
@@ -162,14 +162,14 @@ class SidebarFrame(ctk.CTkFrame):
         self.train_button.configure(fg_color=['#3a7ebf', '#1f538d'])
         self.net_button.configure(fg_color='gray')
         self.visualize_button.configure(fg_color='gray')
-        self.forecast_button.configure(fg_color='gray')
+        self.application_button.configure(fg_color='gray')
         
     def visualize_button_event(self):
         # turn of other frames
         self.data_frame.grid_forget()
         self.network_frame.grid_forget()
         self.train_test_frame.grid_forget()
-        self.forecast_frame.grid_forget()
+        self.application_frame.grid_forget()
         
         # turn on data frame
         self.visual_frame.grid(row=0, column=1, rowspan=4, padx = 10, 
@@ -180,16 +180,16 @@ class SidebarFrame(ctk.CTkFrame):
         self.train_button.configure(fg_color='gray')
         self.net_button.configure(fg_color='gray')
         self.visualize_button.configure(fg_color=['#3a7ebf', '#1f538d'])
-        self.forecast_button.configure(fg_color='gray')
+        self.application_button.configure(fg_color='gray')
         
-    def forecast_button_event(self):
+    def application_button_event(self):
         self.data_frame.grid_forget()
         self.network_frame.grid_forget()
         self.train_test_frame.grid_forget()
         self.visual_frame.grid_forget()
    
         # turn on data frame
-        self.forecast_frame.grid(row=0, column=1, rowspan=4, padx = 10, 
+        self.application_frame.grid(row=0, column=1, rowspan=4, padx = 10, 
                                columnspan=2, pady=(20, 20), sticky="nsew")
         
         # change button color
@@ -197,7 +197,7 @@ class SidebarFrame(ctk.CTkFrame):
         self.train_button.configure(fg_color='gray')
         self.net_button.configure(fg_color='gray')
         self.visualize_button.configure(fg_color='gray')
-        self.forecast_button.configure(fg_color=['#3a7ebf', '#1f538d'])
+        self.application_button.configure(fg_color=['#3a7ebf', '#1f538d'])
                 
         
         
