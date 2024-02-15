@@ -3,6 +3,7 @@ import customtkinter as ctk
 import matplotlib
 import tkinter as tk
 from matplotlib.figure import Figure
+import numpy as np
 from matplotlib.backends.backend_tkagg import (FigureCanvasTkAgg, 
                                                NavigationToolbar2Tk)
 
@@ -186,6 +187,7 @@ def plot_time_series(plot_window, data, key, idx, lineplot,
     
     # Key names of time and y variables in the input data
     time_name = ["time_train", "time_valid", "time_test"]
+    period = ["Training", "Validation", "Test"]
     y_name = ["y_train", "y_valid", "y_test"]
     
     # Plot observed -----------------------------------------------------------
@@ -247,7 +249,14 @@ def plot_time_series(plot_window, data, key, idx, lineplot,
                       alpha=alpha_sim,
                       linewidth=size_sim,
                       label=label_sim)
+        # Add vertical lines seperate train, valid, test
         axes.axvline(x=time[-1], color = "grey", linestyle='dashed')
+        
+        # Add text train, valid, test
+        if i == 0: 
+            ylable = np.nanmax(y_sim) + 0.4*np.absolute(np.nanmax(y_sim))
+            
+        axes.text(time[1], ylable, period[i])
         
     # Set x label
     axes.set_xlabel(xlabel)
