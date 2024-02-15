@@ -1,45 +1,40 @@
-Usage
-=====
-
-.. _installation:
+Quick start
+===========
+.. quick_start:
 
 Installation
 ------------
 
-To use HydroEcoLSTM contains many dependencies. To advoild conflict with other
-packages, create a virtual environment to install HydroEcoLSMT and its dependencies
+To use HydroEcoLSTM contains many dependencies. To avoid conflict with other
+packages, create a virtual environment to install HydroEcoLSMT and its dependencies.
+To do that, we could install Anaconda from here (https://www.anaconda.com/). Then
+open the cmd command to:
 
-To do that, we could install Annaconda from here (https://www.anaconda.com/). Then
-open the cmd command and create a virtual environment
+* create a virtual environment,
+* activate the environment,
+* install HydroEcoLSTM using pip command.
 
-.. code-block:: console
+.. code-block::
 
->>> # create virtual environment called "saqc-env"
->>> conda create -n hydroecolstm_env
+    conda create -n hydroecolstm_env
+    conda activate hydroecolstm_env
+    pip install git+https://github.com/tamnva/hydroecolstm.git
 
->>> # activate the virtual environment
->>> conda activate hydroecolstm_env
+Example data
+------------
+Example data for streamflow simulation are part of the CAMLE-CH data and
 
->>> install using pip command
->>> pip install git+https://github.com/tamnva/hydroecolstm.git
 
-Creating recipes
-----------------
+The graphical user interface
+----------------------------
 
-To retrieve a list of random ingredients,
-you can use the ``lumache.get_random_ingredients()`` function:
+The graphical user interface can be called using the following command
 
-.. autofunction:: lumache.get_random_ingredients
+.. code-block:: python
 
-The ``kind`` parameter should be either ``"meat"``, ``"fish"``,
-or ``"veggies"``. Otherwise, :py:func:`lumache.get_random_ingredients`
-will raise an exception.
+   import hydroecolstm
+   hydroecolstm.interface.show_gui()
 
-.. autoexception:: lumache.InvalidKindError
 
-For example:
-
->>> import lumache
->>> lumache.get_random_ingredients()
-['shells', 'gorgonzola', 'parsley']
-
+The graphical user interface
+----------------------------
