@@ -5,8 +5,6 @@ from hydroecolstm.model.lstm_linears import Lstm_Linears
 from hydroecolstm.model.ea_lstm import Ea_Lstm_Linears
 from hydroecolstm.train.trainer import Trainer
 
-config_file = "C:/Users/nguyenta/Documents/GitHub/hydroecolstm/examples/configuration_example/config.yml"
-
 # Function to train and test the model 
 def run_train(config):
 

@@ -166,7 +166,9 @@ def check_ylim(entry, default):
 
 
 
-    
+#-----------------------------------------------------------------------------#
+#                                 plot timeseries                             #
+#-----------------------------------------------------------------------------#
 def plot_time_series(plot_window, data, key, idx, lineplot, 
                  color_obs, alpha_obs, size_obs, linestyle_obs,
                  marker_obs, label_obs, color_sim, alpha_sim, 
@@ -244,7 +246,8 @@ def plot_time_series(plot_window, data, key, idx, lineplot,
                       color=color_sim, 
                       alpha=alpha_sim,
                       linewidth=size_sim,
-                      label=label_sim)            
+                      label=label_sim)
+        axes.axvline(x=time[-1], color = "grey", linestyle='dashed')
         
     # Set x label
     axes.set_xlabel(xlabel)

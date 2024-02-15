@@ -39,15 +39,15 @@ def read_train_valid_test_data(config:dict=None) -> dict:
     x_train = _split_by_object_id(train_data[x_column_name], config["object_id"])
     y_train = _split_by_object_id(train_data[y_column_name], config["object_id"])
     time_train = _time_by_object_id(train_data, config["object_id"])
-
-    config["valid_period"] = pd.to_datetime(config["valid_period"], format = "%Y-%m-%d")
+ 
+    config["valid_period"] = pd.to_datetime(config["valid_period"], format = "%Y-%m-%d %H:%M")
     valid_data = dynamic_data[(dynamic_data["time"] >= config["valid_period"][0]) &
                              (dynamic_data["time"] <= config["valid_period"][1])]
     x_valid = _split_by_object_id(valid_data[x_column_name], config["object_id"])
     y_valid = _split_by_object_id(valid_data[y_column_name], config["object_id"])
     time_valid = _time_by_object_id(valid_data, config["object_id"])
     
-    config["test_period"] = pd.to_datetime(config["test_period"], format = "%Y-%m-%d")
+    config["test_period"] = pd.to_datetime(config["test_period"], format = "%Y-%m-%d %H:%M")
     test_data = dynamic_data[(dynamic_data["time"] >= config["test_period"][0]) &
                              (dynamic_data["time"] <= config["test_period"][1])]
     x_test = _split_by_object_id(test_data[x_column_name], config["object_id"])
