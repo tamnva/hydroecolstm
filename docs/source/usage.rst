@@ -1,9 +1,6 @@
-Quick start
-===========
-.. quick_start:
-
 Installation
-------------
+===========
+.. Installation:
 
 To use HydroEcoLSTM contains many dependencies. To avoid conflict with other
 packages, create a virtual environment to install HydroEcoLSMT and its dependencies.
@@ -21,12 +18,26 @@ open the cmd command to:
     pip install git+https://github.com/tamnva/hydroecolstm.git
 
 Example data
-------------
-Example data for streamflow simulation are part of the CAMLE-CH data and
+============
 
+CAMEL-CH data
+-------------
+The CAMEL-CH data contains
 
-The graphical user interface
-----------------------------
+Streamflow and instream isotope signatures
+-----------------------------------------
+TODO: Write something here
+
+The Graphical User Interface
+===========================
+
+CAMEL-CH data
+-------------
+The CAMEL-CH data contains
+
+Streamflow and instream isotope signatures
+------------------------------------------
+Write something here
 
 The graphical user interface can be called using the following command
 
@@ -36,5 +47,13 @@ The graphical user interface can be called using the following command
    hydroecolstm.interface.show_gui()
 
 
-The graphical user interface
-----------------------------
+Illustrative examples
+=====================
+Write something here
+Streamflow prediction in ungauged catchments
+--------------------------------------------
+Write something here
+
+Multiple target variable predictions
+-------------------------------------
+Write something here
