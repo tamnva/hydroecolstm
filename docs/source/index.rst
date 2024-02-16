@@ -10,4 +10,5 @@ Contents
    data
    the_grahical_user_interface
    configuration_file
+   examples
    api
