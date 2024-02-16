@@ -1,5 +1,6 @@
 
 import customtkinter as ctk
+import pandas as pd
 import tkcalendar as tkc
 from hydroecolstm.data.read_data import read_forecast_data
 import tkinter as tk
@@ -194,8 +195,9 @@ class ApplicationFrame(ctk.CTkScrollableFrame):
         
         try:
             # Get forecast period
-            self.config['forecast_period'] = [self.start_forecast.get_date(),
-                                              self.end_forecast.get_date()]
+            self.config['forecast_period'] = pd.to_datetime(
+                [self.start_forecast.get_date(), self.end_forecast.get_date()],
+                format = "%Y-%m-%d %H:%M")
             
             # Get forecast id
             all_items = self.object_id_forecast.get(index='all')

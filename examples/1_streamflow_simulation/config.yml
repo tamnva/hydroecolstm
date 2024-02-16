@@ -1,11 +1,11 @@
 dynamic_data_file:
-  - C:/Users/nguyenta/Documents/GitHub/hydroecolstm/examples/1_streamflow_simulation/data/time_series.csv
+  - C:/example/1_streamflow_simulation/data/time_series.csv
 
 static_data_file:
-  - C:/Users/nguyenta/Documents/GitHub/hydroecolstm/examples/1_streamflow_simulation/data/static_attributes.csv
+  - C:/example/1_streamflow_simulation/data/static_attributes.csv
 
 output_directory:
-  - C:/Users/nguyenta/Documents/GitHub/hydroecolstm/examples/1_streamflow_simulation/results
+  - C:/example/1_streamflow_simulation/results
 
 input_static_features:
   - elev_mean
@@ -94,32 +94,3 @@ forecast_period:
 object_id_forecast:
   - 2011
   - 2029
-
-#({'2009': tensor([0.8372]), 
-#  '2016': tensor([0.9073]), 
-#  '2018': tensor([0.9072]), 
-#  '2019': tensor([0.7205]), 
-#  '2020': tensor([0.8170]), 
-#  '2024': tensor([0.8604]), 
-#  '2030': tensor([0.8806]), 
-#  '2033': tensor([0.6892])}, tensor(0.8274))
-
-#({'2009': tensor([0.8350]), 
-#  '2016': tensor([0.8751]), 
-#  '2018': tensor([0.8534]), 
-#  '2019': tensor([0.7367]), 
-#  '2020': tensor([0.8022]), 
-#  '2024': tensor([0.8201]), 
-#  '2030': tensor([0.8729]), 
-#  '2033': tensor([0.6931])}, tensor(0.8111))
-
-#({'2009': tensor([0.7950]), 
-#  '2016': tensor([0.8917]), 
-#  '2018': tensor([0.8843]), 
-#  '2019': tensor([0.7011]), 
-#  '2020': tensor([0.7913]), 
-#  '2024': tensor([0.8159]), 
-#  '2030': tensor([0.8709]), 
-#  '2033': tensor([0.5723])}, tensor(0.7903))
-
-#({'2011': tensor([0.8327]), '2029': tensor([0.5283])}, tensor(0.6805))

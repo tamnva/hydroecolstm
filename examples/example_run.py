@@ -8,14 +8,17 @@ from hydroecolstm.utility.evaluation_function import EvaluationFunction
 #-----------------------------------------------------------------------------#
 #                                Run the model                                #
 #-----------------------------------------------------------------------------#
-# Configuration file
-config_file = "D:/Tam/hydroecolstm/examples/1_streamflow_simulation/config.yml"
-config = read_config(config_file)
+# Read configuration file
+config = read_config("C:/example/1_streamflow_simulation/config.yml")
+
+
 model, x_scaler, y_scaler, data = run_train(config)
 
 #data.update(test)
 data["trainer"].loss.drop(['epoch', 'best_model'], axis=1).plot()
 objective = EvaluationFunction("MAE", config['warmup_length'])
+
+
 print(objective(data['y_train'], data['y_train_simulated']))
 print(objective(data['y_valid'], data['y_valid_simulated']))
 print(objective(data['y_test'], data['y_test_simulated']))

@@ -489,12 +489,21 @@ class DataFrame(ctk.CTkScrollableFrame):
     def data_split_transform(self):
         # Train test split
         # get training and testing periods
-        self.config['train_period'] = [self.start_train.get_date(),
-                                       self.end_train.get_date()]
-        self.config['valid_period'] = [self.start_valid.get_date(),
-                                       self.end_valid.get_date()]
-        self.config['test_period'] = [self.start_test.get_date(),
-                                      self.end_test.get_date()]
+        
+        try:
+            self.config['train_period'] = pd.to_datetime(
+                [self.start_train.get_date(), self.end_train.get_date()],
+                format = "%Y-%m-%d %H:%M")
+
+            self.config['valid_period'] = pd.to_datetime(
+                [self.start_valid.get_date(), self.end_valid.get_date()],
+                format = "%Y-%m-%d %H:%M")
+            
+            self.config['test_period'] = pd.to_datetime(
+                [self.start_test.get_date(), self.end_test.get_date()],
+                format = "%Y-%m-%d %H:%M")
+        except:
+            pass
         
         # get input features
         all_items = self.select_input_feature.get(index='all')
