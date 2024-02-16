@@ -68,7 +68,7 @@ Please follow the numbering schemes (1 => 2 => 3 and so on) on the GUI to setup 
 Configuration file config.yml
 =============================
 
-*``dynamic_data_file``: path to the dynamic (time series data) file.
+* ``dynamic_data_file``: path to the dynamic (time series data) file.
 
 * ``static_data_file``: [``list``] - path to the static (catchment attributes) data file (optional input).
 
@@ -94,9 +94,9 @@ Configuration file config.yml
 
 * ``activation_function``: [``list``] - name of the activation function for each layer, could be a list of character ``Identity``, ``ReLu``, ``Sigmoid``, ``Tanh``, ``Softplus``.
 
-* num_neurons:
-    - None
-  num_layers: 1
+* ``num_neurons``: [``list``] - number of neurons in each layers of the model head, use ``None`` for the last layer as the number of neurons in this layer is defined by the model, which is equals to the number of target features
+
+* ``num_layers``: [``int``] - number of layers of the model head.
 
 * ``scaler_input_dynamic_features``: [``list``] - name of the transformation technique for the input dynamic features, for example ``Z-score``, ``MinMaxScaler``, or ``None``
  
@@ -129,11 +129,9 @@ Configuration file config.yml
 * ``static_data_file_forecast``: [``list``] - path to the static (catchment attributes) data file that contain data of the ungauged catchments or of the forecast period, which I call forecast in general. If it is the same file as ``static_data_file`` then type ``static_data_file``.
   - static_data_file
 
-* ``dynamic_data_file_forecast``[``list``] - path to the dynamic (time series) data file that contain data of the ungauged catchments or of the forecast period. If it is the same file as ``dynamic_data_file`` then type ``dynamic_data_file``.
+* ``dynamic_data_file_forecast``: [``list``] - path to the dynamic (time series) data file that contain data of the ungauged catchments or of the forecast period. If it is the same file as ``dynamic_data_file`` then type ``dynamic_data_file``.
 
 * ``forecast_period``: [``list``] - the starting and ending time of the forecast period, muss be in ``YYYY-MM-DD HH:MM`` format.
-  - 2001-01-01 00:00
-  - 2009-12-31 00:00
 
 * ``object_id_forecast``: [``list``] - list of the object_id in the ``static_data_file_forecast`` that you want to used
 
@@ -145,7 +143,7 @@ Examples working without GUI
 
 Streamflow simulation
 ---------------------
-TODO
+The code for streamflow simulations 
 
 Multi-target variables simulation
 ---------------------------------
