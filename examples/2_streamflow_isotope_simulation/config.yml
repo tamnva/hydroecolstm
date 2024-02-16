@@ -1,11 +1,11 @@
 dynamic_data_file:
-  - C:/Users/nguyenta/Documents/GitHub/hydroecolstm/examples/2_streamflow_isotope_simulation/data/timeseries_data.csv
+  - C:/example/2_streamflow_isotope_simulation/data/timeseries_data.csv
 
 static_data_file:
-  - C:/Users/nguyenta/Documents/GitHub/hydroecolstm/examples/2_streamflow_isotope_simulation/data/static_data.csv
+  - C:/example/2_streamflow_isotope_simulation/data/static_data.csv
 
 output_directory:
-  - C:/Users/nguyenta/Documents/GitHub/hydroecolstm/examples/2_streamflow_isotope_simulation/results
+  - C:/example/2_streamflow_isotope_simulation/results
 
 input_static_features:
   - area
@@ -14,7 +14,6 @@ input_dynamic_features:
   - precipitation
   - oxygen_isotope_precipitation
   - temperature
-#  - relative_humidity
 
 target_features:
   - streamflow
@@ -73,19 +72,3 @@ batch_size: 2
 patience: 20
 
 eval_function: NSE
-
-
-# NSE
-#({'Erlenbach': tensor([0.5981, 0.7766]), 'Alp': tensor([0.7945, 0.7559])}, tensor(0.7313))
-#({'Erlenbach': tensor([ 0.4815, -0.0022]), 'Alp': tensor([ 0.6911, -0.1262])}, tensor(0.2610))
-#({'Erlenbach': tensor([ 0.8265, -0.0085]), 'Alp': tensor([ 0.7064, -0.3160])}, tensor(0.3021))
-
-# RMSE
-#({'Erlenbach': tensor([5.5513, 0.6248]), 'Alp': tensor([2.1224, 0.4291])}, tensor(2.1819))
-#({'Erlenbach': tensor([4.8963, 0.6052]), 'Alp': tensor([2.2476, 0.4745])}, tensor(2.0559))
-#({'Erlenbach': tensor([2.0639, 0.6794]), 'Alp': tensor([1.4189, 0.5795])}, tensor(1.1854))
-
-# MAE
-#({'Erlenbach': tensor([2.3172, 0.4850]), 'Alp': tensor([1.2288, 0.3089])}, tensor(1.0850))
-#({'Erlenbach': tensor([2.6626, 0.4949]), 'Alp': tensor([1.4438, 0.3815])}, tensor(1.2457))
-#({'Erlenbach': tensor([1.1578, 0.5245]), 'Alp': tensor([0.8880, 0.4771])}, tensor(0.7619))

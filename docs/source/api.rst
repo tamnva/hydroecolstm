@@ -1,7 +1,7 @@
 API
 ===
 
-.. automodule:: hydroecolstm.model.linears
+.. autoclass:: hydroecolstm.model.linears
    :members:
    :undoc-members:
    :show-inheritance:

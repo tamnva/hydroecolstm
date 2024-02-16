@@ -82,16 +82,3 @@ class Lstm_Linears(nn.Module):
         num_neurons.append(self.output_size)
 
         return num_neurons
-
-'''                  
-model = nn.LSTM(input_size=3, hidden_size=4, batch_first=True)
-input = torch.rand(2,10,3)
-out, state = model(input)
-
-newmodel = nn.Linear(in_features=4, out_features=2)
-newinput = torch.rand(2,10,4)
-test = newinput[1,:,:]
-newout = newmodel(test)
-
-nn.Linear(in_features, out_features)       
-'''     
