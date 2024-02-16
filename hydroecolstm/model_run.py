@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 
 from hydroecolstm.data.read_data import read_train_valid_test_data
 from hydroecolstm.data.scaler import Scaler, get_scaler_name
@@ -53,3 +54,5 @@ def run_train(config):
     
     return model, x_scaler, y_scaler, data
 
+if __name__ == "__main__":
+    globals()[sys.argv[1]]()
