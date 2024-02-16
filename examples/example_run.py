@@ -9,7 +9,7 @@ from hydroecolstm.utility.evaluation_function import EvaluationFunction
 #                                Run the model                                #
 #-----------------------------------------------------------------------------#
 # Configuration file
-config_file = "C:/Users/nguyenta/Documents/GitHub/hydroecolstm/examples/2_streamflow_isotope_simulation/config.yml"
+config_file = "D:/Tam/hydroecolstm/examples/1_streamflow_simulation/config.yml"
 config = read_config(config_file)
 model, x_scaler, y_scaler, data = run_train(config)
 
