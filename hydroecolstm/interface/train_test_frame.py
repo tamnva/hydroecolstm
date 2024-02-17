@@ -238,7 +238,6 @@ class TrainTestFrame(ctk.CTkScrollableFrame):
             else:
                 self.globalData["model"] = Ea_Lstm_Linears(config=self.config)
             print("done create model")
-            print(self.config)
             # Train the model
             self.globalData["trainer"] = Trainer(config=self.config, 
                                                model=self.globalData["model"])

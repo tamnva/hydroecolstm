@@ -382,7 +382,6 @@ class VisualizeFrame(ctk.CTkScrollableFrame):
                                                                 ('All files', '*.*')))
             self.config.update(read_config(file_name))
             self.selected_config_file.configure(text= '...' + file_name[-30:])
-            print(self.config)
         except:
             pass
         
