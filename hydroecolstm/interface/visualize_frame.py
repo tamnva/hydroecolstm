@@ -340,7 +340,7 @@ class VisualizeFrame(ctk.CTkScrollableFrame):
 
     # Data selection event
     def data_selection_event(self, method: str):
-        if method == "From other project":
+        if method == "from other project":
             #  Load config file
             self.load_data_label=ctk.CTkLabel(self.tabview.tab("1. Data for plot"),
                                              text="2. Load data from other projects (ATTENTION!!!)")

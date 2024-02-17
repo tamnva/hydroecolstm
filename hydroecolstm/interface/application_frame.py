@@ -4,8 +4,12 @@ import pandas as pd
 import tkcalendar as tkc
 from hydroecolstm.data.read_data import read_forecast_data
 import tkinter as tk
+import torch
 from CTkListbox import CTkListbox
 from CTkToolTip import CTkToolTip
+from hydroecolstm.data.read_config import read_config
+from hydroecolstm.model.lstm_linears import Lstm_Linears
+from hydroecolstm.model.ea_lstm import Ea_Lstm_Linears
 from hydroecolstm.interface.utility import (ToplevelWindow, 
                                             plot_train_valid_loss,
                                             plot_time_series,
@@ -34,7 +38,8 @@ class ApplicationFrame(ctk.CTkScrollableFrame):
         self.tabview.add("1. Inputs")
         self.tabview.tab("1. Inputs").grid_columnconfigure(0, weight=0) 
         self.tabview.tab("1. Inputs").grid_columnconfigure(1, weight=0)
-        self.tabview.tab("1. Inputs").grid_columnconfigure(2, weight=1)
+        self.tabview.tab("1. Inputs").grid_columnconfigure(2, weight=0)
+        self.tabview.tab("1. Inputs").grid_columnconfigure(3, weight=1)
 
         
         self.tabview.add("2. Plot outputs")
@@ -60,39 +65,62 @@ class ApplicationFrame(ctk.CTkScrollableFrame):
         self.load_train_test_config = ctk.CTkButton(self.tabview.tab("1. Inputs"), 
                                                anchor='w', 
                                                text="Select config.yml file", 
-                                               command=None)
+                                               command=self.get_config_file)
         self.load_train_test_config.grid(row=1, column=1, padx = 10, pady=(2,2), sticky="w")  
+        self.config_file_name = ctk.CTkLabel(self.tabview.tab("1. Inputs"), 
+                                         text="No file was selected")
+        self.config_file_name.grid(row=1, column=2, padx = 10, pady=(2,2), sticky="w")  
         
         self.dynamic_file_button = ctk.CTkButton(self.tabview.tab("1. Inputs"), 
                                                anchor='w', 
                                                text="Select dynamic data file", 
-                                               command=None)
-        self.dynamic_file_button.grid(row=2, column=1, padx = 10, pady=(2,2), sticky="w")       
+                                               command=self.get_dynamic_file_forecast)
+        self.dynamic_file_button.grid(row=2, column=1, padx = 10, pady=(2,2), sticky="w")
+        self.dynamic_file_name = ctk.CTkLabel(self.tabview.tab("1. Inputs"), 
+                                         text="No file was selected")
+        self.dynamic_file_name.grid(row=2, column=2, padx = 10, pady=(2,2), sticky="w") 
+        
     
         self.static_file_button = ctk.CTkButton(self.tabview.tab("1. Inputs"), 
                                                anchor='w', 
                                                text="Select static data file", 
-                                               command=None)
-        self.static_file_button.grid(row=3, column=1, padx = 10, pady=(2,2), sticky="w")  
+                                               command=self.get_static_file_forecast)
+        self.static_file_button.grid(row=3, column=1, padx = 10, pady=(2,2), sticky="w")
+        self.static_file_name = ctk.CTkLabel(self.tabview.tab("1. Inputs"), 
+                                         text="No file was selected")
+        self.static_file_name.grid(row=3, column=2, padx = 10, pady=(2,2), sticky="w") 
+        
 
         self.model_button = ctk.CTkButton(self.tabview.tab("1. Inputs"), 
                                                anchor='w', 
                                                text="Load trained model", 
-                                               command=None)
-        self.model_button.grid(row=4, column=1, padx = 10, pady=(2,2), sticky="w")    
+                                               command=self.load_model_state_dicts)
+        self.model_button.grid(row=4, column=1, padx = 10, pady=(2,2), sticky="w") 
+        self.model_name = ctk.CTkLabel(self.tabview.tab("1. Inputs"), 
+                                         text="No model was loaded")
+        self.model_name.grid(row=4, column=2, padx = 10, pady=(2,2), sticky="w") 
+        
+        self.load_scaler_button = ctk.CTkButton(self.tabview.tab("1. Inputs"), 
+                                               anchor='w', 
+                                               text="Load scalers", 
+                                               command=self.load_scalers)
+        self.load_scaler_button.grid(row=5, column=1, padx = 10, pady=(2,2), sticky="w") 
+        self.load_scaler_label = ctk.CTkLabel(self.tabview.tab("1. Inputs"), 
+                                         text="No scalers were loaded")
+        self.load_scaler_label.grid(row=5, column=2, padx = 10, pady=(2,2), sticky="w") 
         
         self.model_label = ctk.CTkLabel(self.tabview.tab("1. Inputs"), 
                                          text="3. Forecast period")
-        self.model_label.grid(row=5, column=1, padx = 10, pady=(40,5), sticky="w")
-        
+        self.model_label.grid(row=6, column=1, columnspan=2, padx = 10, pady=(40,5), sticky="w")
         self.start_forecast = tkc.DateEntry(self.tabview.tab("1. Inputs"), 
                                          date_pattern= 'yyyy-mm-dd', width = 25,
                                          year=1800, month=1, day=1, font=ctk.CTkFont(size=14))
-        self.start_forecast.grid(row= 6, column=1, padx=30, pady=10, sticky='e')
+        self.start_forecast.grid(row= 7, column=1, columnspan=2, padx=30, pady=10, sticky='w')
         self.end_forecast = tkc.DateEntry(self.tabview.tab("1. Inputs"), 
                                        date_pattern= 'yyyy-mm-dd', width = 25,
                                        year=2015, month=1, day=1, font=ctk.CTkFont(size=14))
-        self.end_forecast.grid(row= 7, column=1, padx=30, pady=10, sticky='e')   
+        self.end_forecast.grid(row= 8, column=1, columnspan=2, padx=30, pady=10, sticky='w')   
+        
         
         # ---------------------------------------------------------------Column 3
         self.object_id_label = ctk.CTkLabel(self.tabview.tab("1. Inputs"), 
@@ -103,18 +131,18 @@ class ApplicationFrame(ctk.CTkScrollableFrame):
                                            multiple_selection=True, border_width=1.5,
                                            text_color="black")
         
-        self.object_id_forecast.grid(row=1, column=3, rowspan=4, padx = 10, 
+        self.object_id_forecast.grid(row=1, column=3, rowspan=5, padx = 10, 
                                      pady=(10,10), sticky="we")
 
         self.run_label = ctk.CTkLabel(self.tabview.tab("1. Inputs"), 
                                         text="5. Run forecast")
-        self.run_label.grid(row=5, column=3, padx = 10, pady=(5,5), sticky="w")
+        self.run_label.grid(row=6, column=3, padx = 10, pady=(5,5), sticky="w")
        
         self.run_button = ctk.CTkButton(self.tabview.tab("1. Inputs"), 
                                               anchor='w', 
                                               text="Run", 
                                               command=self.run_forecast)
-        self.run_button.grid(row=6, column=3, padx = 10, pady=(5,5), sticky="w") 
+        self.run_button.grid(row=7, column=3, padx = 10, pady=(5,5), sticky="w") 
         
         #---------------------------------------------------------2 Plot output
         self.object_id_label =\
@@ -283,6 +311,124 @@ class ApplicationFrame(ctk.CTkScrollableFrame):
                                   placeholder_text="label")
         self.label_sim.grid(row=7, column=3, sticky="w", padx=5)
 
+    def get_config_file(self):
+        
+        try:
+            # get file name
+            file_name = ctk.filedialog.askopenfilename(title="Select configuration file (.yml format)", 
+                                                       filetypes=(('yml files', '*.yml'),
+                                                                  ('All files', '*.*')))
+            
+            # read configuration file
+            config = read_config(file_name)
+            
+            # update label
+            self.config_file_name.configure(text= '...' + file_name[-15:])
+            
+            # update configuration
+            self.config = config
+            
+            tk.messagebox.showinfo(title="Message box", 
+                                   message="All of your previous configurations " +
+                                   "were replaced by the configurations in the " +
+                                   "selected file")
+            
+        except:
+            tk.messagebox.showinfo(title="Message box", 
+                                   message="No thing was change due either " +
+                                   "canceling file selection or unsuccessfully " +
+                                   "read of the selected configuration file")
+            
+    def get_dynamic_file_forecast(self):
+        
+        try:
+            # get file name
+            file_name = ctk.filedialog.askopenfilename(title="Select dynamic data file (.csv format)", 
+                                                       filetypes=(('yml files', '*.csv'),
+                                                                  ('All files', '*.*')))
+            
+            # update label
+            self.dynamic_file_name.configure(text= '...' + file_name[-15:])
+            
+            # update configuration
+            self.config["dynamic_data_file_forecast"] = [file_name]
+            
+            # try to remove object_id
+            try:
+                self.object_id_forecast.delete(index=0, last='END')
+            except:
+                pass
+            
+            # read dynamic data file to get header namey (object_id)
+            object_id = pd.read_csv(file_name, delimiter=",", header=0)
+            object_id = list(pd.unique(object_id["object_id"]))
+             
+            # remove columns with object_id and time
+            for i in object_id:
+                self.object_id_forecast.insert('END', option=i)
+            
+        except:
+            self.dynamic_file_name.configure(text= 'No file was selected')
+
+
+    def get_static_file_forecast(self):
+        
+        try:
+            # get file name
+            file_name = ctk.filedialog.askopenfilename(title="Select static data file (.csv format)", 
+                                                       filetypes=(('yml files', '*.csv'),
+                                                                  ('All files', '*.*')))
+            
+            # update label
+            self.static_file_name.configure(text= '...' + file_name[-15:])
+            
+            # update configuration
+            self.config["static_data_file_forecast"] = [file_name]
+            
+            
+        except:
+            self.static_file_name.configure(text= 'No file was selected')
+            
+    def load_model_state_dicts(self):
+        try:
+            # Create the model
+            if self.config["model_class"] == "LSTM":
+                self.globalData["model"] = Lstm_Linears(self.config)
+            else:
+                self.globalData["model"] = Ea_Lstm_Linears(self.config)
+                
+            # Load model state dicts
+            file_name = ctk.filedialog.askopenfilename(title="Select model state dicts (.pt format)", 
+                                                       filetypes=(('yml files', '*.pt'),
+                                                                  ('All files', '*.*')))
+            self.globalData["model"].load_state_dict(torch.load(file_name))
+            
+            # Update selected model name
+            self.model_name.configure(text= '...' + file_name[-15:])
+            
+        except:
+            tk.messagebox.showinfo(title="Error", 
+                                   message="Cannot load model state dicts")
+            
+    # Load scalers
+    def load_scalers(self):
+        try:
+            # Load model state dicts
+            file_name = ctk.filedialog.askopenfilename(title="Select scaler file (.pt format)", 
+                                                       filetypes=(('yml files', '*.pt'),
+                                                                  ('All files', '*.*')))
+            
+            scalers = torch.load(file_name)
+            self.globalData["x_scaler"] = scalers["x_scaler"]
+            self.globalData["y_scaler"] = scalers["y_scaler"]
+            
+            # Update selected model name
+            self.load_scaler_label.configure(text= '...' + file_name[-15:])
+            
+        except:
+            tk.messagebox.showinfo(title="Error", 
+                                   message="Cannot load scalers")        
+        
     # Show plot time series setting
     def show_plot_timeseries_setting(self):
         if self.plot_timeseries.get() == 0:
@@ -333,28 +479,30 @@ class ApplicationFrame(ctk.CTkScrollableFrame):
     def run_forecast(self):
         
         try:
+            
+            
             # Get forecast period
             self.config['forecast_period'] = pd.to_datetime(
                 [self.start_forecast.get_date(), self.end_forecast.get_date()],
                 format = "%Y-%m-%d %H:%M")
-            
+
             # Get forecast id
             all_items = self.object_id_forecast.get(index='all')
             select_index = self.object_id_forecast.curselection()
             object_id_forecast = [all_items[i] for i in select_index]
             self.config['object_id_forecast'] = object_id_forecast
-            
+
             # Add forecast data to globalData
             self.globalData.update(read_forecast_data(self.config))
-            
+ 
             # Scale forecast data
             self.globalData["x_forecast_scale"] =\
                 self.globalData["x_scaler"].transform(x=self.globalData["x_forecast"])
-                
+
             # Run forward model
             y_forecast_scale_simulated =\
                 self.globalData["model"].evaluate(self.globalData["x_forecast_scale"])
-            
+
             tk.messagebox.showinfo(title="Message box", 
                                    message="Finished forward run")
             
