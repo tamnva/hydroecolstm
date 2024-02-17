@@ -1,5 +1,7 @@
-Configuration file config.yml
-=============================
+Configuration file
+==================
+
+The configuration file is named ``config.yml``
 
 * ``dynamic_data_file``: path to the dynamic (time series data) file.
 

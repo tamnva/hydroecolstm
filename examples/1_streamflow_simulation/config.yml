@@ -1,12 +1,16 @@
+# path to time series data file, input and target features should be in this file
 dynamic_data_file:
   - C:/example/1_streamflow_simulation/data/time_series.csv
 
+# (optional input) path to catchment attributes file
 static_data_file:
   - C:/example/1_streamflow_simulation/data/static_attributes.csv
 
+# ouptut directory, model output will be save in this file
 output_directory:
   - C:/example/1_streamflow_simulation/results
 
+# input static features - column name(s) of the static_data_file
 input_static_features:
   - elev_mean
   - slope_mean
@@ -14,13 +18,16 @@ input_static_features:
   - aridity
   - pet_mean
 
+# input dynamic features - column name(s) of the dynamic_data_file
 input_dynamic_features:
   - precipitation_mm_d
   - temperature_mean_degC
 
+# target output - column name(s) of the dynamic_data_file
 target_features:
   - discharge_vol_m3_s
 
+# selected catchments (object_id) used for traning/validation/test the model
 object_id:
   - 2009
   - 2016
@@ -31,66 +38,110 @@ object_id:
   - 2030
   - 2033
 
+# start and ending of the train period, must be in yyyy-mm-dd hh:mm format
 train_period: 
   - 2010-01-01 00:00
   - 2020-12-31 00:00
 
+# start and ending of the validation period, must be in yyyy-mm-dd hh:mm format
 valid_period: 
   - 2006-01-01 00:00
   - 2009-12-31 00:00
 
+# start and ending of the test period, must be in yyyy-mm-dd hh:mm format
 test_period: 
   - 2001-01-01 00:00
   - 2005-12-31 00:00
 
+# model class: LSTM
+# model_class: EA-LSTM
 model_class: LSTM
 
+# Model head: currently only regression model (multi-layer neural network was implemented)
 Regression:
+  # Activation function of each layer (layer 1 - output layer): Identity, ReLu, Sigmoid, Tanh, Softplus
   activation_function:
     - Identity
+  # Number of neural each layer (number of neuraon in last layer = number of target features; put "None" for the last layer)
   num_neurons:
     - None
+  # Number of layer
   num_layers: 1
 
+# E.g., model head of 2 layers
+#Regression:
+#  activation_function:
+#    - Sigmoid
+#    - Identity
+#  num_neurons:
+#    - 6
+#    - None
+#  num_layers: 2
+
+# Scaler for input dynamic features: Z-score, MinMaxScaler, or None
 scaler_input_dynamic_features:
   - Z-score
+  
+# Scaler for input static features: Z-score, MinMaxScaler, or None
 scaler_input_static_features:
   - Z-score
+
+# Scaler for target features: Z-score, MinMaxScaler, or None
 scaler_target_features:
   - MinMaxScaler
 
+# Hidden size of the LSTM network
 hidden_size: 30
 
+# Number of LSTM layers
 num_layers: 1
 
+# Number of training epoch
 n_epochs: 300
 
+# Learning rate
 learning_rate: 0.005
 
+# Dropout rate (applied to output of each LSTM layers)
 dropout: 0.3
 
+# Warmup length
 warmup_length: 30
 
+# Loss function: RMSE, MSE, MAE
 loss_function: RMSE
 
+# Sequence length
 sequence_length: 365
 
+# Batch size
 batch_size: 8
 
+# Patience length
 patience: 30
 
+# (optional input) function to evaluate the selected model: NSE, RMSE, MAE, MSE
 eval_function: NSE
 
+# optional input - applied the selected model for prediction/ungagued catchments
+
+# path to the static data file contains static features for forecast catchments 
+# if these data inside the "static_data_file" file, type static_data_file
 static_data_file_forecast:
   - static_data_file
 
+# path to the dynamic data file contains dynamic features for forecast catchments 
+# if these data inside the "dynamic_data_file" file, type dynamic_data_file
 dynamic_data_file_forecast:
   - dynamic_data_file
 
+# start and ending of the forecast period, must be in yyyy-mm-dd hh:mm format
 forecast_period: 
   - 2001-01-01 00:00
   - 2009-12-31 00:00
 
+# selected catchments (object_id) for forecast
 object_id_forecast:
   - 2011
   - 2029
+
