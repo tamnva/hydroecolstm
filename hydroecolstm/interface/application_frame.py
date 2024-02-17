@@ -1,13 +1,18 @@
-
+import matplotlib
 import customtkinter as ctk
 import pandas as pd
 import tkcalendar as tkc
 from hydroecolstm.data.read_data import read_forecast_data
 import tkinter as tk
-
 from CTkListbox import CTkListbox
-from matplotlib.figure import Figure
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk
+from CTkToolTip import CTkToolTip
+from hydroecolstm.interface.utility import (ToplevelWindow, 
+                                            plot_train_valid_loss,
+                                            plot_time_series,
+                                            check_size,check_linestyle,
+                                            check_alpha,check_line_plot,
+                                            check_marker, check_color, 
+                                            check_ylim)
 
 class ApplicationFrame(ctk.CTkScrollableFrame):
     def __init__(self, container=None, config=None, globalData=None):
@@ -32,8 +37,8 @@ class ApplicationFrame(ctk.CTkScrollableFrame):
         self.tabview.tab("1. Inputs").grid_columnconfigure(2, weight=1)
 
         
-        self.tabview.add("2. Outputs")
-        self.tabview.tab("2. Outputs").grid_columnconfigure((0), weight=1)
+        self.tabview.add("2. Plot outputs")
+        self.tabview.tab("2. Plot outputs").grid_columnconfigure((0,1,2), weight=1)
         
         # ---------------------------------------------content of load data tab
         # -----------------------------------------------------------Column 1
@@ -92,7 +97,8 @@ class ApplicationFrame(ctk.CTkScrollableFrame):
         # ---------------------------------------------------------------Column 3
         self.object_id_label = ctk.CTkLabel(self.tabview.tab("1. Inputs"), 
                                  text="4. Select object_id for forecasting")
-        self.object_id_label.grid(row=0, column=3, columnspan=1, padx = 10, pady=(5,5), sticky="w")
+        self.object_id_label.grid(row=0, column=3, columnspan=1, 
+                                  padx = 10, pady=(5,5), sticky="w")
         self.object_id_forecast = CTkListbox(master=self.tabview.tab("1. Inputs"), 
                                            multiple_selection=True, border_width=1.5,
                                            text_color="black")
@@ -109,49 +115,181 @@ class ApplicationFrame(ctk.CTkScrollableFrame):
                                               command=self.run_forecast)
         self.run_button.grid(row=6, column=3, padx = 10, pady=(5,5), sticky="w") 
         
-        #---------------------------------------------------------2 Outputs
-        self.object_id_label = ctk.CTkLabel(self.tabview.tab("2. Outputs"), 
-                                            text="1. Please insert object_id for plot")
-        self.object_id_label.grid(row=0, column=0, sticky="w", padx=(5,5))
+        #---------------------------------------------------------2 Plot output
+        self.object_id_label =\
+            ctk.CTkLabel(self.tabview.tab("2. Plot outputs"),
+                         text="1. Select object id and target feature for plot")
+            
+        self.object_id_label.grid(row=0, column=0, columnspan=3, sticky="w", padx=5)
+
+        self.object_id=ctk.CTkTextbox(self.tabview.tab("2. Plot outputs"), 
+                                        height=30, border_width=1.5)
         
-        self.select_input_frame = ctk.CTkFrame(master=self.tabview.tab("2. Outputs"), height=400)
-        self.select_input_frame.grid(row=1, column=0, sticky="w", padx=(20,20), pady=(20,20))
-        self.select_input_frame.columnconfigure((0,1), weight=1)
-
-        self.object_id_label = ctk.CTkLabel(self.tabview.tab("2. Outputs"), 
-                                            text="2. Plotting area")
-        self.object_id_label.grid(row=2, column=0, sticky="w", padx=(5,5), pady=(20,5))
-
-        self.object_id = ctk.CTkTextbox(master=self.select_input_frame, height=30,
-                                        border_width=1.5)
         self.object_id.insert("0.0", "object_id") 
-        self.object_id.grid(row=0, column=0, sticky="w", padx=(5,5), pady=(5,5))
+        self.object_id.grid(row=1, column=0, sticky="w", padx=5, pady=5)
+        
         self.object_id.bind('<KeyRelease>', self.get_object_id)
 
-        self.target_feature = ctk.CTkTextbox(master=self.select_input_frame, height=30, 
-                                             border_width=1.5)
+        self.target_feature=ctk.CTkTextbox(self.tabview.tab("2. Plot outputs"), 
+                                             height=30, border_width=1.5)
+        
         self.target_feature.insert("0.0", "target_feature") 
-        self.target_feature.grid(row=1, column=0, sticky="w", padx=(5,5), pady=(5,5))
+        
+        self.target_feature.grid(row=2, column=0, sticky="w", padx=5, pady=5)
+        
         self.target_feature.bind('<KeyRelease>', self.get_target_feature)
         
-        self.next_object_id_button = ctk.CTkButton(self.select_input_frame, 
+        self.next_object_id_button=ctk.CTkButton(self.tabview.tab("2. Plot outputs"), 
                                                    anchor='w',
                                                    command=self.next_object_id, 
                                                    text="Next object id")
-        self.next_object_id_button.grid(row=0, column=1, sticky="w", 
-                                        padx=(5,5), pady=(5,5))
-        self.next_target_feature_button = ctk.CTkButton(self.select_input_frame, 
-                                                        anchor='w',
-                                                   command=self.next_target_feature, 
-                                                   text="Next target features")
-        self.next_target_feature_button.grid(row=1, column=1, sticky="w", 
-                                             padx=(5,5), pady=(5,5))
-                
-        self.update_plot = ctk.CTkButton(self.select_input_frame, anchor='w', 
-                                 command=self.plot_figure, text="Update plot")
-        self.update_plot.grid(row=3, column=0, columnspan=2, sticky="w", 
-                              padx=(5,20), pady=(10,10))
+        
+        self.next_object_id_button.grid(row=1, column=1, sticky="w", 
+                                        padx=5, pady=5)
+        
+        self.next_target_feature_button =\
+            ctk.CTkButton(self.tabview.tab("2. Plot outputs"), anchor='w',
+                          command=self.next_target_feature,
+                          text="Next target features")
+            
+        self.next_target_feature_button.grid(row=2, column=1, sticky="w", 
+                                             padx=5, pady=5)
+        
+        # Plot button
+        self.update_plot=ctk.CTkButton(self.tabview.tab("2. Plot outputs"), anchor='we', 
+                                 command=self.plot_figure, 
+                                 text="Plot (update plot)")
+        
+        self.update_plot.grid(row=1, column=2,  
+                              sticky="we", padx=5, pady=5)
+        
+        #-------------------------------------------------------2. Plot setting
+        # check to load/unload
+        self.plot_timeseries=ctk.IntVar(value=0)        
+        self.plot_timeseries_checkbox=ctk.CTkCheckBox(self.tabview.tab("2. Plot outputs"), 
+                                               text="Show plot settings",
+                                               command= self.show_plot_timeseries_setting, 
+                                               variable=self.plot_timeseries)
+        
+        self.plot_timeseries_checkbox.grid(row=3, column=0, padx=10, pady=(10, 0), sticky="w")
+        
+        self.plot_timeseries_frame=ctk.CTkFrame(self.tabview.tab("2. Plot outputs"),
+                                              height=400, fg_color="transparent")
+        self.plot_timeseries_frame.columnconfigure((0,1,2), weight=1)
 
+        #----------------------------------------------------------------------
+        self.common_settings=ctk.CTkLabel(self.plot_timeseries_frame,
+                                         text="Common settings")   
+        self.common_settings.grid(row=0, column=0, sticky="w", padx=5)
+        
+        self.plot_title=ctk.CTkEntry(self.plot_timeseries_frame,
+                                  placeholder_text="plot title")
+        
+        self.plot_title.grid(row=1, column=0, sticky="w", padx=5)
+        
+        
+        self.x_label=ctk.CTkEntry(self.plot_timeseries_frame,
+                                  placeholder_text="xlabel")
+        self.x_label.grid(row=2, column=0, sticky="w", padx=5)
+        
+        self.y_label=ctk.CTkEntry(self.plot_timeseries_frame,
+                                  placeholder_text="ylabel")
+        self.y_label.grid(row=3, column=0, sticky="w", padx=5)
+        
+        self.ylim_up=ctk.CTkEntry(self.plot_timeseries_frame,
+                                  placeholder_text="ylim (upper)")
+        CTkToolTip(self.ylim_up, delay=0.1, bg_color='orange',
+                   text_color='black', anchor='e',  wraplength=500, justify="left",
+                   message='Upper limit of the y axis (input numeric value)')
+        
+        self.ylim_up.grid(row=4, column=0, sticky="w", padx=5)
+        
+        self.observed_data_plot=ctk.CTkLabel(self.plot_timeseries_frame,
+                                         text="observed data plot")
+        self.observed_data_plot.grid(row=0, column=1, sticky="w", padx=5)
+          
+        self.lineplot=ctk.CTkEntry(self.plot_timeseries_frame,
+                                  placeholder_text="line (true or false)")
+        self.lineplot.grid(row=1, column=1, sticky="w", padx=5, pady=5)
+                
+        self.color_obs=ctk.CTkEntry(self.plot_timeseries_frame,
+                                  placeholder_text="color")
+        self.color_obs.grid(row=2, column=1, sticky="w", padx=5, pady=5)
+        CTkToolTip(self.color_obs, delay=0.1, bg_color='orange',
+                   text_color='black', anchor='e',  wraplength=500, 
+                   justify="left", 
+                   message=str(list(matplotlib.colors.cnames.keys())))
+        
+        self.alpha_obs=ctk.CTkEntry(self.plot_timeseries_frame,
+                                  placeholder_text="alpha")    
+        self.alpha_obs.grid(row=3, column=1, sticky="w", padx=5, pady=5)
+        CTkToolTip(self.alpha_obs, delay=0.1, bg_color='orange',
+                   text_color='black', anchor='e',  wraplength=500, 
+                   justify="left", message='tranparency level: input any ' +
+                   'numeric values between 0 and 1')
+        
+        self.size_obs=ctk.CTkEntry(self.plot_timeseries_frame,
+                                  placeholder_text="size")        
+        self.size_obs.grid(row=4, column=1, sticky="w", padx=5, pady=5)
+        CTkToolTip(self.size_obs, delay=0.1, bg_color='orange',
+                   text_color='black', anchor='e',  wraplength=500, justify="left", 
+                   message='input positive numeric value for line thickness')
+        
+        self.linestyle_obs=ctk.CTkEntry(self.plot_timeseries_frame,
+                                  placeholder_text="linestyle")    
+        CTkToolTip(self.linestyle_obs, delay=0.1, bg_color='orange',
+                   text_color='black', anchor='e',  wraplength=500, 
+                   justify="left", message='solid, dashed, dashdot, dotted')
+        
+        self.linestyle_obs.grid(row=5, column=1, sticky="w", padx=5, pady=5)
+        self.marker_obs=ctk.CTkEntry(self.plot_timeseries_frame,
+                                       placeholder_text="marker")
+        self.marker_obs.grid(row=6, column=1, sticky="w", padx=5, pady=5)
+        CTkToolTip(self.marker_obs, delay=0.1, bg_color='orange',
+                   text_color='black', anchor='e',  wraplength=500, 
+                   justify="left", message="., o, s, ^, v, +, x")
+        
+        self.label_obs=ctk.CTkEntry(self.plot_timeseries_frame,
+                                  placeholder_text="label")
+        
+        self.label_obs.grid(row=7, column=1, sticky="w", padx=5, pady=5)
+        
+        #----------------------------------------------------------------------
+        self.simulated_data_plot=ctk.CTkLabel(self.plot_timeseries_frame,
+                                         text="simulated data plot")
+        self.simulated_data_plot.grid(row=0, column=3, sticky="w", padx=5)
+        
+        self.color_sim=ctk.CTkEntry(self.plot_timeseries_frame,
+                                  placeholder_text="color")
+        self.color_sim.grid(row=2, column=3, sticky="w", padx=5)
+        self.alpha_sim=ctk.CTkEntry(self.plot_timeseries_frame,
+                                  placeholder_text="alpha")
+        self.alpha_sim.grid(row=3, column=3, sticky="w", padx=5)
+        self.size_sim=ctk.CTkEntry(self.plot_timeseries_frame,
+                                  placeholder_text="size")
+        self.size_sim.grid(row=4, column=3, sticky="w", padx=5)
+        CTkToolTip(self.size_sim, delay=0.1, bg_color='orange',
+                   text_color='black', anchor='e',  wraplength=500, justify="left", 
+                   message='input positive numeric value for line thickness')
+        
+        self.linestyle_sim=ctk.CTkEntry(self.plot_timeseries_frame,
+                                  placeholder_text="linestype")
+        self.linestyle_sim.grid(row=5, column=3, sticky="w", padx=5)
+        CTkToolTip(self.linestyle_sim, delay=0.1, bg_color='orange',
+                   text_color='black', anchor='e',  wraplength=500, 
+                   justify="left", message='solid, dashed, dashdot, dotted')
+        self.label_sim=ctk.CTkEntry(self.plot_timeseries_frame,
+                                  placeholder_text="label")
+        self.label_sim.grid(row=7, column=3, sticky="w", padx=5)
+
+    # Show plot time series setting
+    def show_plot_timeseries_setting(self):
+        if self.plot_timeseries.get() == 0:
+            self.plot_timeseries_frame.grid_forget()
+        else:
+            self.plot_timeseries_frame.grid(row=4, column=0, columnspan=3,
+                                      sticky="w", padx=(0,0), pady=(20,20))
+            
     # Get dropout
     def import_button_event(self):
         
@@ -205,22 +343,16 @@ class ApplicationFrame(ctk.CTkScrollableFrame):
             object_id_forecast = [all_items[i] for i in select_index]
             self.config['object_id_forecast'] = object_id_forecast
             
-            predict_data = read_forecast_data(self.config)
-            
-            self.globalData["x_forecast"] = predict_data["x_forecast"]
-            self.globalData["y_forecast"] = predict_data["y_forecast"]
-            self.globalData["time_forecast"] = predict_data["time_forecast"]
-            self.globalData["x_forecast_column_name"] = predict_data["x_column_name"]
-            self.globalData["y_forecast_column_name"] = predict_data["y_column_name"]         
-            del predict_data
+            # Add forecast data to globalData
+            self.globalData.update(read_forecast_data(self.config))
             
             # Scale forecast data
             self.globalData["x_forecast_scale"] =\
                 self.globalData["x_scaler"].transform(x=self.globalData["x_forecast"])
-
+                
             # Run forward model
             y_forecast_scale_simulated =\
-                self.globalData["model"].forward(self.globalData["x_forecast_scale"])
+                self.globalData["model"].evaluate(self.globalData["x_forecast_scale"])
             
             tk.messagebox.showinfo(title="Message box", 
                                    message="Finished forward run")
@@ -286,44 +418,52 @@ class ApplicationFrame(ctk.CTkScrollableFrame):
             self.globalData["target_feature_forecast_plot"].strip()
         print(f"Selected target_feature for plot =\
               {self.globalData['target_feature_forecast_plot']}")
-        
-  
+              
     def plot_figure(self):
-        
-        # Remove and create frame again to update figure
         try:
-            self.plot_frame.destroy()
-        except:
-            pass
-        
-        self.plot_frame = ctk.CTkFrame(master=self.tabview.tab("2. Outputs"), height=400)
-        self.plot_frame.grid(row=3, column=0, sticky="w", padx=(20,20), pady=(20,20))
-        
-        try:   
-             
-            time = self.globalData["time_forecast"][self.globalData["object_id_forecast_plot"]]
+            # Get information for plot
+            key=self.globalData["object_id_forecast_plot"]
+            idx=self.config["target_features"].index(
+                self.globalData["target_feature_forecast_plot"])
             
-            obs = self.globalData["y_forecast"][self.globalData["object_id_forecast_plot"]]  
-            obs = obs[:, self.config["target_features"].\
-                      index(self.globalData["target_feature_forecast_plot"])]  
+            # General setting for plotting observed data
+            lineplot=check_line_plot(self.lineplot)
+            color_obs=check_color(self.color_obs, "coral")
+            alpha_obs=check_alpha(self.alpha_obs, 1)
+            size_obs=check_size(self.size_obs, 1)
+            linestyle_obs=check_linestyle(self.linestyle_obs, 'dashed')
+            marker_obs=check_marker(self.marker_obs, "d")
+            label_obs=self.label_obs.get()
+            if len(label_obs) == 0: label_obs="Observed"
+
+            # General setting for plotting simulated data
+            color_sim=check_color(self.color_sim, "blue")
+            alpha_sim=check_alpha(self.alpha_sim, 1)
+            size_sim=check_size(self.size_sim, 1)
+            linestyle_sim=check_linestyle(self.linestyle_sim, 'solid')
+            label_sim=self.label_sim.get()
+            if len(label_sim) == 0: label_sim="Simulated"
+          
+            # Lable
+            title=self.plot_title.get()
+            xlabel=self.x_label.get()
+            ylabel=self.y_label.get().strip()
+            if ylabel == "": ylabel=self.globalData["target_feature_forecast_plot"]
+            ylim_up=check_ylim(self.ylim_up, -9999.0)
                 
-            predict = self.globalData["y_forecast_simulated"]\
-                [self.globalData["object_id_forecast_plot"]].detach().numpy()
-            predict = predict[:, self.config["target_features"].\
-                              index(self.globalData["target_feature_forecast_plot"])]    
+            plot_window=ToplevelWindow(window_name="Plot window")
             
-            figure = Figure(figsize=(15, 4), dpi=100)
-            figure_canvas = FigureCanvasTkAgg(figure, self.plot_frame )
-            NavigationToolbar2Tk(figure_canvas, self.plot_frame )          
-            axes = figure.add_subplot()
-            axes.plot(time, obs, 'ro', label = "Observed (test data)", 
-                      alpha=0.9, markersize=2.5 )            
-            axes.plot(time, predict, color = 'blue', label = "Predicted (test data)", 
-                      alpha=0.9, linewidth=0.75)
-            axes.set_title(f"object_id = {self.globalData['object_id_forecast_plot']}")
-            axes.legend() 
-            figure_canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=1)
+            # Plot
+            plot_time_series(plot_window, self.globalData, key, idx, lineplot, 
+                             color_obs, alpha_obs, size_obs, linestyle_obs,
+                             marker_obs, label_obs, color_sim, alpha_sim, 
+                             size_sim, linestyle_sim, label_sim, title, xlabel,
+                             ylabel, ylim_up, forecast_period=True)
+            
             
         except:
-            tk.messagebox.showinfo(title="Message box", 
-                                   message="Error: Cannot show plot")
+            tk.messagebox.showinfo(title="Error", 
+                                   message="Cannot plot time series")
+              
+              
+

@@ -498,7 +498,7 @@ class VisualizeFrame(ctk.CTkScrollableFrame):
                              color_obs, alpha_obs, size_obs, linestyle_obs,
                              marker_obs, label_obs, color_sim, alpha_sim, 
                              size_sim, linestyle_sim, label_sim, title, xlabel,
-                             ylabel, ylim_up)
+                             ylabel, ylim_up, forecast_period=False)
             
             
         except:

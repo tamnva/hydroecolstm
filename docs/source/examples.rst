@@ -44,21 +44,26 @@ The configuration file ``config.yml`` and data for this example can be found `he
    forecast_dataset = read_forecast_data(config)
    x_forecast_scale = x_scaler.transform(forecast_dataset["x_forecast"])
    y_forecast_scale = model.evaluate(x_forecast_scale)
-   y_forecast = y_scaler.inverse(y_forecast_scale)
-            
+   
+   # Application of the model for (assumed) ungagued basins
+   forecast_dataset = read_forecast_data(config)
+   x_forecast_scale = x_scaler.transform(forecast_dataset["x_forecast"])
+   y_forecast_scale = model.evaluate(x_forecast_scale)
+   y_forecast_simulated = y_scaler.inverse(y_forecast_scale)
+
    # Visualize result: train_test_period = "train" or "test"
-   for object_id in y_forecast.keys():
-       plt.plot(forecast_dataset["time_forecast"][object_id], 
-                forecast_dataset["y_forecast"][object_id].detach().numpy(), 
+   for object_id in y_forecast_simulated.keys():
+       plt.plot(forecast_dataset["time_forecast"][object_id],
+                forecast_dataset["y_forecast"][object_id].detach().numpy(),
                 color = 'blue', label = "Observed", alpha=0.9, linewidth=0.75)
-       plt.plot(forecast_dataset["time_forecast"][object_id], 
-                y_forecast[object_id].detach().numpy(), 
+       plt.plot(forecast_dataset["time_forecast"][object_id],
+                y_forecast_simulated[object_id].detach().numpy(),
                 color = 'red', label = "Simulated", alpha=0.9, linewidth=0.75)
        plt.legend()
        plt.show()
 
    # Objective function for forecast
-   objective(forecast_dataset['y_forecast'], y_forecast)
+   objective(forecast_dataset['y_forecast'], y_forecast_simulated)
 
    # Save all data and model state dicts to the output_directory
    torch.save(data, Path(config["output_directory"][0], "data.pt"))

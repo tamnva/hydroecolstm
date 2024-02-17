@@ -174,7 +174,7 @@ def plot_time_series(plot_window, data, key, idx, lineplot,
                  color_obs, alpha_obs, size_obs, linestyle_obs,
                  marker_obs, label_obs, color_sim, alpha_sim, 
                  size_sim, linestyle_sim, label_sim, title, xlabel,
-                 ylabel, ylim_up):
+                 ylabel, ylim_up, forecast_period):
     
     # Create figure
     figure = Figure(figsize=(15, 4.5), dpi=100)
@@ -185,78 +185,110 @@ def plot_time_series(plot_window, data, key, idx, lineplot,
     toolbar.pack(side=tk.BOTTOM, fill=tk.X)
     axes = figure.add_subplot()
     
-    # Key names of time and y variables in the input data
-    time_name = ["time_train", "time_valid", "time_test"]
-    period = ["Training", "Validation", "Test"]
-    y_name = ["y_train", "y_valid", "y_test"]
+    if not forecast_period:
+        # Key names of time and y variables in the input data
+        time_name = ["time_train", "time_valid", "time_test"]
+        period = ["Training", "Validation", "Test"]
+        y_name = ["y_train", "y_valid", "y_test"]
+        
+        # Plot observed -----------------------------------------------------------
+        for i in range(3):
+            time = data[time_name[i]][key]
+            y_obs = data[y_name[i]][key][:,idx].detach().numpy()
+            
+            if lineplot:
+                if i < 2:
+                    axes.plot(time, 
+                              y_obs, 
+                              linestyle=linestyle_obs,
+                              color=color_obs, 
+                              alpha=alpha_obs,
+                              linewidth=size_obs)
+                else:
+                    axes.plot(time, 
+                              y_obs, 
+                              linestyle=linestyle_obs,
+                              color=color_obs, 
+                              alpha=alpha_obs, 
+                              linewidth=size_obs, 
+                              label=label_obs)                
+            else:
+                if i < 2:
+                    axes.plot(time, 
+                              y_obs, 
+                              marker_obs,
+                              color=color_obs, 
+                              alpha=alpha_obs,
+                              markersize=size_obs)
+                else:
+                    axes.plot(time, 
+                              y_obs, 
+                              marker_obs,
+                              color=color_obs, 
+                              alpha=alpha_obs,
+                              markersize=size_obs,
+                              label=label_obs)
+                
+                
+        # Plot simulated ----------------------------------------------------------   
+        for i in range(3):
+            time = data[time_name[i]][key]
+            y_sim = data[y_name[i]+"_simulated"][key][:,idx].detach().numpy()
     
-    # Plot observed -----------------------------------------------------------
-    for i in range(3):
-        time = data[time_name[i]][key]
-        y_obs = data[y_name[i]][key][:,idx].detach().numpy()
+            if i < 2:
+                axes.plot(time, 
+                          y_sim, 
+                          linestyle=linestyle_sim,
+                          color=color_sim, 
+                          alpha=alpha_sim,
+                          linewidth=size_sim)
+            else:
+                axes.plot(time, 
+                          y_sim, 
+                          linestyle=linestyle_sim,
+                          color=color_sim, 
+                          alpha=alpha_sim,
+                          linewidth=size_sim,
+                          label=label_sim)
+            # Add vertical lines seperate train, valid, test
+            axes.axvline(x=time[-1], color = "grey", linestyle='dashed')
+            
+            # Add text train, valid, test
+            if i == 0: 
+                ylable = np.nanmax(y_sim) + 0.6*np.absolute(np.nanmax(y_sim))
+                
+            axes.text(time[1], ylable, period[i])
+    else:
+        time = data["time_forecast"][key]
+        y_sim = data["y_forecast"][key][:,idx].detach().numpy()
+        y_obs = data["y_forecast_simulated"][key][:,idx].detach().numpy()
         
+        # Plot observed
         if lineplot:
-            if i < 2:
-                axes.plot(time, 
-                          y_obs, 
-                          linestyle=linestyle_obs,
-                          color=color_obs, 
-                          alpha=alpha_obs,
-                          linewidth=size_obs)
-            else:
-                axes.plot(time, 
-                          y_obs, 
-                          linestyle=linestyle_obs,
-                          color=color_obs, 
-                          alpha=alpha_obs, 
-                          linewidth=size_obs, 
-                          label=label_obs)                
+            axes.plot(time,
+                      y_obs, 
+                      linestyle=linestyle_obs,
+                      color=color_obs, 
+                      alpha=alpha_obs, 
+                      linewidth=size_obs, 
+                      label=label_obs)                
         else:
-            if i < 2:
-                axes.plot(time, 
-                          y_obs, 
-                          marker_obs,
-                          color=color_obs, 
-                          alpha=alpha_obs,
-                          markersize=size_obs)
-            else:
-                axes.plot(time, 
-                          y_obs, 
-                          marker_obs,
-                          color=color_obs, 
-                          alpha=alpha_obs,
-                          markersize=size_obs,
-                          label=label_obs)
+            axes.plot(time,
+                      y_obs,
+                      marker_obs,
+                      color=color_obs,
+                      alpha=alpha_obs,
+                      markersize=size_obs,
+                      label=label_obs)
             
-            
-    # Plot simulated ----------------------------------------------------------   
-    for i in range(3):
-        time = data[time_name[i]][key]
-        y_sim = data[y_name[i]+"_simulated"][key][:,idx].detach().numpy()
-
-        if i < 2:
-            axes.plot(time, 
-                      y_sim, 
-                      linestyle=linestyle_sim,
-                      color=color_sim, 
-                      alpha=alpha_sim,
-                      linewidth=size_sim)
-        else:
-            axes.plot(time, 
-                      y_sim, 
-                      linestyle=linestyle_sim,
-                      color=color_sim, 
-                      alpha=alpha_sim,
-                      linewidth=size_sim,
-                      label=label_sim)
-        # Add vertical lines seperate train, valid, test
-        axes.axvline(x=time[-1], color = "grey", linestyle='dashed')
-        
-        # Add text train, valid, test
-        if i == 0: 
-            ylable = np.nanmax(y_sim) + 0.4*np.absolute(np.nanmax(y_sim))
-            
-        axes.text(time[1], ylable, period[i])
+        # Plot simulated
+        axes.plot(time,
+                  y_sim, 
+                  linestyle=linestyle_sim,
+                  color=color_sim, 
+                  alpha=alpha_sim,
+                  linewidth=size_sim,
+                  label=label_sim)
         
     # Set x label
     axes.set_xlabel(xlabel)
@@ -273,7 +305,6 @@ def plot_time_series(plot_window, data, key, idx, lineplot,
                                        fill=tk.BOTH, 
                                        expand=1)
        
-
            
 def config_to_text(config):
     out_text = []

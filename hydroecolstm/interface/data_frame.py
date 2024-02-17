@@ -6,7 +6,6 @@ from pandastable import Table
 import tkcalendar as tkc
 from CTkListbox import CTkListbox
 from CTkToolTip import CTkToolTip
-
 from hydroecolstm.data.scaler import Scaler, get_scaler_name
 from hydroecolstm.data.read_data import read_train_valid_test_data
    
