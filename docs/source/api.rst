@@ -1,6 +1,8 @@
 API
 ===
 
+TODO: Add documentation for these classes/functions
+
 Linears
 -------
 
@@ -8,3 +10,16 @@ Linears
    :members:
    :undoc-members:
    :show-inheritance:
+   
+run_train
+---------
+
+read_config
+-----------
+
+EvaluationFunction
+------------------
+
+
+read_forecast_data
+------------------
