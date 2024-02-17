@@ -59,7 +59,7 @@ class ApplicationFrame(ctk.CTkScrollableFrame):
 
         self.load_train_test_config = ctk.CTkButton(self.tabview.tab("1. Inputs"), 
                                                anchor='w', 
-                                               text="Select train/test config file", 
+                                               text="Select config.yml file", 
                                                command=None)
         self.load_train_test_config.grid(row=1, column=1, padx = 10, pady=(2,2), sticky="w")  
         
@@ -87,11 +87,11 @@ class ApplicationFrame(ctk.CTkScrollableFrame):
         
         self.start_forecast = tkc.DateEntry(self.tabview.tab("1. Inputs"), 
                                          date_pattern= 'yyyy-mm-dd', width = 25,
-                                         year=1800, month=1, day=1, font=ctk.CTkFont(size=16))
+                                         year=1800, month=1, day=1, font=ctk.CTkFont(size=14))
         self.start_forecast.grid(row= 6, column=1, padx=30, pady=10, sticky='e')
         self.end_forecast = tkc.DateEntry(self.tabview.tab("1. Inputs"), 
                                        date_pattern= 'yyyy-mm-dd', width = 25,
-                                       year=2015, month=1, day=1, font=ctk.CTkFont(size=16))
+                                       year=2015, month=1, day=1, font=ctk.CTkFont(size=14))
         self.end_forecast.grid(row= 7, column=1, padx=30, pady=10, sticky='e')   
         
         # ---------------------------------------------------------------Column 3
@@ -103,7 +103,8 @@ class ApplicationFrame(ctk.CTkScrollableFrame):
                                            multiple_selection=True, border_width=1.5,
                                            text_color="black")
         
-        self.object_id_forecast.grid(row=1, column=3, rowspan=4, padx = 10, pady=(10,10), sticky="we")
+        self.object_id_forecast.grid(row=1, column=3, rowspan=4, padx = 10, 
+                                     pady=(10,10), sticky="we")
 
         self.run_label = ctk.CTkLabel(self.tabview.tab("1. Inputs"), 
                                         text="5. Run forecast")

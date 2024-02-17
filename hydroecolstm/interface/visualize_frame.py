@@ -45,15 +45,14 @@ class VisualizeFrame(ctk.CTkScrollableFrame):
         self.data_plot_label.grid(row=0, column=0, sticky="w", padx=5, pady=5)
         
         self.data_selection = ctk.CTkOptionMenu(self.tabview.tab("1. Data for plot"),
-                                                values=['From current project',
-                                                        'From other project'],
+                                                values=['from current project',
+                                                        'from other project'],
                                                 command=self.data_selection_event)
         self.data_selection.grid(row=1, column=0, sticky="w", padx=5, pady=5)
         CTkToolTip(self.data_selection, delay=0.1, bg_color='orange',
                    text_color='black', anchor='e',  wraplength=500, justify="left", 
-                   message='Select From other project ONLY IF you want to use '+ 
-                   'data from other project (everything created before this step '+
-                   'will be OVERWRITTEN in this case')
+                   message="Select 'from other project' ONLY IF you want to use "+ 
+                   "data from other project")
         
         #----------------------------------------------
         self.loss_label=ctk.CTkLabel(self.tabview.tab("2. Loss plot"),
