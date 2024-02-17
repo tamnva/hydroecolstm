@@ -8,11 +8,3 @@ Linears
    :members:
    :undoc-members:
    :show-inheritance:
-   
-Linears
--------
-
-.. automodule:: hydroecolstm.utility.test
-   :members:
-   :undoc-members:
-   :show-inheritance:
