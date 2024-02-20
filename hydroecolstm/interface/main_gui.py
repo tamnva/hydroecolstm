@@ -54,6 +54,7 @@ class MainGUI(ctk.CTk):
         # Initialize global data
         globalData = {}
         globalData['dynamic_data_header'] =[]
+        globalData['init_state_dicts'] = False
         globalData['static_data_header'] =[]
         globalData["object_id_no"] = 0
         globalData["target_feature_no"] = 0
