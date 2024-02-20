@@ -507,6 +507,7 @@ class VisualizeFrame(ctk.CTkScrollableFrame):
     def loss_plot_event(self):
         try:
             # Data for plot
+
             loss=self.globalData["trainer"].loss
 
             # Make plot window
@@ -525,7 +526,6 @@ class VisualizeFrame(ctk.CTkScrollableFrame):
                                   self.valid_line_style.get().strip(),
                                   self.valid_legend.get().strip(),
                                   self.best_model_legend.get().strip())
-            print("cannot")
         except:
             # Make plot window
             #plot_window=ToplevelWindow(window_name="Plot window")

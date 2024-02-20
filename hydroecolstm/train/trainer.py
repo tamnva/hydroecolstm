@@ -50,7 +50,7 @@ class Trainer():
         model_flag = []
         
         # initialize early stoping
-        early_stopping = EarlyStopping(patience=self.patience, verbose=True,
+        early_stopping = EarlyStopping(patience=self.patience, verbose=False,
                                        path=self.out_dir)
         
         # Train the model
@@ -147,6 +147,7 @@ class Trainer():
                                   'train_loss': train_loss_epoch,
                                   'validation_loss': valid_loss_epoch,
                                   'best_model': model_flag})
+
         return self.model
     
 # ----------------------------------------------------------------------------#
@@ -192,7 +193,8 @@ class EarlyStopping:
             flag = True
         elif score < self.best_score + self.delta:
             self.counter += 1
-            self.trace_func(f'EarlyStopping counter: {self.counter} out of {self.patience}')
+            if self.verbose:
+                self.trace_func(f'EarlyStopping counter: {self.counter} out of {self.patience}')
             if self.counter >= self.patience:
                 self.early_stop = True
         else:
@@ -207,6 +209,4 @@ class EarlyStopping:
         if self.verbose:
             self.trace_func(f'Validation loss decreased ({self.val_loss_min:.6f} --> {val_loss:.6f}).  Saving model ...')
         torch.save(model.state_dict(), self.path)
-        best_model_flag = True
-        print(best_model_flag)
         self.val_loss_min = val_loss

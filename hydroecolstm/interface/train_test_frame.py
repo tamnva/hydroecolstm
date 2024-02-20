@@ -284,12 +284,12 @@ class TrainTestFrame(ctk.CTkScrollableFrame):
                     torch.load(self.globalData['init_state_dicts_file']))
                 
             # Train the model
-            self.globalData["2. Trainer"] = Trainer(config=self.config, 
+            self.globalData["trainer"] = Trainer(config=self.config, 
                                                model=self.globalData["model"])
             
             
             print("done initialize trainer")
-            self.globalData["model"] = self.globalData["2. Trainer"].train(
+            self.globalData["model"] = self.globalData["trainer"].train(
                 self.globalData["x_train_scale"],
                 self.globalData["y_train_scale"],
                 self.globalData["x_valid_scale"],
