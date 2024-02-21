@@ -10,7 +10,8 @@ from hydroecolstm.interface.utility import (ToplevelWindow,
                                             check_size,check_linestyle,
                                             check_alpha,check_line_plot,
                                             check_marker, check_color, 
-                                            check_ylim)
+                                            check_ylim,
+                                            combine_simulated)
 from CTkToolTip import CTkToolTip
 
     
@@ -63,7 +64,6 @@ class VisualizeFrame(ctk.CTkScrollableFrame):
                                          command=self.loss_plot_event,
                                          text="Plot (update plot)")
         self.loss_plot.grid(row=1, column=0, sticky="w", padx=5, pady=5)
-        
         CTkToolTip(self.loss_plot, delay=0.1, bg_color='orange',
                    text_color='black', anchor='e',  wraplength=500, justify="left", 
                    message='Click here to create plot or update plot (in a new window)')
@@ -218,6 +218,16 @@ class VisualizeFrame(ctk.CTkScrollableFrame):
         self.update_plot.grid(row=1, column=2,  
                               sticky="we", padx=5, pady=5)
         
+        # show all data
+        self.show_all_data=ctk.CTkButton(self.tabview.tab("3. Time-series plot"), anchor='w', 
+                                         command=self.show_all_data_event,
+                                         text="Show data source")
+        self.show_all_data.grid(row=2, column=2, sticky="we", padx=5, pady=5)
+        CTkToolTip(self.show_all_data, delay=0.1, bg_color='orange',
+                   text_color='black', anchor='e',  wraplength=500, justify="left", 
+                   message='Click here to show all simulated and observed data')
+        
+        
         #-------------------------------------------------------2. Plot setting
         # check to load/unload
         self.plot_timeseries=ctk.IntVar(value=0)        
@@ -337,6 +347,18 @@ class VisualizeFrame(ctk.CTkScrollableFrame):
                                   placeholder_text="label")
         self.label_sim.grid(row=7, column=3, sticky="w", padx=5)
 
+    def show_all_data_event(self):
+        try:
+            dataframe = combine_simulated(self.globalData, 
+                                          self.globalData["y_column_name"])
+            
+            self.table = Table(tk.Toplevel(self), dataframe=dataframe, 
+                               showtoolbar=True, showstatusbar=True)
+            self.table.show()
+        except:
+            pass
+        
+        
     # Data selection event
     def data_selection_event(self, method: str):
         if method == "from other project":

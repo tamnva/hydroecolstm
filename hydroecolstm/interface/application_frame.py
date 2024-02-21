@@ -7,6 +7,7 @@ import tkinter as tk
 import torch
 from CTkListbox import CTkListbox
 from CTkToolTip import CTkToolTip
+from pandastable import Table
 from hydroecolstm.data.read_config import read_config
 from hydroecolstm.model.lstm_linears import Lstm_Linears
 from hydroecolstm.model.ea_lstm import Ea_Lstm_Linears
@@ -16,7 +17,7 @@ from hydroecolstm.interface.utility import (ToplevelWindow,
                                             check_size,check_linestyle,
                                             check_alpha,check_line_plot,
                                             check_marker, check_color, 
-                                            check_ylim)
+                                            check_ylim, combine_forecast)
 
 class ApplicationFrame(ctk.CTkScrollableFrame):
     def __init__(self, container=None, config=None, globalData=None):
@@ -218,6 +219,16 @@ class ApplicationFrame(ctk.CTkScrollableFrame):
         self.update_plot.grid(row=1, column=2,  
                               sticky="we", padx=5, pady=5)
         
+        # show all data
+        self.show_all_data=ctk.CTkButton(self.tabview.tab("2. Plot outputs"), anchor='w', 
+                                         command=self.show_all_data_event,
+                                         text="Show data source")
+        self.show_all_data.grid(row=2, column=2, sticky="we", padx=5, pady=5)
+        CTkToolTip(self.show_all_data, delay=0.1, bg_color='orange',
+                   text_color='black', anchor='e',  wraplength=500, justify="left", 
+                   message='Click here to show all data')
+        
+        
         #-------------------------------------------------------2. Plot setting
         # check to load/unload
         self.plot_timeseries=ctk.IntVar(value=0)        
@@ -337,6 +348,17 @@ class ApplicationFrame(ctk.CTkScrollableFrame):
                                   placeholder_text="label")
         self.label_sim.grid(row=7, column=3, sticky="w", padx=5)
 
+    def show_all_data_event(self):
+        try:
+            dataframe = combine_forecast(self.globalData,
+                                         self.globalData["y_column_name"])
+            
+            self.table = Table(tk.Toplevel(self), dataframe=dataframe, 
+                               showtoolbar=True, showstatusbar=True)
+            self.table.show()
+        except:
+            pass
+        
     def get_config_file(self):
         
         try:
@@ -428,6 +450,9 @@ class ApplicationFrame(ctk.CTkScrollableFrame):
                                                        filetypes=(('yml files', '*.pt'),
                                                                   ('All files', '*.*')))
             self.globalData["model"].load_state_dict(torch.load(file_name))
+            
+            # Set model to eval mode (in this mode, dropout = 0, no normlization)
+            self.globalData["model"].eval()
             
             # Update selected model name
             self.model_name.configure(text= '...' + file_name[-15:])
