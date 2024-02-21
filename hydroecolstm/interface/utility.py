@@ -25,7 +25,7 @@ def plot_train_valid_loss(loss, plot_window, xlabel, ylabel, title,
     epoch = loss.query('best_model == True').iloc[-1,:].epoch
     
     # Default plot setting
-
+    
     if train_color == "": train_color = "coral"
     if train_line_style == "": train_line_style = "dashed"
     if train_legend == "": train_legend = "Training loss"

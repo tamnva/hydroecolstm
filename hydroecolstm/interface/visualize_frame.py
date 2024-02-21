@@ -171,7 +171,6 @@ class VisualizeFrame(ctk.CTkScrollableFrame):
                    'or leave it empty to use default name')
         self.valid_legend.grid(row=3, column=2, sticky="w", padx=5, pady=5)
         
-        # TODO:----------------------------------------------------------------
         # ---------------------------------------------content of load data tab
         self.object_id_label =\
             ctk.CTkLabel(self.tabview.tab("3. Time-series plot"),
@@ -373,6 +372,14 @@ class VisualizeFrame(ctk.CTkScrollableFrame):
             self.selected_data_file = ctk.CTkLabel(self.tabview.tab("1. Data for plot"),
                                                           text="No file was selected")
             self.selected_data_file.grid(row=4, column=1, padx=5, pady=5, sticky="w") 
+        else:
+            # hide all buttons for load data from previous project
+            self.load_data_label.grid_forget()
+            self.load_config.grid_forget()
+            self.selected_config_file.grid_forget()
+            self.load_data.grid_forget()
+            self.selected_data_file.grid_forget()
+            
     
     def load_config_event(self):
         try:
@@ -507,6 +514,7 @@ class VisualizeFrame(ctk.CTkScrollableFrame):
     def loss_plot_event(self):
         try:
             # Data for plot
+
             loss=self.globalData["trainer"].loss
 
             # Make plot window
@@ -525,7 +533,6 @@ class VisualizeFrame(ctk.CTkScrollableFrame):
                                   self.valid_line_style.get().strip(),
                                   self.valid_legend.get().strip(),
                                   self.best_model_legend.get().strip())
-            print("cannot")
         except:
             # Make plot window
             #plot_window=ToplevelWindow(window_name="Plot window")
