@@ -373,6 +373,14 @@ class VisualizeFrame(ctk.CTkScrollableFrame):
             self.selected_data_file = ctk.CTkLabel(self.tabview.tab("1. Data for plot"),
                                                           text="No file was selected")
             self.selected_data_file.grid(row=4, column=1, padx=5, pady=5, sticky="w") 
+        else:
+            # hide all buttons for load data from previous project
+            self.load_data_label.grid_forget()
+            self.load_config.grid_forget()
+            self.selected_config_file.grid_forget()
+            self.load_data.grid_forget()
+            self.selected_data_file.grid_forget()
+            
     
     def load_config_event(self):
         try:
