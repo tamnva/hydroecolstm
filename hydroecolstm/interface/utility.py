@@ -260,8 +260,8 @@ def plot_time_series(plot_window, data, key, idx, lineplot,
             axes.text(time[1], ylable, period[i])
     else:
         time = data["time_forecast"][key]
-        y_sim = data["y_forecast"][key][:,idx].detach().numpy()
-        y_obs = data["y_forecast_simulated"][key][:,idx].detach().numpy()
+        y_obs = data["y_forecast"][key][:,idx].detach().numpy()
+        y_sim = data["y_forecast_simulated"][key][:,idx].detach().numpy()
         
         # Plot observed
         if lineplot:
