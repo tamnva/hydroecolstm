@@ -56,6 +56,9 @@ class ApplicationFrame(ctk.CTkScrollableFrame):
                                                command=self.import_button_event, 
                                                variable=self.import_checkvalue)
         self.import_checkbox.grid(row=1, column=0, padx = 10, pady=(10,10), sticky="we")
+        CTkToolTip(self.import_checkbox, delay=0.1, bg_color = 'orange',
+                   text_color = 'black', anchor='w',  wraplength=500, 
+                   message="Check this box to use the model and data created from steps 1 to 4")
 
         # -----------------------------------------------------------Column 2
         self.file_selection_label = ctk.CTkLabel(self.tabview.tab("1. Inputs"), 
@@ -64,8 +67,13 @@ class ApplicationFrame(ctk.CTkScrollableFrame):
 
         self.load_train_test_config = ctk.CTkButton(self.tabview.tab("1. Inputs"), 
                                                anchor='w', 
-                                               text="Select config.yml file", 
+                                               text="Select config file", 
                                                command=self.get_config_file)
+        
+        CTkToolTip(self.load_train_test_config, delay=0.1, bg_color = 'orange',
+                   text_color = 'black', anchor='w',  wraplength=500, 
+                   message="Select the configuration .yml file")
+        
         self.load_train_test_config.grid(row=1, column=1, padx = 10, pady=(2,2), sticky="w")  
         self.config_file_name = ctk.CTkLabel(self.tabview.tab("1. Inputs"), 
                                          text="No file was selected")
@@ -86,6 +94,7 @@ class ApplicationFrame(ctk.CTkScrollableFrame):
                                                text="Select static data file", 
                                                command=self.get_static_file_forecast)
         self.static_file_button.grid(row=3, column=1, padx = 10, pady=(2,2), sticky="w")
+        
         self.static_file_name = ctk.CTkLabel(self.tabview.tab("1. Inputs"), 
                                          text="No file was selected")
         self.static_file_name.grid(row=3, column=2, padx = 10, pady=(2,2), sticky="w") 
@@ -447,6 +456,7 @@ class ApplicationFrame(ctk.CTkScrollableFrame):
             self.dynamic_file_button.configure(state="disabled")
             self.static_file_button.configure(state="disabled")
             self.model_button.configure(state="disabled")
+            self.load_scaler_button.configure(state="disabled")
             
             # First try to remove all items in object_id_forecast
             try:
@@ -474,6 +484,8 @@ class ApplicationFrame(ctk.CTkScrollableFrame):
             self.dynamic_file_button.configure(state="normal")
             self.static_file_button.configure(state="normal")
             self.model_button.configure(state="normal")
+            self.load_scaler_button.configure(state="normal")
+            
                 
         
     def run_forecast(self):

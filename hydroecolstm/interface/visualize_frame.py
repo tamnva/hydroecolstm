@@ -171,7 +171,6 @@ class VisualizeFrame(ctk.CTkScrollableFrame):
                    'or leave it empty to use default name')
         self.valid_legend.grid(row=3, column=2, sticky="w", padx=5, pady=5)
         
-        # TODO:----------------------------------------------------------------
         # ---------------------------------------------content of load data tab
         self.object_id_label =\
             ctk.CTkLabel(self.tabview.tab("3. Time-series plot"),

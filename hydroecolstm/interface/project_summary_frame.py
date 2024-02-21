@@ -44,12 +44,10 @@ class ProjectSummaryFrame(ctk.CTkFrame):
         self.summary_textbox.insert("end", "to see project info: " )
         self.summary_textbox.configure(spacing3=10) 
 
-        self.save_buton = ctk.CTkButton(self, border_color="grey",
-                                        border_width=1.5,
+        self.save_buton = ctk.CTkButton(self, fg_color='gray',
+                                        border_width=0,
                                         command=self.save_yml,
-                                        text = "Save", 
-                                        fg_color = "transparent",
-                                        text_color="black")
+                                        text = "Save")
         CTkToolTip(self.save_buton, delay=0.1, bg_color = 'orange',
                    text_color = 'black', anchor = 'n',  wraplength=500, 
                    message= 'Click here to save project summary as' +

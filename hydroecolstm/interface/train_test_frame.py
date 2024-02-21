@@ -32,14 +32,15 @@ class TrainTestFrame(ctk.CTkScrollableFrame):
         self.load_model_label = ctk.CTkLabel(self.tabview.tab("1. Initial state dicts"), 
                                       text="1. Load model state dicts")
         self.load_model_label.grid(row=0, column=0, sticky = "w")  
-        CTkToolTip(self.load_model_label, delay=0.1, bg_color = 'orange',
-                   text_color = 'black', anchor='w',  wraplength=500, 
-                   message="Load model state dicts for parameter fine turning. \n" + 
-                   "This input is optional")
         self.load_model = ctk.CTkButton(self.tabview.tab("1. Initial state dicts"), anchor='w', 
                                          command=self.load_state_dict,
                                          text="Load model")
         self.load_model.grid(row=1, column=0, sticky = "w")
+        CTkToolTip(self.load_model, delay=0.1, bg_color = 'orange',
+                   text_color = 'black', anchor='w',  wraplength=500, 
+                   message="Optional input - load initial model state dicts. " +
+                   "This could be, e.g., the calibrated model at a regional scale " +
+                   "and used in here for parameter fine tuning.")
         
         # ---------------------------------------------Content of load data tab
         # Number of epochs
@@ -54,7 +55,7 @@ class TrainTestFrame(ctk.CTkScrollableFrame):
         self.nepoch.bind('<KeyRelease>', self.get_nepoch)
         CTkToolTip(self.nepoch, delay=0.1, bg_color = 'orange',
                    text_color = 'black', anchor='w',  wraplength=500, 
-                   message='Number of training epochs. Input should be numeric ') 
+                   message='Number of training epochs (positive integer number)') 
         
         # Learning rate
         self.learning_rate_label = ctk.CTkLabel(self.tabview.tab("2. Trainer"), 
@@ -64,6 +65,9 @@ class TrainTestFrame(ctk.CTkScrollableFrame):
                              placeholder_text="0.01")
         self.learning_rate.grid(row=3, column=0, sticky = "w")
         self.learning_rate.bind('<KeyRelease>', self.get_learning_rate)
+        CTkToolTip(self.learning_rate, delay=0.1, bg_color = 'orange',
+                   text_color = 'black', anchor='w',  wraplength=500, 
+                   message='Learning rate for gradient descent (positive real number)') 
         
         # Warm up length
         self.warmup_length_label = ctk.CTkLabel(self.tabview.tab("2. Trainer"), 
@@ -76,7 +80,7 @@ class TrainTestFrame(ctk.CTkScrollableFrame):
         CTkToolTip(self.warmup_length, delay=0.1, bg_color = 'orange',
                    text_color = 'black', anchor='w',  wraplength=500, 
                    message='The number of timesteps used for warm-up. \n' +
-                   'For example, the first n simulated outputs will be skipped \n'+
+                   'For example, the first warmup_length outputs will be skipped \n'+
                    'when calculating the loss function. This value MUST \n'+
                    'be smaller than sequence length') 
         
@@ -132,17 +136,25 @@ class TrainTestFrame(ctk.CTkScrollableFrame):
                                                    values=['Adam'],
                                                    command=self.get_optim_method) 
         self.optim.grid(row=3, column=2, sticky = "w")
+        CTkToolTip(self.optim, delay=0.1, bg_color = 'orange',
+                   text_color = 'black', anchor='w',  wraplength=500, 
+                   message="In this version only Adam method is available")
         
         # Loss function
         self.loss_function_label = ctk.CTkLabel(self.tabview.tab("2. Trainer"), 
                                                text="8. Loss function")
         self.loss_function_label.grid(row=4, column=2, sticky = "w")    
         self.loss = ctk.CTkOptionMenu(self.tabview.tab("2. Trainer"),
-                                                   values=['Root Mean Square Error (RMSE)',
-                                                           'Mean Absolute Error (MAE)',
-                                                           'Mean Squared Error (MSE)'],
+                                                   values=['Root Mean Square Error',
+                                                           'Mean Absolute Error',
+                                                           'Mean Squared Error'],
                                                    command=self.loss_function) 
         self.loss.grid(row=5, column=2, sticky = "w")
+        CTkToolTip(self.loss, delay=0.1, bg_color = 'orange',
+                   text_color = 'black', anchor='w',  wraplength=500, 
+                   message="Please select the loss function for calculating"+
+                   " traning and validatation losses, which are used for" +
+                   " updating model paramters and early stopping")
         
         # Save model
         self.out_dir_label = ctk.CTkLabel(self.tabview.tab("2. Trainer"), 
@@ -152,6 +164,10 @@ class TrainTestFrame(ctk.CTkScrollableFrame):
                                          command=self.out_dir_event,
                                          text="Select directory")
         self.out_dir.grid(row=7, column=2, sticky = "w")
+        CTkToolTip(self.out_dir, delay=0.1, bg_color = 'orange',
+                   text_color = 'black', anchor='w',  wraplength=500, 
+                   message="Please select the directory for saving model outputs"+
+                   " If not selected, the default directory (pathlib.Path.cwd()) is used")
         
         
         # Run model
@@ -162,13 +178,19 @@ class TrainTestFrame(ctk.CTkScrollableFrame):
                                          command=self.run_train_test,
                                          text="Run")
         self.run.grid(row=9, column=2, sticky = "w")
+        CTkToolTip(self.run, delay=0.1, bg_color = 'orange',
+                   text_color = 'black', anchor='w',  wraplength=500, 
+                   message="Click here to run the model. While model is running"+
+                   " in the background, the GUI will be frozen.")
                 
         # Progressbar
         self.progressbar = ctk.CTkProgressBar(master=self.tabview.tab("2. Trainer"))
         self.progressbar.grid(row=10, column=2,  sticky = "w", pady = (10,10))
         CTkToolTip(self.progressbar, delay=0.1, bg_color = 'orange',
                    text_color = 'black', anchor='w',  wraplength=500, 
-                   message="This is the training progress bar")
+                   message="This is the training progress bar." +
+                   " It will turn to full orange when the training was completed")
+        
         self.progressbar.configure(mode="determinate", progress_color="orange")
         self.progressbar.set(0)
         
@@ -222,9 +244,9 @@ class TrainTestFrame(ctk.CTkScrollableFrame):
         
     # Get number of lstm layers
     def loss_function(self, method: str):
-        loss_fn = {'Root Mean Square Error (RMSE)': "RMSE",
-                    'Mean Absolute Error (MAE)': "MAE",
-                    'Mean Squared Error (MSE)': "MSE"} 
+        loss_fn = {'Root Mean Square Error': "RMSE",
+                   'Mean Absolute Error': "MAE",
+                   'Mean Squared Error': "MSE"} 
                               
         self.config["loss_function"] = loss_fn[method]
         print(self.config["loss_function"])

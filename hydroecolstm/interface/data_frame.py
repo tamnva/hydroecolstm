@@ -47,13 +47,13 @@ class DataFrame(ctk.CTkScrollableFrame):
         CTkToolTip(self.select_dynamic_file, delay=0.1, bg_color = 'orange',
                    text_color = 'black', anchor='e',  wraplength=500, 
                    message='Click here to select dynamic (timeseries) data file. ' + 
-                   'The data file must be in .csv format with header, seperator' + 
-                   ' is <,>. This data file must contains at least two colums, ' +
+                   'The data file must be in .csv format with header. ' +
+                   'This data file must contains at least two colums, ' +
                    'one with the name <object_id> and the other column with the ' +
                    'name <time> in format yyyy-mm-dd hh:mm.The object_id column will '+ 
                    'link object in dynamic/timeseries data file with static data file. ' +
                    'Timeseries of BOTH input and target features must be in this file. ' +
-                   'Template of this file can be seen in this Github repo ./example_1')
+                   'Template of this file can be seen in the package documentation')
         
         # display selected data file
         self.selected_dynamic_filename = ctk.CTkLabel(self.tabview.tab("1. Load data"),
@@ -98,10 +98,10 @@ class DataFrame(ctk.CTkScrollableFrame):
         CTkToolTip(self.select_static_file, delay=0.1, bg_color = 'orange',
                    text_color = 'black', anchor='w',  wraplength=500, 
                    message='Click here to select static (catchment attributes) data file. ' + 
-                   'the data file must be in .csv format with header, seperator ' + 
-                   ' is <,>. This data file must contains a column name ' +
-                   '<object_id> to connect static with dynamic data. ' +
-                   'Template of this file can be seen in this Github repo ./example_1')
+                   'the data file must be in .csv format with header. ' + 
+                   'This data file must contains a column name <object_id> ' +
+                   'to connect static with dynamic data. ' +
+                   'Template of this file can be seen in the package documentation')
         
         # display selected data file
         self.selected_static_filename = ctk.CTkLabel(self.tabview.tab("1. Load data"),
