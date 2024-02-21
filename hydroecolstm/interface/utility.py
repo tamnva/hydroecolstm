@@ -1,9 +1,11 @@
 
 import customtkinter as ctk
+import torch
 import matplotlib
 import tkinter as tk
 from matplotlib.figure import Figure
 import numpy as np
+import pandas as pd
 from matplotlib.backends.backend_tkagg import (FigureCanvasTkAgg, 
                                                NavigationToolbar2Tk)
 
@@ -459,3 +461,97 @@ class ToplevelWindow(ctk.CTkToplevel):
         super().__init__(*args, **kwargs)
         self.geometry("600x400")
         self.title(window_name)
+        
+def combine_simulated(data, target_features):
+    
+    # combine train, valid, test results
+    for i, key in enumerate(data["y_train_simulated"].keys()):
+        
+        # simulated target variables during train, valid, test periods
+        sim = torch.cat((data["y_train_simulated"][key],
+                         data["y_valid_simulated"][key],
+                         data["y_test_simulated"][key]))
+        
+        obs = torch.cat((data["y_train"][key],
+                         data["y_valid"][key],
+                         data["y_test"][key]))
+        
+        # date
+        date = np.concatenate((data["time_train"][key],
+                               data["time_valid"][key],
+                               data["time_test"][key]), axis=0)
+        
+        # Object id
+        train_length = data["y_train_simulated"][key].shape[0]
+        valid_length = data["y_valid_simulated"][key].shape[0]
+        test_length = data["y_test_simulated"][key].shape[0]
+        
+        object_id = np.repeat(key, train_length+valid_length+test_length, axis=None)
+        flag = np.concatenate((np.repeat("train_period", train_length, axis=None), 
+                               np.repeat("valid_period", valid_length, axis=None),
+                               np.repeat("test_period", test_length, axis=None)), axis=0) 
+        
+        # Now combine
+        if i == 0:
+            cat_sim = sim
+            cat_obs = obs
+            cat_date = date
+            cat_object_id = object_id
+            cat_flag = flag
+        else:
+            cat_sim = torch.cat((cat_sim, sim))
+            cat_obs = torch.cat((cat_obs, obs))
+            cat_date = np.concatenate((cat_date, date), axis=0)
+            cat_object_id = np.concatenate((cat_object_id, object_id), axis=0)
+            cat_flag = np.concatenate((cat_flag, flag), axis=0)
+    
+    # combine simulated and observed
+    cat_sim_obs = torch.cat((cat_sim, cat_obs), axis=1)
+    
+    # convert to data frame
+    output = pd.DataFrame(data=cat_sim_obs.numpy())
+    
+    # rename data frame
+    colnames = np.concatenate((["simulated_" + name for name in target_features],
+                                      ["observed_" + name for name in target_features]), 
+                                     axis=0)
+    output = output.set_axis(colnames, axis='columns') 
+    
+    # insert 
+    output.insert(0, "flag", cat_flag.ravel(), True)
+    output.insert(0, "time", cat_date.ravel(), True)
+    output.insert(0, "object_id", cat_object_id.ravel(), True)
+    
+    return output
+
+def combine_forecast(data, target_features):
+    
+    # combine train, valid, test results
+    for i, key in enumerate(data["y_forecast"].keys()):
+        
+        # simulated target variables during train, valid, test periods
+        sim = data["y_forecast_simulated"][key]
+        date = data["time_forecast"][key]
+        object_id = np.repeat(key, data["y_forecast_simulated"][key].shape[0], 
+                              axis=None)
+        
+        # Now combine
+        if i == 0:
+            cat_sim = sim
+            cat_date = date
+            cat_object_id = object_id
+        else:
+            cat_sim = torch.cat((cat_sim, sim))
+            cat_date = np.concatenate((cat_date, date), axis=0)
+            cat_object_id = np.concatenate((cat_object_id, object_id), axis=0)
+    
+    # convert to data frame
+    output = pd.DataFrame(data=cat_sim.numpy())
+    output = output.set_axis(["forecast_" + name for name in target_features], 
+                             axis='columns') 
+    
+    # insert 
+    output.insert(0, "time", cat_date.ravel(), True)
+    output.insert(0, "object_id", cat_object_id.ravel(), True)
+    
+    return output
