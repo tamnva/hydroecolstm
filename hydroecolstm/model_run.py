@@ -53,6 +53,3 @@ def run_train(config):
     data["x_scaler"] = x_scaler
     
     return model, x_scaler, y_scaler, data
-
-if __name__ == "__main__":
-    globals()[sys.argv[1]]()

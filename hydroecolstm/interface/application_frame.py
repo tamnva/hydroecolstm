@@ -84,6 +84,10 @@ class ApplicationFrame(ctk.CTkScrollableFrame):
                                                text="Select dynamic data file", 
                                                command=self.get_dynamic_file_forecast)
         self.dynamic_file_button.grid(row=2, column=1, padx = 10, pady=(2,2), sticky="w")
+        CTkToolTip(self.dynamic_file_button, delay=0.1, bg_color = 'orange',
+                   text_color = 'black', anchor='w',  wraplength=500, 
+                   message="Please see 1. Data processing for more detail")
+        
         self.dynamic_file_name = ctk.CTkLabel(self.tabview.tab("1. Inputs"), 
                                          text="No file was selected")
         self.dynamic_file_name.grid(row=2, column=2, padx = 10, pady=(2,2), sticky="w") 
@@ -94,6 +98,9 @@ class ApplicationFrame(ctk.CTkScrollableFrame):
                                                text="Select static data file", 
                                                command=self.get_static_file_forecast)
         self.static_file_button.grid(row=3, column=1, padx = 10, pady=(2,2), sticky="w")
+        CTkToolTip(self.static_file_button, delay=0.1, bg_color = 'orange',
+                   text_color = 'black', anchor='w',  wraplength=500, 
+                   message="Please see 1. Data processing for more detail")
         
         self.static_file_name = ctk.CTkLabel(self.tabview.tab("1. Inputs"), 
                                          text="No file was selected")
@@ -105,6 +112,10 @@ class ApplicationFrame(ctk.CTkScrollableFrame):
                                                text="Load trained model", 
                                                command=self.load_model_state_dicts)
         self.model_button.grid(row=4, column=1, padx = 10, pady=(2,2), sticky="w") 
+        CTkToolTip(self.static_file_button, delay=0.1, bg_color = 'orange',
+                   text_color = 'black', anchor='w',  wraplength=500, 
+                   message="Select file contains the model state dicts .pt file")
+        
         self.model_name = ctk.CTkLabel(self.tabview.tab("1. Inputs"), 
                                          text="No model was loaded")
         self.model_name.grid(row=4, column=2, padx = 10, pady=(2,2), sticky="w") 
@@ -117,6 +128,12 @@ class ApplicationFrame(ctk.CTkScrollableFrame):
         self.load_scaler_label = ctk.CTkLabel(self.tabview.tab("1. Inputs"), 
                                          text="No scalers were loaded")
         self.load_scaler_label.grid(row=5, column=2, padx = 10, pady=(2,2), sticky="w") 
+        CTkToolTip(self.static_file_button, delay=0.1, bg_color = 'orange',
+                   text_color = 'black', anchor='w',  wraplength=500, 
+                   message="Load the file contains scaler for input and target features. " +  
+                   " When you save this project, this is also inside the data.pt file." +
+                   " So you can load this data.pt file here")
+        
         
         self.model_label = ctk.CTkLabel(self.tabview.tab("1. Inputs"), 
                                          text="3. Forecast period")
