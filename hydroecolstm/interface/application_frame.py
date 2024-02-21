@@ -429,6 +429,9 @@ class ApplicationFrame(ctk.CTkScrollableFrame):
                                                                   ('All files', '*.*')))
             self.globalData["model"].load_state_dict(torch.load(file_name))
             
+            # Set model to eval mode (in this mode, dropout = 0, no normlization)
+            self.globalData["model"].eval()
+            
             # Update selected model name
             self.model_name.configure(text= '...' + file_name[-15:])
             
