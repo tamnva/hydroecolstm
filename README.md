@@ -1,4 +1,4 @@
-### HydroEcoLSTM <a href="https://github.com/tamnva/hydroecolstm/tree/master/docs/images/logo.png"><img src="docs/images/logo.png" align="right" height="120" /></a>
+### HydroEcoLSTM <a href="https://github.com/tamnva/hydroecolstm/tree/master/docs/images/logo.svg"><img src="docs/images/logo.svg" align="right" height="120" /></a>
 
 [![Documentation Status](https://readthedocs.org/projects/hydroecolstm/badge/?version=latest)](https://hydroecolstm.readthedocs.io/en/latest/?badge=latest) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10673255.svg)](https://doi.org/10.5281/zenodo.10673255)
 

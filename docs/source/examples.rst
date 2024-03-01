@@ -67,7 +67,7 @@ The configuration file ``config.yml`` and data for this example can be found `he
 
    # Save all data and model state dicts to the output_directory
    torch.save(data, Path(config["output_directory"][0], "data.pt"))
-   torch.save(model.state_dict(), Path(config["output_directory"][0], "model.pt"))
+   #torch.save(model.state_dict(), Path(config["output_directory"][0], "model.pt"))
 
 
 Multiple outputs simulation
@@ -111,8 +111,4 @@ The configuration file ``config.yml`` and data for this example can be found `he
 
    # Save all data and model state dicts to the output_directory
    torch.save(data, Path(config["output_directory"][0], "data.pt"))
-   torch.save(model.state_dict(), Path(config["output_directory"][0], "model.pt"))
-
-
-
-
+   #torch.save(model.state_dict(), Path(config["output_directory"][0], "model.pt"))
