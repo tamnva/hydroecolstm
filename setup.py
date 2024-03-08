@@ -5,7 +5,6 @@ setup(
     version='0.1.0',    
     description='A python package for HydroEcological Modelling using LSTM',
     url='https://github.com/tamnva/HydroPyTorch',
-    download_url = "https://github.com/tamnva/hydroecolstm/archive/refs/tags/v0.2.0.tar.gz",
     author='Tam V. Nguyen',
     author_email='tamnva@gmail.com',
     license='GPLv3',
