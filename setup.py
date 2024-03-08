@@ -1,9 +1,17 @@
 from setuptools import setup
+from pathlib import Path
 
+# Read the description
+readme_file = Path(__file__).absolute().parent / "README.md"
+with readme_file.open("r") as fp:
+    long_description = fp.read()
+    
 setup(
     name='hydroecolstm',
     version='0.1.0',    
     description='A python package for HydroEcological Modelling using LSTM',
+    long_description=long_description,
+    long_description_content_type='text/markdown',
     url='https://github.com/tamnva/HydroPyTorch',
     author='Tam V. Nguyen',
     author_email='tamnva@gmail.com',
