@@ -11,8 +11,8 @@
 ### Quick start
 
 ```python
-# Install the package from github using pip command
-pip install git+https://github.com/tamnva/hydroecolstm.git
+# Install the package from PyPi
+pip install hydroecolstm
 
 # Import the package and show the GUI (please see below)
 import hydroecolstm
