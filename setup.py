@@ -15,7 +15,7 @@ setup(
     url='https://github.com/tamnva/HydroPyTorch',
     author='Tam V. Nguyen',
     author_email='tamnva@gmail.com',
-    license='GPLv3',
+    license='GPL',
     packages=['hydroecolstm', 
               'hydroecolstm.data',
               'hydroecolstm.interface', 
