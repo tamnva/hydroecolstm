@@ -24,5 +24,5 @@ hydroecolstm.interface.show_gui()
 - After lanching the GUI, you should see the following window (the latest version could look different)
 
 <p align="center">
-  <img src="docs/images/intro_figure.gif" width=100% title="hover text">
+  <img src="https://github.com/tamnva/hydroecolstm/blob/master/docs/images/intro_figure.gif" width=100% title="hover text">
 </p>
