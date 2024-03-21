@@ -5,12 +5,14 @@
 # They are provided by a third-party and are governed by
 # separate terms of service, privacy policy, and support
 # documentation.
+# on
+#  release:
+#    types: [published]
 
 name: Upload Python Package
 
 on:
-  release:
-    types: [published]
+   push
 
 permissions:
   contents: read
