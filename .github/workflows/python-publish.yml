@@ -35,7 +35,6 @@ jobs:
     - name: Build package
       run: python -m build
     - name: Publish package
-      if: github.repository == 'hydroecolstm/hydroecolstm'
       uses: pypa/gh-action-pypi-publish@master
       with:
         user: __token__
