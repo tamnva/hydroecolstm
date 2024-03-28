@@ -172,9 +172,9 @@ class NetworkDesignFrame(ctk.CTkScrollableFrame):
     def show_model_head_class(self):
         
         # Get link to the image
-        image = Path(__file__).parents[2]
+        image = Path(__file__).parents[1]
         button_image = ctk.CTkImage(Image.open( 
-            Path(image, "docs/images/model_head_class.png")),
+            Path(image, "images/model_head_class.png")),
             size=(500, 500))
         
         # Create new window 
