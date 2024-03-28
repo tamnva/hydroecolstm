@@ -8,11 +8,11 @@ with readme_file.open("r") as fp:
     
 setup(
     name='hydroecolstm',
-    version='0.1.0',    
+    version='0.2.0',    
     description='A python package for HydroEcological Modelling using LSTM',
     long_description=long_description,
     long_description_content_type='text/markdown',
-    url='https://github.com/tamnva/HydroPyTorch',
+    url='https://github.com/tamnva/hydroecolstm',
     author='Tam V. Nguyen',
     author_email='tamnva@gmail.com',
     packages=['hydroecolstm', 
