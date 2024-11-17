@@ -1,5 +1,7 @@
 import numpy as np
 import pandas as pd
+from ray import train
+import copy
 import torch
 from pathlib import Path
 from torch.utils.data import DataLoader
@@ -26,6 +28,8 @@ class Trainer():
         
         # Train and loss
         self.loss = None
+        self.best_loss = None
+        self.best_state_dict = None
         
     # Train function
     def train(self, 
@@ -124,21 +128,27 @@ class Trainer():
             # Early stopping based on validation loss and make checkpoint
             flag = early_stopping(valid_loss_epoch[-1], self.model)
             model_flag.append(flag)
-            
+            if flag: 
+                self.best_loss = np.average(train_loss_batch)
+                self.best_state_dict = copy.deepcopy(self.model.state_dict())
+                train.report({"score":np.average(train_loss_batch)})
+                
             if early_stopping.early_stop:
                 print("Early stopping")
                 break
             
         # If the model does not stops until the last epoch
-        # it means that the best model is from last epoch
+        # It means that the best model is from last epoch
         if (epoch + 1) == self.n_epochs:
             print("Validation loss continue decreasing. Saving model ...")
-            torch.save(self.model.state_dict(), 
-                       Path(self.out_dir, "best_model.pt"))
+            self.best_loss = np.average(train_loss_batch)
+            self.best_state_dict = copy.deepcopy(self.model.state_dict())
+            train.report({"score": np.average(train_loss_batch)})
+            
         else:
             # Load the last checkpoint with the best model
-            self.model.load_state_dict(torch.load(Path(self.out_dir, 
-                                                       "best_model.pt")))
+            self.model.load_state_dict(self.best_state_dict)
+            
             # Set model to eval mode
             self.model.eval()
             pass
@@ -180,7 +190,6 @@ class EarlyStopping:
         self.early_stop = False
         self.val_loss_min = np.Inf
         self.delta = delta
-        self.path = Path(path, "best_model.pt")
         self.trace_func = trace_func
     def __call__(self, val_loss, model):
 
@@ -208,5 +217,4 @@ class EarlyStopping:
         '''Saves model when validation loss decrease.'''
         if self.verbose:
             self.trace_func(f'Validation loss decreased ({self.val_loss_min:.6f} --> {val_loss:.6f}).  Saving model ...')
-        torch.save(model.state_dict(), self.path)
         self.val_loss_min = val_loss
