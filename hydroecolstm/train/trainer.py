@@ -1,9 +1,10 @@
 import numpy as np
 import pandas as pd
 from ray import train
+import tempfile
+import os
 import copy
 import torch
-from pathlib import Path
 from torch.utils.data import DataLoader
 
 from hydroecolstm.train.custom_loss import CustomLoss
@@ -131,7 +132,14 @@ class Trainer():
             if flag: 
                 self.best_loss = np.average(train_loss_batch)
                 self.best_state_dict = copy.deepcopy(self.model.state_dict())
-                train.report({"score":np.average(train_loss_batch)})
+                with tempfile.TemporaryDirectory() as temp_checkpoint_dir:
+                    torch.save(
+                        self.model.state_dict(), 
+                        os.path.join(temp_checkpoint_dir, "model.pt")) 
+                    checkpoint = train.Checkpoint.from_directory(temp_checkpoint_dir) 
+                    train.report({"score": np.average(train_loss_batch)}, 
+                                 checkpoint=checkpoint)
+                
                 
             if early_stopping.early_stop:
                 print("Early stopping")
@@ -143,7 +151,13 @@ class Trainer():
             print("Validation loss continue decreasing. Saving model ...")
             self.best_loss = np.average(train_loss_batch)
             self.best_state_dict = copy.deepcopy(self.model.state_dict())
-            train.report({"score": np.average(train_loss_batch)})
+            with tempfile.TemporaryDirectory() as temp_checkpoint_dir:
+                torch.save(
+                    self.model.state_dict(), 
+                    os.path.join(temp_checkpoint_dir, "model.pt")) 
+                checkpoint = train.Checkpoint.from_directory(temp_checkpoint_dir) 
+                train.report({"score": np.average(train_loss_batch)}, 
+                             checkpoint=checkpoint)
             
         else:
             # Load the last checkpoint with the best model
