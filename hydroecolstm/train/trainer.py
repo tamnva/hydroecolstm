@@ -5,6 +5,7 @@ import tempfile
 import os
 import copy
 import torch
+from pathlib import Path
 from torch.utils.data import DataLoader
 
 from hydroecolstm.train.custom_loss import CustomLoss
@@ -28,8 +29,8 @@ class Trainer():
         self.out_dir = config["output_directory"][0]
         
         # Train and loss
-        self.loss = None
-        self.best_loss = None
+        self.loss_epoch = None
+        self.best_train_loss = None
         self.best_state_dict = None
         
     # Train function
@@ -52,7 +53,7 @@ class Trainer():
         # Train and valid loss per epoch
         train_loss_epoch = []
         valid_loss_epoch = []
-        model_flag = []
+        check_point = []
         
         # initialize early stoping
         early_stopping = EarlyStopping(patience=self.patience, verbose=False,
@@ -128,18 +129,9 @@ class Trainer():
                 
             # Early stopping based on validation loss and make checkpoint
             flag = early_stopping(valid_loss_epoch[-1], self.model)
-            model_flag.append(flag)
+            check_point.append(flag)
             if flag: 
-                self.best_loss = np.average(train_loss_batch)
-                self.best_state_dict = copy.deepcopy(self.model.state_dict())
-                with tempfile.TemporaryDirectory() as temp_checkpoint_dir:
-                    torch.save(
-                        self.model.state_dict(), 
-                        os.path.join(temp_checkpoint_dir, "model.pt")) 
-                    checkpoint = train.Checkpoint.from_directory(temp_checkpoint_dir) 
-                    train.report({"score": np.average(train_loss_batch)}, 
-                                 checkpoint=checkpoint)
-                
+                self.__save_check_point(np.average(train_loss_batch))
                 
             if early_stopping.early_stop:
                 print("Early stopping")
@@ -149,15 +141,7 @@ class Trainer():
         # It means that the best model is from last epoch
         if (epoch + 1) == self.n_epochs:
             print("Validation loss continue decreasing. Saving model ...")
-            self.best_loss = np.average(train_loss_batch)
-            self.best_state_dict = copy.deepcopy(self.model.state_dict())
-            with tempfile.TemporaryDirectory() as temp_checkpoint_dir:
-                torch.save(
-                    self.model.state_dict(), 
-                    os.path.join(temp_checkpoint_dir, "model.pt")) 
-                checkpoint = train.Checkpoint.from_directory(temp_checkpoint_dir) 
-                train.report({"score": np.average(train_loss_batch)}, 
-                             checkpoint=checkpoint)
+            self.__save_check_point(np.average(train_loss_batch))
             
         else:
             # Load the last checkpoint with the best model
@@ -167,13 +151,29 @@ class Trainer():
             self.model.eval()
             pass
             
-        self.loss = pd.DataFrame({"epoch": list(range(1,len(train_loss_epoch)+1)),
-                                  'train_loss': train_loss_epoch,
-                                  'validation_loss': valid_loss_epoch,
-                                  'best_model': model_flag})
+        self.loss_epoch = pd.DataFrame({"epoch": list(range(1,len(train_loss_epoch)+1)),
+                                        'train_loss': train_loss_epoch,
+                                        'validation_loss': valid_loss_epoch,
+                                        'check_point': check_point})
 
         return self.model
     
+    # Save intermediate result at check points
+    def __save_check_point(self, loss):
+        
+        self.best_train_loss = loss
+        self.best_state_dict = copy.deepcopy(self.model.state_dict())
+                
+        with tempfile.TemporaryDirectory() as temp_checkpoint_dir:
+            
+            # Save model state dict and train and valid loss
+            torch.save(self.model.state_dict(),
+                       os.path.join(temp_checkpoint_dir, "model.pt"))
+            
+            checkpoint = train.Checkpoint.from_directory(temp_checkpoint_dir)
+            
+            train.report({"loss": loss}, checkpoint=checkpoint)
+            
 # ----------------------------------------------------------------------------#
 # The EarlyStopping code was copied from                                     #
 # https://github.com/Bjarten/early-stopping-pytorch/blob/master/pytorchtools.py
