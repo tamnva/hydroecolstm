@@ -30,7 +30,6 @@ class Trainer():
         
         # Train and loss
         self.loss_epoch = None
-        self.best_train_loss = None
         self.best_state_dict = None
         
     # Train function
@@ -131,7 +130,8 @@ class Trainer():
             flag = early_stopping(valid_loss_epoch[-1], self.model)
             check_point.append(flag)
             if flag: 
-                self.__save_check_point(np.average(train_loss_batch))
+                self._save_check_point(train_loss_epoch, valid_loss_epoch, 
+                                       check_point)
                 
             if early_stopping.early_stop:
                 print("Early stopping")
@@ -141,7 +141,9 @@ class Trainer():
         # It means that the best model is from last epoch
         if (epoch + 1) == self.n_epochs:
             print("Validation loss continue decreasing. Saving model ...")
-            self.__save_check_point(np.average(train_loss_batch))
+            check_point[-1] = True
+            self._save_check_point(train_loss_epoch, valid_loss_epoch, 
+                                   check_point)
             
         else:
             # Load the last checkpoint with the best model
@@ -151,17 +153,16 @@ class Trainer():
             self.model.eval()
             pass
             
-        self.loss_epoch = pd.DataFrame({"epoch": list(range(1,len(train_loss_epoch)+1)),
-                                        'train_loss': train_loss_epoch,
-                                        'validation_loss': valid_loss_epoch,
-                                        'check_point': check_point})
+        self.loss_epoch = self._create_train_loss_df(train_loss_epoch, 
+                                                     valid_loss_epoch, 
+                                                     check_point)
 
         return self.model
     
     # Save intermediate result at check points
-    def __save_check_point(self, loss):
+    def _save_check_point(self, train_loss_epoch, valid_loss_epoch, 
+                          check_point):
         
-        self.best_train_loss = loss
         self.best_state_dict = copy.deepcopy(self.model.state_dict())
                 
         with tempfile.TemporaryDirectory() as temp_checkpoint_dir:
@@ -172,8 +173,31 @@ class Trainer():
             
             checkpoint = train.Checkpoint.from_directory(temp_checkpoint_dir)
             
-            train.report({"loss": loss}, checkpoint=checkpoint)
+            loss_epoch = self._create_train_loss_df(train_loss_epoch, 
+                                                    valid_loss_epoch, 
+                                                    check_point)
             
+            train.report({'loss': train_loss_epoch[-1], 
+                          'loss_epoch': loss_epoch},
+                         checkpoint=checkpoint)
+            
+    # Create data frame of epoch number, train loss, valid loss
+    def _create_train_loss_df(self, train_loss_epoch, valid_loss_epoch, 
+                              check_point):
+        
+        # Initialize False list to mark best model later
+        best_model = [False for i in range(len(train_loss_epoch))]
+        
+        # The last model is the best model
+        best_model[np.where(check_point)[0][-1]] = True
+        
+        # Create a data frame
+        loss_epoch = pd.DataFrame({
+            'train_loss': train_loss_epoch,
+            'valid_loss': valid_loss_epoch,
+            'best_model': best_model})
+        
+        return loss_epoch   
 # ----------------------------------------------------------------------------#
 # The EarlyStopping code was copied from                                     #
 # https://github.com/Bjarten/early-stopping-pytorch/blob/master/pytorchtools.py

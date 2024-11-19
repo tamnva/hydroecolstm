@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import torch
+from hydroecolstm.data.scaler import Scaler, get_scaler_name
 
 # Read time series data into pandas data frame
 def read_train_valid_test_data(config:dict=None) -> dict:
@@ -202,4 +203,26 @@ def _time_by_object_id(data, object_id):
     for objectid in object_id: 
         output[str(objectid)] = data.loc[objectid]["time"].values
     return output
+
+# Read and scale data
+def read_scale_data(config):
+    data = read_train_valid_test_data(config)
     
+    # Scale/transformer name for static, dynamic, and target features
+    x_scaler_name, y_scaler_name = get_scaler_name(config)
+    
+    # Scaler/transformer
+    data['x_scaler'], data['y_scaler'] = Scaler(), Scaler()
+    data['x_scaler'].fit(x=data["x_train"], method=x_scaler_name)
+    data['y_scaler'].fit(x=data["y_train"], method=y_scaler_name)
+    
+    # Scale/transform data input data
+    data['x_train_scale'] = data['x_scaler'].transform(x=data["x_train"])
+    data['x_valid_scale'] = data['x_scaler'].transform(x=data["x_valid"])
+    data['x_test_scale'] = data['x_scaler'].transform(x=data["x_test"])
+    
+    # Scale/transform data target train data    
+    data['y_train_scale'] = data['y_scaler'].transform(x=data["y_train"])
+    data['y_valid_scale'] = data['y_scaler'].transform(x=data["y_valid"])  
+    
+    return data
