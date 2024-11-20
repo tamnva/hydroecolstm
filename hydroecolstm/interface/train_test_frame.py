@@ -36,8 +36,8 @@ class TrainTestFrame(ctk.CTkScrollableFrame):
                                          command=self.load_state_dict,
                                          text="Load model")
         self.load_model.grid(row=1, column=0, sticky = "w")
-        CTkToolTip(self.load_model, delay=0.1, bg_color = 'orange',
-                   text_color = 'black', anchor='w',  wraplength=500, 
+        CTkToolTip(self.load_model, delay=0.1, bg_color = 'orange', justify = "left",
+                   text_color = 'black', anchor='w',  wraplength=250, 
                    message="Optional input - load initial model state dicts. " +
                    "This could be, e.g., the calibrated model at a regional scale " +
                    "and used in here for parameter fine tuning.")
@@ -53,8 +53,8 @@ class TrainTestFrame(ctk.CTkScrollableFrame):
                
         self.nepoch.grid(row=1, column=0, sticky = "w")
         self.nepoch.bind('<KeyRelease>', self.get_nepoch)
-        CTkToolTip(self.nepoch, delay=0.1, bg_color = 'orange',
-                   text_color = 'black', anchor='w',  wraplength=500, 
+        CTkToolTip(self.nepoch, delay=0.1, bg_color = 'orange', justify = "left",
+                   text_color = 'black', anchor='w',  wraplength=250, 
                    message='Number of training epochs (positive integer number)') 
         
         # Learning rate
@@ -65,8 +65,8 @@ class TrainTestFrame(ctk.CTkScrollableFrame):
                              placeholder_text="0.01")
         self.learning_rate.grid(row=3, column=0, sticky = "w")
         self.learning_rate.bind('<KeyRelease>', self.get_learning_rate)
-        CTkToolTip(self.learning_rate, delay=0.1, bg_color = 'orange',
-                   text_color = 'black', anchor='w',  wraplength=500, 
+        CTkToolTip(self.learning_rate, delay=0.1, bg_color = 'orange', justify = "left",
+                   text_color = 'black', anchor='w',  wraplength=250, 
                    message='Learning rate for gradient descent (positive real number)') 
         
         # Warm up length
@@ -77,8 +77,8 @@ class TrainTestFrame(ctk.CTkScrollableFrame):
                              placeholder_text="30") 
         self.warmup_length.grid(row=5, column=0, sticky = "w")
         self.warmup_length.bind('<KeyRelease>', self.get_warmup_length)
-        CTkToolTip(self.warmup_length, delay=0.1, bg_color = 'orange',
-                   text_color = 'black', anchor='w',  wraplength=500, 
+        CTkToolTip(self.warmup_length, delay=0.1, bg_color = 'orange', justify = "left",
+                   text_color = 'black', anchor='w',  wraplength=250, 
                    message='The number of timesteps used for warm-up. \n' +
                    'For example, the first warmup_length outputs will be skipped \n'+
                    'when calculating the loss function. This value MUST \n'+
@@ -92,8 +92,8 @@ class TrainTestFrame(ctk.CTkScrollableFrame):
                              placeholder_text="720") 
         self.sequence_length.grid(row=7, column=0, sticky = "w")
         self.sequence_length.bind('<KeyRelease>', self.get_sequence_length)
-        CTkToolTip(self.sequence_length, delay=0.1, bg_color = 'orange',
-                   text_color = 'black', anchor='w',  wraplength=500, 
+        CTkToolTip(self.sequence_length, delay=0.1, bg_color = 'orange', justify = "left",
+                   text_color = 'black', anchor='w',  wraplength=250, 
                    message="The number of timesteps in each sample dataset. \n" + 
                    "One epoch loops over multiple baches. \n" +
                    "One batch consists of 'batch_size' sample datasets. \n" +
@@ -108,8 +108,8 @@ class TrainTestFrame(ctk.CTkScrollableFrame):
                              placeholder_text="3") 
         self.batch_size.grid(row=9, column=0, sticky = "w")
         self.batch_size.bind('<KeyRelease>', self.get_batch_size)
-        CTkToolTip(self.batch_size, delay=0.1, bg_color = 'orange',
-                   text_color = 'black', anchor='w',  wraplength=500, 
+        CTkToolTip(self.batch_size, delay=0.1, bg_color = 'orange', justify = "left",
+                   text_color = 'black', anchor='w',  wraplength=250, 
                    message="Please see sequence length for help") 
         
         # Patience
@@ -120,8 +120,8 @@ class TrainTestFrame(ctk.CTkScrollableFrame):
                              placeholder_text="20") 
         self.patience.grid(row=1, column=2, sticky = "w")
         self.patience.bind('<KeyRelease>', self.get_patience_length)
-        CTkToolTip(self.patience, delay=0.1, bg_color = 'orange',
-                   text_color = 'black', anchor='w',  wraplength=500, 
+        CTkToolTip(self.patience, delay=0.1, bg_color = 'orange', justify = "left",
+                   text_color = 'black', anchor='w',  wraplength=250, 
                    message="The number of epochs to wait (before stopping) to \n" + 
                    "see if there is no improvement in ths validation loss, \n" + 
                    "which is used for early stopping. More information \n" + 
@@ -136,8 +136,8 @@ class TrainTestFrame(ctk.CTkScrollableFrame):
                                                    values=['Adam'],
                                                    command=self.get_optim_method) 
         self.optim.grid(row=3, column=2, sticky = "w")
-        CTkToolTip(self.optim, delay=0.1, bg_color = 'orange',
-                   text_color = 'black', anchor='w',  wraplength=500, 
+        CTkToolTip(self.optim, delay=0.1, bg_color = 'orange', justify = "left",
+                   text_color = 'black', anchor='w',  wraplength=250, 
                    message="In this version only Adam method is available")
         
         # Loss function
@@ -150,8 +150,8 @@ class TrainTestFrame(ctk.CTkScrollableFrame):
                                                            'Mean Squared Error'],
                                                    command=self.loss_function) 
         self.loss.grid(row=5, column=2, sticky = "w")
-        CTkToolTip(self.loss, delay=0.1, bg_color = 'orange',
-                   text_color = 'black', anchor='w',  wraplength=500, 
+        CTkToolTip(self.loss, delay=0.1, bg_color = 'orange', justify = "left",
+                   text_color = 'black', anchor='w',  wraplength=250, 
                    message="Please select the loss function for calculating"+
                    " traning and validatation losses, which are used for" +
                    " updating model paramters and early stopping")
@@ -164,8 +164,8 @@ class TrainTestFrame(ctk.CTkScrollableFrame):
                                          command=self.out_dir_event,
                                          text="Select directory")
         self.out_dir.grid(row=7, column=2, sticky = "w")
-        CTkToolTip(self.out_dir, delay=0.1, bg_color = 'orange',
-                   text_color = 'black', anchor='w',  wraplength=500, 
+        CTkToolTip(self.out_dir, delay=0.1, bg_color = 'orange', justify = "left",
+                   text_color = 'black', anchor='w',  wraplength=250, 
                    message="Please select the directory for saving model outputs"+
                    " If not selected, the default directory (pathlib.Path.cwd()) is used")
         
@@ -178,16 +178,16 @@ class TrainTestFrame(ctk.CTkScrollableFrame):
                                          command=self.run_train_test,
                                          text="Run")
         self.run.grid(row=9, column=2, sticky = "w")
-        CTkToolTip(self.run, delay=0.1, bg_color = 'orange',
-                   text_color = 'black', anchor='w',  wraplength=500, 
+        CTkToolTip(self.run, delay=0.1, bg_color = 'orange', justify = "left",
+                   text_color = 'black', anchor='w',  wraplength=250, 
                    message="Click here to run the model. While model is running"+
                    " in the background, the GUI will be frozen.")
                 
         # Progressbar
         self.progressbar = ctk.CTkProgressBar(master=self.tabview.tab("2. Trainer"))
         self.progressbar.grid(row=10, column=2,  sticky = "w", pady = (10,10))
-        CTkToolTip(self.progressbar, delay=0.1, bg_color = 'orange',
-                   text_color = 'black', anchor='w',  wraplength=500, 
+        CTkToolTip(self.progressbar, delay=0.1, bg_color = 'orange', justify = "left",
+                   text_color = 'black', anchor='w',  wraplength=250, 
                    message="This is the training progress bar." +
                    " It will turn to full orange when the training was completed")
         

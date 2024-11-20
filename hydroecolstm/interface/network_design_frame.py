@@ -6,7 +6,6 @@ from PIL import Image
 from pathlib import Path
 from ray import tune
 
-
 class NetworkDesignFrame(ctk.CTkScrollableFrame):
     def __init__(self, container=None, config=None, globalData=None):
         super().__init__(container)
@@ -204,7 +203,7 @@ class NetworkDesignFrame(ctk.CTkScrollableFrame):
                 self.hidden_size.configure(fg_color = 'forest green')
             except:
                 self.hidden_size.configure(fg_color = 'firebrick1')
-                self._message_box_tune()
+                self.message_box_tune()
             
     # Get number of lstm layers
     def get_num_layers(self, nlayer: str):
@@ -213,9 +212,9 @@ class NetworkDesignFrame(ctk.CTkScrollableFrame):
             print("num_layers = ", self.config["num_layers"])
         except:
             pass
-
+        
     # Message box for error in input with tune search space 
-    def _message_box_tune(self):
+    def message_box_tune(self):
         tk.messagebox.showinfo(
             title="Error",
             message="Input should be integer or Tune Search Space API command: " +
