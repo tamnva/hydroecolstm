@@ -7,9 +7,8 @@ from ray import tune, air
 from pathlib import Path
 from datetime import datetime
 import copy
-
-# from hydroecolstm.data.read_config import read_config
-#  config = read_config("C:/examples/1_streamflow_simulation/config.yml")
+import os
+import torch
 
 # Function to train and test the model 
 def run_config(config):
@@ -37,6 +36,7 @@ def run_config(config):
         # Save train loss per epoch and best train loss
         data["loss_epoch"] = trainer.loss_epoch
         data["best_train_loss"] = trainer.best_train_loss
+        best_config = config
         
     else:
         
@@ -49,6 +49,26 @@ def run_config(config):
                                )
                            )
         result = tuner.fit()
+        
+        # Create model 
+        best_result = result.get_best_result("loss", mode="min")
+        best_config = best_result.config
+        del best_result.config["x_train_scale"], 
+        del best_result.config["y_train_scale"]
+        del best_result.config["x_valid_scale"]
+        del best_result.config["y_valid_scale"]
+        
+        model = create_model(best_result.config)
+        
+        with best_result.checkpoint.as_directory() as checkpoint_dir:
+            model.load_state_dict(torch.load(
+                os.path.join(checkpoint_dir, "model.pt"))
+                )
+
+        data["loss_epoch"] = best_result.metrics['loss_epoch']
+        data["best_train_loss"] = best_result.metrics['loss']
+        
+    return model, data, best_config
 
 
 def loss(config):
