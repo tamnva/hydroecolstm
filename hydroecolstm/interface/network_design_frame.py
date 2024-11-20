@@ -198,15 +198,14 @@ class NetworkDesignFrame(ctk.CTkScrollableFrame):
             print("hidden size = ", self.config["hidden_size"])
             self.hidden_size.configure(fg_color = 'forest green')
         except:
-            self.hidden_size.configure(fg_color = 'firebrick1')
-            self._message_box_tune()
+            try:
+                self.config["hidden_size"] = int(get_input_text)
+                print("hidden size = ", self.config["hidden_size"])
+                self.hidden_size.configure(fg_color = 'forest green')
+            except:
+                self.hidden_size.configure(fg_color = 'firebrick1')
+                self._message_box_tune()
             
-        try:
-            self.config["hidden_size"] = int(get_input_text)
-            print("hidden size = ", self.config["hidden_size"])
-        except:
-            self._message_box_tune()       
-             
     # Get number of lstm layers
     def get_num_layers(self, nlayer: str):
         try:
