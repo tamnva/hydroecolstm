@@ -31,6 +31,7 @@ class Trainer():
         # Train and loss
         self.loss_epoch = None
         self.best_state_dict = None
+        self.best_train_loss = None
         
     # Train function
     def train(self, 
@@ -163,6 +164,7 @@ class Trainer():
     def _save_check_point(self, train_loss_epoch, valid_loss_epoch, 
                           check_point):
         
+        self.best_train_loss = train_loss_epoch[-1]
         self.best_state_dict = copy.deepcopy(self.model.state_dict())
                 
         with tempfile.TemporaryDirectory() as temp_checkpoint_dir:
