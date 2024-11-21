@@ -538,19 +538,15 @@ class DataFrame(ctk.CTkScrollableFrame):
         select_index = self.object_id.curselection()
         self.config['object_id'] = [all_items[i] for i in select_index]
         
-        # Get train and test data
+        # Test if reading data work, in the train_test_frame we will read 
+        # and save data to globalData
         data = read_scale_data(self.config)
-        
-        # Update global data
-        self.globalData.update(data)
-        
-        # Delete data variable to free memory
         del data
-         
+        
         # Show message box
         tk.messagebox.showinfo(
             title="Message box",
-            message="Done data split (train, valid, test) and transform")
+            message="Done test read data split (train, valid, test) and transform")
         
     def get_first_tensor(self): 
         

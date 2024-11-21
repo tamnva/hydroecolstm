@@ -1,8 +1,10 @@
 import tkinter as tk
 import customtkinter as ctk
-from hydroecolstm.model.lstm_linears import Lstm_Linears
-from hydroecolstm.model.ea_lstm import Ea_Lstm_Linears
 from hydroecolstm.model_run import run_config, forward_run
+from hydroecolstm.data.read_data import read_scale_data
+from hydroecolstm.model.create_model import create_model
+from hydroecolstm.train.trainer import Trainer
+from hydroecolstm.model_run import config_to_search_space
 from CTkToolTip import CTkToolTip
 import torch
 from ray import tune
@@ -46,7 +48,10 @@ class TrainTestFrame(ctk.CTkScrollableFrame):
                    text_color = 'black', anchor='w',  wraplength=250, 
                    message="Optional input - load initial model state dicts. " +
                    "This could be, e.g., the calibrated model at a regional scale " +
-                   "and used in here for parameter fine tuning.")
+                   "and used in here for parameter fine tuning. The model " +
+                   "state dict is ONLY USED with the MANUAL hyperparamter " +
+                   "optimization, incase of AUTOMATIC hyperparameter tuning "+
+                   "with ray tune, this option is discarded")
         
         # ---------------------------------------------Content of load data tab
         # Number of epochs
@@ -374,23 +379,55 @@ class TrainTestFrame(ctk.CTkScrollableFrame):
         tk.messagebox.showinfo(title="Message box", 
                                message="Trainning will start after closing this box")
         
+        
         try:
             
-            model, data, best_config = run_config(self.config)
+            # Read data
+            data = read_scale_data(self.config)
+            
+            # Convert config to search space
+            search_space = config_to_search_space(
+                self.config,
+                data['x_train_scale'],
+                data['y_train_scale'],
+                data['x_valid_scale'],
+                data['y_valid_scale']
+                )
+            
+            if self.globalData['init_state_dicts'] and search_space["is_manual_optim"]:
+                # Create the model
+                model = create_model(self.config)
+                
+                model.load_state_dict(
+                    torch.load(
+                        self.globalData['init_state_dicts_file']
+                        )
+                    )
+                
+                # Train with train dataset
+                trainer = Trainer(self.config, model)
+                model = trainer.train(
+                    data['x_train_scale'], 
+                    data['y_train_scale'],
+                    data['x_valid_scale'], 
+                    data['y_valid_scale'])
+        
+                # Save train loss per epoch and best train loss
+                data["loss_epoch"] = trainer.loss_epoch
+                data["best_train_loss"] = trainer.best_train_loss
+                best_config = self.config
+
+            else:
+                model, data, best_config = run_config(self.config)
 
             # Forward run
             data = forward_run(model, data)
-            
+                
             # Update global data
             self.globalData.update(data)
             self.globalData["model"] = model
             self.globalData["best_config"] = best_config
             self.globalData["config"] = self.config
-            
-            # Initialize weights, biases
-            if self.globalData['init_state_dicts']:
-                self.globalData["model"].load_state_dict(
-                    torch.load(self.globalData['init_state_dicts_file']))
             
  
             tk.messagebox.showinfo(title="Message box",
