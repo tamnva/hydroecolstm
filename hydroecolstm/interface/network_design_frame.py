@@ -31,8 +31,11 @@ class NetworkDesignFrame(ctk.CTkScrollableFrame):
         self.tabview.tab("2. Model head").grid_columnconfigure((0), weight=1)
         
         self.ray_tooltip = ('Or input the tune Search Space API command, ' +
-                            'e.g., tune.grid_search([20, 30]). Please see:' + 
-                            'https://docs.ray.io/en/latest/tune/api/search_space.html')
+                            'e.g., tune.grid_search([20, 30]). Please see: ' + 
+                            'https://docs.ray.io/en/latest/tune/api/search_space.html \n'+
+                            'IMPORTANT: Box color interpretation: \n ' +
+                            'wrong input = light rose  \n ' +
+                            'correct input = light green color')
         
         ctk.CTkButton(master=self,  anchor='w', fg_color='gray',
                       text="Show model head and classes",
@@ -145,7 +148,7 @@ class NetworkDesignFrame(ctk.CTkScrollableFrame):
                    '(most problems should work with any values between 20 to 516). ' +
                    self.ray_tooltip)
         
-        self.hidden_size.bind('<Return>', self.get_hidden_size)
+        self.hidden_size.bind('<KeyRelease>', self.get_hidden_size)
 
         self.nlayers_label = ctk.CTkLabel(self.tabview.tab("1. Model class"), 
                                                text="3. Number of LSTM layers")
@@ -165,7 +168,7 @@ class NetworkDesignFrame(ctk.CTkScrollableFrame):
         self.dropout = ctk.CTkEntry(master=self.tabview.tab("1. Model class"),
                                         placeholder_text="0.30")
         self.dropout.pack(anchor="w", pady = (4,4))
-        self.dropout.bind('<Return>', self.get_dropout)
+        self.dropout.bind('<KeyRelease>', self.get_dropout)
         CTkToolTip(self.dropout, delay=0.1, bg_color = 'orange', justify = "left",
                    text_color = 'black', anchor='w',  wraplength=250, 
                    message='This value is only used if the number of layers > 1.' +
@@ -194,16 +197,15 @@ class NetworkDesignFrame(ctk.CTkScrollableFrame):
         try:
             self.config["hidden_size"] = int(float(get_input_text))
             print("hidden size = ", self.config["hidden_size"])
-            self.hidden_size.configure(fg_color = 'forest green')
+            self.hidden_size.configure(fg_color = '#d3ffc7')
         except:
             try:
                 eval(get_input_text)
                 self.config["hidden_size"] = get_input_text
                 print("hidden size = ", self.config["hidden_size"])
-                self.hidden_size.configure(fg_color = 'forest green')
+                self.hidden_size.configure(fg_color = '#d3ffc7')
             except:
-                self.hidden_size.configure(fg_color = 'firebrick1')
-                self.message_box_tune("integer")
+                self.hidden_size.configure(fg_color = '#ffc7c7')
             
     # Get number of lstm layers
     def get_num_layers(self, nlayer: str):
@@ -229,16 +231,15 @@ class NetworkDesignFrame(ctk.CTkScrollableFrame):
         try:
             self.config["dropout"] = int(float(get_input_text))
             print("drop out rate = ", self.config["dropout"])
-            self.dropout.configure(fg_color = 'forest green')
+            self.dropout.configure(fg_color = '#d3ffc7')
         except:
             try:
                 eval(get_input_text)
                 self.config["dropout"] = get_input_text
                 print("drop out rate = ", self.config["dropout"])
-                self.dropout.configure(fg_color = 'forest green')
+                self.dropout.configure(fg_color = '#d3ffc7')
             except:
-                self.dropout.configure(fg_color = 'firebrick1')
-                self.message_box_tune("float")
+                self.dropout.configure(fg_color = '#ffc7c7')
 
     def get_model_head_name(self, model_head_name: str):
         model_head_names = {"Regression" : "Regression",
@@ -313,7 +314,7 @@ class NetworkDesignFrame(ctk.CTkScrollableFrame):
                                          placeholder_text="10")
                     entry.grid(row=row_number, column=0, sticky="e", padx=10, pady=5)
                     self.reg_neurons.append(entry)
-                    self.reg_neurons[i].bind('<Return>', get_neurons[i])
+                    self.reg_neurons[i].bind('<KeyRelease>', get_neurons[i])
                 
                 option_menu = ctk.CTkOptionMenu(self.regression_frame,
                                                      values=["Identity", "ReLu", "Sigmoid",
