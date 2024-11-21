@@ -192,18 +192,18 @@ class NetworkDesignFrame(ctk.CTkScrollableFrame):
         get_input_text = self.hidden_size.get().strip()
         
         try:
-            eval(get_input_text)
-            self.config["hidden_size"] = get_input_text
+            self.config["hidden_size"] = int(float(get_input_text))
             print("hidden size = ", self.config["hidden_size"])
             self.hidden_size.configure(fg_color = 'forest green')
         except:
             try:
-                self.config["hidden_size"] = int(get_input_text)
+                eval(get_input_text)
+                self.config["hidden_size"] = get_input_text
                 print("hidden size = ", self.config["hidden_size"])
                 self.hidden_size.configure(fg_color = 'forest green')
             except:
                 self.hidden_size.configure(fg_color = 'firebrick1')
-                self.message_box_tune()
+                self.message_box_tune("integer")
             
     # Get number of lstm layers
     def get_num_layers(self, nlayer: str):
@@ -214,11 +214,12 @@ class NetworkDesignFrame(ctk.CTkScrollableFrame):
             pass
         
     # Message box for error in input with tune search space 
-    def message_box_tune(self):
+    def message_box_tune(self, data_type):
         tk.messagebox.showinfo(
             title="Error",
-            message="Input should be integer or Tune Search Space API command: " +
+            message="Input should be " + data_type + " or Tune Search Space API command: " +
             "https://docs.ray.io/en/latest/tune/api/search_space.html")
+
             
     # Get number of lstm layers
     def get_dropout(self, dummy: str):
@@ -226,25 +227,18 @@ class NetworkDesignFrame(ctk.CTkScrollableFrame):
         get_input_text = self.dropout.get().strip()
         
         try:
-            eval(get_input_text)
-            self.config["dropout"] = get_input_text
-            print("Dropout rate = ", self.config["dropout"])
-            
-        except:
-            self.dropout.configure(fg_color = 'firebrick1')
-            tk.messagebox.showinfo(
-                title="Error", 
-                message="Input should be integer or Tune Search Space API command")
-            
-        try:
-            self.config["dropout"] = float(get_input_text)
-            print("Dropout rate = ", self.config["dropout"])
+            self.config["dropout"] = int(float(get_input_text))
+            print("drop out rate = ", self.config["dropout"])
             self.dropout.configure(fg_color = 'forest green')
         except:
-            self.dropout.configure(fg_color = 'firebrick1')
-            tk.messagebox.showinfo(
-                title="Error", 
-                message="Input should be numeric")
+            try:
+                eval(get_input_text)
+                self.config["dropout"] = get_input_text
+                print("drop out rate = ", self.config["dropout"])
+                self.dropout.configure(fg_color = 'forest green')
+            except:
+                self.dropout.configure(fg_color = 'firebrick1')
+                self.message_box_tune("float")
 
     def get_model_head_name(self, model_head_name: str):
         model_head_names = {"Regression" : "Regression",

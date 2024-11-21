@@ -5,6 +5,7 @@ from hydroecolstm.model.ea_lstm import Ea_Lstm_Linears
 from hydroecolstm.train.trainer import Trainer
 from CTkToolTip import CTkToolTip
 import torch
+from ray import tune
 
 class TrainTestFrame(ctk.CTkScrollableFrame):
     def __init__(self, container=None, config=None, globalData=None):
@@ -205,13 +206,13 @@ class TrainTestFrame(ctk.CTkScrollableFrame):
         get_input_text = self.nepoch.get().strip()
         
         try:
-            eval(get_input_text)
-            self.config["n_epochs"] = get_input_text
+            self.config["n_epochs"] = int(float(get_input_text))
             print("Number of epochs = ", self.config["n_epochs"])
             self.nepoch.configure(fg_color = 'forest green')
         except:
             try:
-                self.config["n_epochs"] = int(get_input_text)
+                eval(get_input_text)
+                self.config["n_epochs"] = get_input_text
                 print("Number of epochs = ", self.config["n_epochs"])
                 self.nepoch.configure(fg_color = 'forest green')
             except:
@@ -224,13 +225,13 @@ class TrainTestFrame(ctk.CTkScrollableFrame):
         get_input_text = self.learning_rate.get().strip()
         
         try:
-            eval(get_input_text)
-            self.config["learning_rate"] = get_input_text
+            self.config["learning_rate"] = float(get_input_text)
             print("learning rate = ", self.config["learning_rate"])
             self.learning_rate.configure(fg_color = 'forest green')
         except:
             try:
-                self.config["learning_rate"] = float(get_input_text)
+                eval(get_input_text)
+                self.config["learning_rate"] = get_input_text
                 print("learning rate = ", self.config["learning_rate"])
                 self.learning_rate.configure(fg_color = 'forest green')
             except:
@@ -244,13 +245,13 @@ class TrainTestFrame(ctk.CTkScrollableFrame):
         get_input_text = self.warmup_length.get().strip()
         
         try:
-            eval(get_input_text)
-            self.config["warmup_length"] = get_input_text
+            self.config["warmup_length"] = int(float(get_input_text))
             print("Warm up length = ", self.config["warmup_length"])
             self.warmup_length.configure(fg_color = 'forest green')
         except:
             try:
-                self.config["warmup_length"] = int(get_input_text)
+                eval(get_input_text)
+                self.config["warmup_length"] = get_input_text
                 print("learning rate = ", self.config["warmup_length"])
                 self.warmup_length.configure(fg_color = 'forest green')
             except:
@@ -264,13 +265,13 @@ class TrainTestFrame(ctk.CTkScrollableFrame):
         get_input_text = self.sequence_length.get().strip()
         
         try:
-            eval(get_input_text)
-            self.config["sequence_length"] = get_input_text
+            self.config["sequence_length"] = int(float(get_input_text))
             print("sequence length = ", self.config["sequence_length"])
             self.sequence_length.configure(fg_color = 'forest green')
         except:
             try:
-                self.config["sequence_length"] = int(get_input_text)
+                eval(get_input_text)
+                self.config["sequence_length"] = get_input_text
                 print("learning rate = ", self.config["sequence_length"])
                 self.sequence_length.configure(fg_color = 'forest green')
             except:
@@ -284,13 +285,12 @@ class TrainTestFrame(ctk.CTkScrollableFrame):
         get_input_text = self.batch_size.get().strip()
         
         try:
-            eval(get_input_text)
-            self.config["batch_size"] = get_input_text
+            self.config["batch_size"] = int(float(get_input_text))
             print("sequence length = ", self.config["batch_size"])
             self.batch_size.configure(fg_color = 'forest green')
         except:
             try:
-                self.config["batch_size"] = int(get_input_text)
+                eval(get_input_text)
                 print("batch size = ", self.config["batch_size"])
                 self.batch_size.configure(fg_color = 'forest green')
             except:
@@ -304,13 +304,13 @@ class TrainTestFrame(ctk.CTkScrollableFrame):
         get_input_text = self.patience.get().strip()
         
         try:
-            eval(get_input_text)
-            self.config["patience"] = get_input_text
+            self.config["patience"] = int(float(get_input_text))
             print("sequence length = ", self.config["patience"])
             self.patience.configure(fg_color = 'forest green')
         except:
             try:
-                self.config["patience"] = int(get_input_text)
+                eval(get_input_text)
+                self.config["patience"] = get_input_text
                 print("patience length = ", self.config["patience"])
                 self.patience.configure(fg_color = 'forest green')
             except:
