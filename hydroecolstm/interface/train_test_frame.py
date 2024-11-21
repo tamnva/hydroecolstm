@@ -27,6 +27,11 @@ class TrainTestFrame(ctk.CTkScrollableFrame):
         self.tabview.add("2. Trainer")
         self.tabview.tab("2. Trainer").grid_columnconfigure((0,1), weight=1)
         
+        # Tooltip for tune seach space api
+        self.ray_tooltip = ('Or input the tune Search Space API command, ' +
+                            'e.g., tune.grid_search([20, 30]). Please see:' + 
+                            'https://docs.ray.io/en/latest/tune/api/search_space.html')
+  
         # ---------------------------------------------Initial state dicts      
         # Load model state dict
         self.load_model_label = ctk.CTkLabel(self.tabview.tab("1. Initial state dicts"), 
@@ -52,7 +57,7 @@ class TrainTestFrame(ctk.CTkScrollableFrame):
                              placeholder_text="5")
                
         self.nepoch.grid(row=1, column=0, sticky = "w")
-        self.nepoch.bind('<KeyRelease>', self.get_nepoch)
+        self.nepoch.bind('<Return>', self.get_nepoch)
         CTkToolTip(self.nepoch, delay=0.1, bg_color = 'orange', justify = "left",
                    text_color = 'black', anchor='w',  wraplength=250, 
                    message='Number of training epochs (positive integer number)') 
@@ -64,7 +69,7 @@ class TrainTestFrame(ctk.CTkScrollableFrame):
         self.learning_rate= ctk.CTkEntry(master=self.tabview.tab("2. Trainer"),
                              placeholder_text="0.01")
         self.learning_rate.grid(row=3, column=0, sticky = "w")
-        self.learning_rate.bind('<KeyRelease>', self.get_learning_rate)
+        self.learning_rate.bind('<Return>', self.get_learning_rate)
         CTkToolTip(self.learning_rate, delay=0.1, bg_color = 'orange', justify = "left",
                    text_color = 'black', anchor='w',  wraplength=250, 
                    message='Learning rate for gradient descent (positive real number)') 
@@ -76,7 +81,7 @@ class TrainTestFrame(ctk.CTkScrollableFrame):
         self.warmup_length= ctk.CTkEntry(master=self.tabview.tab("2. Trainer"),
                              placeholder_text="30") 
         self.warmup_length.grid(row=5, column=0, sticky = "w")
-        self.warmup_length.bind('<KeyRelease>', self.get_warmup_length)
+        self.warmup_length.bind('<Return>', self.get_warmup_length)
         CTkToolTip(self.warmup_length, delay=0.1, bg_color = 'orange', justify = "left",
                    text_color = 'black', anchor='w',  wraplength=250, 
                    message='The number of timesteps used for warm-up. \n' +
@@ -91,7 +96,7 @@ class TrainTestFrame(ctk.CTkScrollableFrame):
         self.sequence_length= ctk.CTkEntry(master=self.tabview.tab("2. Trainer"),
                              placeholder_text="720") 
         self.sequence_length.grid(row=7, column=0, sticky = "w")
-        self.sequence_length.bind('<KeyRelease>', self.get_sequence_length)
+        self.sequence_length.bind('<Return>', self.get_sequence_length)
         CTkToolTip(self.sequence_length, delay=0.1, bg_color = 'orange', justify = "left",
                    text_color = 'black', anchor='w',  wraplength=250, 
                    message="The number of timesteps in each sample dataset. \n" + 
@@ -107,7 +112,7 @@ class TrainTestFrame(ctk.CTkScrollableFrame):
         self.batch_size= ctk.CTkEntry(master=self.tabview.tab("2. Trainer"),
                              placeholder_text="3") 
         self.batch_size.grid(row=9, column=0, sticky = "w")
-        self.batch_size.bind('<KeyRelease>', self.get_batch_size)
+        self.batch_size.bind('<Return>', self.get_batch_size)
         CTkToolTip(self.batch_size, delay=0.1, bg_color = 'orange', justify = "left",
                    text_color = 'black', anchor='w',  wraplength=250, 
                    message="Please see sequence length for help") 
@@ -119,7 +124,7 @@ class TrainTestFrame(ctk.CTkScrollableFrame):
         self.patience= ctk.CTkEntry(master=self.tabview.tab("2. Trainer"),
                              placeholder_text="20") 
         self.patience.grid(row=1, column=2, sticky = "w")
-        self.patience.bind('<KeyRelease>', self.get_patience_length)
+        self.patience.bind('<Return>', self.get_patience_length)
         CTkToolTip(self.patience, delay=0.1, bg_color = 'orange', justify = "left",
                    text_color = 'black', anchor='w',  wraplength=250, 
                    message="The number of epochs to wait (before stopping) to \n" + 
@@ -196,52 +201,122 @@ class TrainTestFrame(ctk.CTkScrollableFrame):
         
     # Get number of epochs
     def get_nepoch(self, dummy):
-        try:
-            self.config["n_epochs"] = int(self.nepoch.get().strip())
-            print(f"Number of epochs = {self.config['n_epochs']}")
-        except:
-            tk.messagebox.showinfo(title="Error", message="Input should be integer")
+        # Get number of hidden layers
+        get_input_text = self.nepoch.get().strip()
         
+        try:
+            eval(get_input_text)
+            self.config["n_epochs"] = get_input_text
+            print("Number of epochs = ", self.config["n_epochs"])
+            self.nepoch.configure(fg_color = 'forest green')
+        except:
+            try:
+                self.config["n_epochs"] = int(get_input_text)
+                print("Number of epochs = ", self.config["n_epochs"])
+                self.nepoch.configure(fg_color = 'forest green')
+            except:
+                self.nepoch.configure(fg_color = 'firebrick1')
+                self.message_box_tune("integer")
+                
     # Get learning_rate
     def get_learning_rate(self, dummy):
+        
+        get_input_text = self.learning_rate.get().strip()
+        
         try:
-            self.config["learning_rate"]  = float(self.learning_rate.get().strip())
-            print(f"Learning rate = {self.config['learning_rate']}")
+            eval(get_input_text)
+            self.config["learning_rate"] = get_input_text
+            print("learning rate = ", self.config["learning_rate"])
+            self.learning_rate.configure(fg_color = 'forest green')
         except:
-            tk.messagebox.showinfo(title="Error", message="Input should be numeric")
+            try:
+                self.config["learning_rate"] = float(get_input_text)
+                print("learning rate = ", self.config["learning_rate"])
+                self.learning_rate.configure(fg_color = 'forest green')
+            except:
+                self.learning_rate.configure(fg_color = 'firebrick1')
+                self.message_box_tune("float")
+                
 
     # Get warm up length
     def get_warmup_length(self, dummy):
+
+        get_input_text = self.warmup_length.get().strip()
+        
         try:
-            self.config["warmup_length"] =  int(self.warmup_length.get().strip()) 
-            print(f"Warm-up length = {self.config['warmup_length']}")  
+            eval(get_input_text)
+            self.config["warmup_length"] = get_input_text
+            print("Warm up length = ", self.config["warmup_length"])
+            self.warmup_length.configure(fg_color = 'forest green')
         except:
-            tk.messagebox.showinfo(title="Error", message="Input should be integer")
-     
+            try:
+                self.config["warmup_length"] = int(get_input_text)
+                print("learning rate = ", self.config["warmup_length"])
+                self.warmup_length.configure(fg_color = 'forest green')
+            except:
+                self.warmup_length.configure(fg_color = 'firebrick1')
+                self.message_box_tune("integer")
+                
+                
     # Get learning_rate
     def get_sequence_length(self, dummy):
+        
+        get_input_text = self.sequence_length.get().strip()
+        
         try:
-            self.config["sequence_length"]  = int(self.sequence_length.get().strip())
-            print(f"Sequence length = {self.config['sequence_length']}")
+            eval(get_input_text)
+            self.config["sequence_length"] = get_input_text
+            print("sequence length = ", self.config["sequence_length"])
+            self.sequence_length.configure(fg_color = 'forest green')
         except:
-            tk.messagebox.showinfo(title="Error", message="Input should be integer")
+            try:
+                self.config["sequence_length"] = int(get_input_text)
+                print("learning rate = ", self.config["sequence_length"])
+                self.sequence_length.configure(fg_color = 'forest green')
+            except:
+                self.sequence_length.configure(fg_color = 'firebrick1')
+                self.message_box_tune("integer")
+                
 
     # Get learning_rate
     def get_batch_size(self, dummy):
+        
+        get_input_text = self.batch_size.get().strip()
+        
         try:
-            self.config["batch_size"]  = int(self.batch_size.get().strip())
-            print(f"Batch size = {self.config['batch_size']}")
+            eval(get_input_text)
+            self.config["batch_size"] = get_input_text
+            print("sequence length = ", self.config["batch_size"])
+            self.batch_size.configure(fg_color = 'forest green')
         except:
-            tk.messagebox.showinfo(title="Error", message="Input should be integer")
+            try:
+                self.config["batch_size"] = int(get_input_text)
+                print("batch size = ", self.config["batch_size"])
+                self.batch_size.configure(fg_color = 'forest green')
+            except:
+                self.batch_size.configure(fg_color = 'firebrick1')
+                self.message_box_tune("integer")
+                
 
     # Get learning_rate
     def get_patience_length(self, dummy):
-        try:
-            self.config["patience"]  = int(self.patience.get().strip())
-            print(f"Patience = {self.config['patience']}")
-        except:
-            tk.messagebox.showinfo(title="Error", message="Input should be integer")
         
+        get_input_text = self.patience.get().strip()
+        
+        try:
+            eval(get_input_text)
+            self.config["patience"] = get_input_text
+            print("sequence length = ", self.config["patience"])
+            self.patience.configure(fg_color = 'forest green')
+        except:
+            try:
+                self.config["patience"] = int(get_input_text)
+                print("patience length = ", self.config["patience"])
+                self.patience.configure(fg_color = 'forest green')
+            except:
+                self.patience.configure(fg_color = 'firebrick1')
+                self.message_box_tune("integer")
+                
     # Get number of lstm layers
     def loss_function(self, method: str):
         loss_fn = {'Root Mean Square Error': "RMSE",
@@ -280,6 +355,13 @@ class TrainTestFrame(ctk.CTkScrollableFrame):
         else:
             self.load_model.configure(text = "Load model")
             self.globalData['init_state_dicts'] = False
+
+    # Message box for error in input with tune search space 
+    def message_box_tune(self, data_type):
+        tk.messagebox.showinfo(
+            title="Error",
+            message="Input should be " + data_type + " or Tune Search Space API command: " +
+            "https://docs.ray.io/en/latest/tune/api/search_space.html")
 
      
     def run_train_test(self):

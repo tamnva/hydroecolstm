@@ -30,8 +30,8 @@ class NetworkDesignFrame(ctk.CTkScrollableFrame):
         self.tabview.add("2. Model head")
         self.tabview.tab("2. Model head").grid_columnconfigure((0), weight=1)
         
-        self.ray_tooltip = ('Or input the tune Search Space API command:' +
-                            '(e.g., tune.grid_search([20, 30]). Please see:' + 
+        self.ray_tooltip = ('Or input the tune Search Space API command, ' +
+                            'e.g., tune.grid_search([20, 30]). Please see:' + 
                             'https://docs.ray.io/en/latest/tune/api/search_space.html')
         
         ctk.CTkButton(master=self,  anchor='w', fg_color='gray',
