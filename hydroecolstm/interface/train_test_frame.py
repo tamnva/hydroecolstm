@@ -2,7 +2,7 @@ import tkinter as tk
 import customtkinter as ctk
 from hydroecolstm.model.lstm_linears import Lstm_Linears
 from hydroecolstm.model.ea_lstm import Ea_Lstm_Linears
-from hydroecolstm.train.trainer import Trainer
+from hydroecolstm.model_run import run_config, forward_run
 from CTkToolTip import CTkToolTip
 import torch
 from ray import tune
@@ -375,46 +375,24 @@ class TrainTestFrame(ctk.CTkScrollableFrame):
                                message="Trainning will start after closing this box")
         
         try:
-            if self.config["model_class"] == "LSTM":
-                self.globalData["model"] = Lstm_Linears(config=self.config)
-            else:
-                self.globalData["model"] = Ea_Lstm_Linears(config=self.config)
-                
-            print("done create model")
+            
+            model, data, best_config = run_config(self.config)
+
+            # Forward run
+            data = forward_run(model, data)
+            
+            # Update global data
+            self.globalData.update(data)
+            self.globalData["model"] = model
+            self.globalData["best_config"] = best_config
+            self.globalData["config"] = self.config
             
             # Initialize weights, biases
             if self.globalData['init_state_dicts']:
                 self.globalData["model"].load_state_dict(
                     torch.load(self.globalData['init_state_dicts_file']))
-                
-            # Train the model
-            self.globalData["trainer"] = Trainer(config=self.config, 
-                                               model=self.globalData["model"])
             
-            
-            print("done initialize trainer")
-            self.globalData["model"] = self.globalData["trainer"].train(
-                self.globalData["x_train_scale"],
-                self.globalData["y_train_scale"],
-                self.globalData["x_valid_scale"],
-                self.globalData["y_valid_scale"])
-            print("done train model")
-            # Run forward test the model
-            y_train_simulated_scale = self.globalData["model"].evaluate(
-                self.globalData["x_train_scale"])
-            y_valid_simulated_scale = self.globalData["model"].evaluate(
-                self.globalData["x_valid_scale"])
-            y_test_simulated_scale = self.globalData["model"].evaluate(
-                self.globalData["x_test_scale"])
-
-            # Inverse scale/transform back simulated result to real scale
-            self.globalData["y_train_simulated"] =\
-                self.globalData["y_scaler"].inverse(y_train_simulated_scale)
-            self.globalData["y_valid_simulated"] =\
-                self.globalData["y_scaler"].inverse(y_valid_simulated_scale)
-            self.globalData["y_test_simulated"] =\
-                self.globalData["y_scaler"].inverse(y_test_simulated_scale)
-                
+ 
             tk.messagebox.showinfo(title="Message box",
                                    message="Finished training/testing")
         except:

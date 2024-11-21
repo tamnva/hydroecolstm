@@ -6,8 +6,7 @@ from pandastable import Table
 import tkcalendar as tkc
 from CTkListbox import CTkListbox
 from CTkToolTip import CTkToolTip
-from hydroecolstm.data.scaler import Scaler, get_scaler_name
-from hydroecolstm.data.read_data import read_train_valid_test_data
+from hydroecolstm.data.read_data import read_scale_data
    
 class DataFrame(ctk.CTkScrollableFrame):
     def __init__(self, container=None, config=None, globalData=None):
@@ -540,7 +539,7 @@ class DataFrame(ctk.CTkScrollableFrame):
         self.config['object_id'] = [all_items[i] for i in select_index]
         
         # Get train and test data
-        data = read_train_valid_test_data(self.config)
+        data = read_scale_data(self.config)
         
         # Update global data
         self.globalData.update(data)
@@ -549,43 +548,9 @@ class DataFrame(ctk.CTkScrollableFrame):
         del data
          
         # Show message box
-        print("Done data split (train, valid, test)")
-        
-        #--------------------------------------------------------Transform data
-        # Get scaler name
-        self.globalData["x_scaler_method"], \
-            self.globalData["y_scaler_method"] = get_scaler_name(self.config)
-        print("done get scaler")
-        
-        # Scale x_train and x_test
-        self.globalData["x_scaler"] = Scaler()
-        self.globalData["x_scaler"].fit(x=self.globalData["x_train"], 
-                                        method=self.globalData["x_scaler_method"])
-        
-        self.globalData["x_train_scale"] =\
-            self.globalData["x_scaler"].transform(x=self.globalData["x_train"])
-        print("done x train scale ")    
-            
-        self.globalData["x_valid_scale"] =\
-            self.globalData["x_scaler"].transform(x=self.globalData["x_valid"]) 
-        print("done x valid scale")
-            
-        self.globalData["x_test_scale"] =\
-            self.globalData["x_scaler"].transform(x=self.globalData["x_test"])        
-        
-        # Scale y_train and y_test
-        self.globalData["y_scaler"] = Scaler()
-        self.globalData["y_scaler"].fit(x=self.globalData["y_train"], 
-                                        method=self.globalData["y_scaler_method"])
-        self.globalData["y_train_scale"] =\
-            self.globalData["y_scaler"].transform(x=self.globalData["y_train"])
-        print("done y scale")
-        self.globalData["y_valid_scale"] =\
-            self.globalData["y_scaler"].transform(x=self.globalData["y_valid"])   
-        print("done y valid scale")
-        # Show message box
-        tk.messagebox.showinfo(title="Message box", 
-                               message="Done data split + transform")
+        tk.messagebox.showinfo(
+            title="Message box",
+            message="Done data split (train, valid, test) and transform")
         
     def get_first_tensor(self): 
         
