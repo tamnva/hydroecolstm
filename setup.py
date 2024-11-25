@@ -24,7 +24,7 @@ setup(
     python_requires='>=3.8',
     install_requires=['pandas>=2.2.0',
                       'numpy>=1.24.4',
-                      'torch>=2.1.0',
+                      'pytorch>=2.3.0',
                       'pandastable>=0.13.1',
                       'tkcalendar>=1.6.1',
                       'PyYAML>=6.0.1',
