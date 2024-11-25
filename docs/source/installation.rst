@@ -2,7 +2,7 @@ Installation
 ===========
 .. Installation with Anaconda
 
-HydroEcoLSTM was developed based on many other packages. To avoid conflict with other pre-installed packages, create a virtual environment to install HydroEcoLSMT and its dependencies. To do that, we could install Anaconda from `here <https://www.anaconda.com/>`_. Download the `environment file <https://github.com/tamnva/hydroecolstm/tree/master/environments/>`_. Then open the Anaconda PowerShell Prompt:
+HydroEcoLSTM was developed based on many other packages. To avoid conflict with other pre-installed packages, create a virtual environment to install HydroEcoLSMT and its dependencies. To do that, we could install Anaconda from `here <https://www.anaconda.com/>`_. Next, you can download the `environment file <https://github.com/tamnva/hydroecolstm/tree/master/environments/>`_. Then open the Anaconda PowerShell Prompt and type the following commands:
 
 .. code-block:: python
     

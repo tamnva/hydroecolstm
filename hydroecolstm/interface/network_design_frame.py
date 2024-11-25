@@ -21,7 +21,8 @@ class NetworkDesignFrame(ctk.CTkScrollableFrame):
     def __create_widgets(self): 
         
         # create tabs
-        self.tabview = ctk.CTkTabview(master=self, width = 750, border_width=1.5,
+        self.tabview = ctk.CTkTabview(master=self, width = 750, 
+                                      border_width=1.5,
                                       fg_color = "transparent")
         self.tabview.pack(fill='both',expand=1)
         self.tabview.add("1. Model class")
@@ -41,13 +42,13 @@ class NetworkDesignFrame(ctk.CTkScrollableFrame):
                       text="Show model head and classes",
                       command=self.__show_model_head_class).pack(anchor="e", pady = 10)
         
-        self.error_label = ctk.CTkLabel(master=self,  anchor='w', fg_color='transparent',
-                      text=" ", text_color = "red")
+        self.error_label = ctk.CTkLabel(master=self,  anchor='w', text=" ",
+                                        fg_color='transparent', text_color = "red")
         self.error_label.pack(anchor="w", padx = 10)
         
         # ----------------------------------------------------------2. Model heads
         self.intro_label = ctk.CTkLabel(self.tabview.tab("2. Model head"), 
-                                                   text="1. Select model head")
+                                        text="1. Select model head")
         self.intro_label.grid(row=0, column=0, padx = 10, pady=(5,5), sticky="w")
         
         self.model_head_type =\
@@ -182,7 +183,7 @@ class NetworkDesignFrame(ctk.CTkScrollableFrame):
                    'from a Bernoulli distribution. Commons values are from 0.2 to 0.5')
 
         
-    # ---------------------------------------------content of load data tab
+    # -------------------------------------------------content of load data tab
     def __show_model_head_class(self):
         
         # Get link to the image
