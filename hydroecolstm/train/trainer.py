@@ -232,7 +232,7 @@ class EarlyStopping:
         self.counter = 0
         self.best_score = None
         self.early_stop = False
-        self.val_loss_min = np.Inf
+        self.val_loss_min = np.inf
         self.delta = delta
         self.trace_func = trace_func
     def __call__(self, val_loss, model):
