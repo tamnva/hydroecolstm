@@ -34,7 +34,7 @@ setup(
                       'CTkMessagebox',
                       'CTkListbox',
                       'matplotlib',
-                      'ray'
+                      'ray[tune]'
                       ],
 
     classifiers=[
