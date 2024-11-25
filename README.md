@@ -10,11 +10,20 @@
 
 ### Quick start
 
+Installation with Anaconda using environment ([environment.yml](https://github.com/tamnva/hydroecolstm/tree/master/environments)) file, please see the [package documentation](https://hydroecolstm.readthedocs.io/en/latest/installation.html) for more detail.
+
 ```python
-# Install the package from PyPi
+# 1. Create the environment from environment.yml file (see link above)
+conda env create -f environment.yml
+conda activate hydroecolstm_env
+
+# 2. Install the lastest version from github
+pip install git+https://github.com/tamnva/hydroecolstm.git
+
+# Or Install from PyPI (stable version)
 pip install hydroecolstm
 
-# Import the package and show the GUI (please see below)
+# 3. Import the package and show the GUI (please see below)
 import hydroecolstm
 hydroecolstm.interface.show_gui()
 ```
