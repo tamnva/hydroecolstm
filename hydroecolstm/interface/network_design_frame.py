@@ -39,7 +39,7 @@ class NetworkDesignFrame(ctk.CTkScrollableFrame):
         
         ctk.CTkButton(master=self,  anchor='w', fg_color='gray',
                       text="Show model head and classes",
-                      command=self.show_model_head_class).pack(anchor="e", pady = 10)
+                      command=self.__show_model_head_class).pack(anchor="e", pady = 10)
         
         self.error_label = ctk.CTkLabel(master=self,  anchor='w', fg_color='transparent',
                       text=" ", text_color = "red")
@@ -54,7 +54,7 @@ class NetworkDesignFrame(ctk.CTkScrollableFrame):
             ctk.CTkOptionMenu(self.tabview.tab("2. Model head"),
                               values=["Regression",
                                       "Gaussian Mixture Model (GMM)"],
-                              command=self.get_model_head_name)
+                              command=self.__get_model_head_name)
         
         self.model_head_type.grid(row=1, column=0, padx = 10, pady=5, sticky="w")        
         CTkToolTip(self.model_head_type, delay=0.1, bg_color = 'orange',
@@ -77,7 +77,7 @@ class NetworkDesignFrame(ctk.CTkScrollableFrame):
         
         self.regression_nlayers = ctk.CTkOptionMenu(self.regression_frame,
                           values=list(map(str, range(1, 6))),
-                          command=self.create_entry_regression_model)
+                          command=self.__create_entry_regression_model)
         self.regression_nlayers.grid(row=1, column=0, sticky="w", padx=10, pady=5)        
         CTkToolTip(self.regression_nlayers, delay=0.1, bg_color = 'orange',
                    text_color = 'black', anchor='w',  wraplength=250, 
@@ -103,7 +103,7 @@ class NetworkDesignFrame(ctk.CTkScrollableFrame):
         self.option_menu = ctk.CTkOptionMenu(self.regression_frame,
                                              values=["Identity", "ReLu", "Sigmoid",
                                                      "Tanh", "Softplus"],
-                                             command=self.reg_get_acts_1)
+                                             command=self.__reg_get_acts_1)
         self.option_menu.grid(row=3, column=1, sticky="e", padx=10, pady=5)
         self.reg_activation_func = [self.option_menu]
                 
@@ -128,7 +128,7 @@ class NetworkDesignFrame(ctk.CTkScrollableFrame):
         
         self.model_class_type =\
             ctk.CTkOptionMenu(self.tabview.tab("1. Model class"),
-                              values=["LSTM","EA-LSTM"], command=self.get_model_class)
+                              values=["LSTM","EA-LSTM"], command=self.__get_model_class)
         CTkToolTip(self.model_class_type, delay=0.1, bg_color = 'orange', justify = "left",
                    text_color = 'black', anchor='w',  wraplength=250, 
                    message='The flow of data from input => output is as follows: ' + 
@@ -153,14 +153,14 @@ class NetworkDesignFrame(ctk.CTkScrollableFrame):
                    '(most problems should work with any values between 20 to 516). ' +
                    self.ray_tooltip)
         
-        self.hidden_size.bind('<KeyRelease>', self.get_hidden_size)
+        self.hidden_size.bind('<KeyRelease>', self.__get_hidden_size)
 
         self.nlayers_label = ctk.CTkLabel(self.tabview.tab("1. Model class"), 
                                                text="3. Number of LSTM layers")
         self.nlayers_label.pack(anchor="w", pady = (4,4))
         self.nlayers= ctk.CTkOptionMenu(self.tabview.tab("1. Model class"),
                                              values=list(map(str,list(range(1,6,1)))),
-                                             command=self.get_num_layers) 
+                                             command=self.__get_num_layers) 
         self.nlayers.pack(anchor="w", pady = (4,4))
         CTkToolTip(self.nlayers, delay=0.1, bg_color = 'orange', justify = "left",
                    text_color = 'black', anchor='w',  wraplength=250, 
@@ -173,7 +173,7 @@ class NetworkDesignFrame(ctk.CTkScrollableFrame):
         self.dropout = ctk.CTkEntry(master=self.tabview.tab("1. Model class"),
                                         placeholder_text="0.30")
         self.dropout.pack(anchor="w", pady = (4,4))
-        self.dropout.bind('<KeyRelease>', self.get_dropout)
+        self.dropout.bind('<KeyRelease>', self.__get_dropout)
         CTkToolTip(self.dropout, delay=0.1, bg_color = 'orange', justify = "left",
                    text_color = 'black', anchor='w',  wraplength=250, 
                    message='This value is only used if the number of layers > 1.' +
@@ -183,7 +183,7 @@ class NetworkDesignFrame(ctk.CTkScrollableFrame):
 
         
     # ---------------------------------------------content of load data tab
-    def show_model_head_class(self):
+    def __show_model_head_class(self):
         
         # Get link to the image
         image = Path(__file__).parents[1]
@@ -195,7 +195,7 @@ class NetworkDesignFrame(ctk.CTkScrollableFrame):
         self.new_window = ctk.CTkToplevel(self, fg_color = "white")
         ctk.CTkLabel(master=self.new_window, image=button_image, text = "").pack()
             
-    def get_hidden_size(self, dummy):
+    def __get_hidden_size(self, dummy):
         # Get number of hidden layers
         get_input_text = self.hidden_size.get().strip()
         
@@ -213,11 +213,11 @@ class NetworkDesignFrame(ctk.CTkScrollableFrame):
                 self.error_label.configure(text=" ")
             except:
                 self.hidden_size.configure(fg_color = '#ffc7c7')
-                self.error_label.configure(text=self.message_text_tune("integer"), 
+                self.error_label.configure(text=self.__message_text_tune("integer"), 
                                            text_color = "red")
             
     # Get number of lstm layers
-    def get_num_layers(self, nlayer: str):
+    def __get_num_layers(self, nlayer: str):
         try:
             self.config["num_layers"] = int(nlayer)
             print("num_layers = ", self.config["num_layers"])
@@ -225,14 +225,14 @@ class NetworkDesignFrame(ctk.CTkScrollableFrame):
             pass
         
     # Message box for error in input with tune search space 
-    def message_text_tune(self, data_type):
+    def __message_text_tune(self, data_type):
         out_message=("Input should be " + data_type + " or Tune Search Space API command: " +
             "https://docs.ray.io/en/latest/tune/api/search_space.html")
         return out_message
 
             
     # Get number of lstm layers
-    def get_dropout(self, dummy: str):
+    def __get_dropout(self, dummy: str):
         
         get_input_text = self.dropout.get().strip()
         
@@ -249,7 +249,7 @@ class NetworkDesignFrame(ctk.CTkScrollableFrame):
             except:
                 self.dropout.configure(fg_color = '#ffc7c7')
 
-    def get_model_head_name(self, model_head_name: str):
+    def __get_model_head_name(self, model_head_name: str):
         model_head_names = {"Regression" : "Regression",
                             "Gaussian Mixture Model (GMM)": "GMM"}
         
@@ -272,7 +272,7 @@ class NetworkDesignFrame(ctk.CTkScrollableFrame):
             except:
                 pass
  
-    def get_model_class(self, model_class: str):
+    def __get_model_class(self, model_class: str):
         self.config["model_class"] = model_class
         print("Model class name = ", self.config["model_class"])
         
@@ -281,7 +281,7 @@ class NetworkDesignFrame(ctk.CTkScrollableFrame):
                                    message="This model class takes a lot of time to train " +
                                    "need to improve the forward pass for this model class")         
             
-    def create_entry_regression_model(self, nlayers: str):
+    def __create_entry_regression_model(self, nlayers: str):
         print("number of layer", int(nlayers))
         
         # try to hide all entry
@@ -309,11 +309,11 @@ class NetworkDesignFrame(ctk.CTkScrollableFrame):
             self.config["Regression"]["activation_function"] = ["Identity" for i in 
                                                          range(int(nlayers))]
 
-            get_neurons = {0: self.reg_get_neurons_1, 1: self.reg_get_neurons_2,
-                           2: self.reg_get_neurons_3, 3: self.reg_get_neurons_4}
-            get_acts = {0: self.reg_get_acts_1, 1: self.reg_get_acts_2,
-                        2: self.reg_get_acts_3, 3: self.reg_get_acts_4,
-                        4: self.reg_get_acts_5}
+            get_neurons = {0: self.__reg_get_neurons_1, 1: self.__reg_get_neurons_2,
+                           2: self.__reg_get_neurons_3, 3: self.__reg_get_neurons_4}
+            get_acts = {0: self.__reg_get_acts_1, 1: self.__reg_get_acts_2,
+                        2: self.__reg_get_acts_3, 3: self.__reg_get_acts_4,
+                        4: self.__reg_get_acts_5}
             
             for i in range(int(nlayers)):
 
@@ -331,46 +331,48 @@ class NetworkDesignFrame(ctk.CTkScrollableFrame):
                 option_menu.grid(row=row_number, column=1, sticky="e", padx=10, pady=5)
                 self.reg_activation_func.append(option_menu)
                 row_number += 1
-    
-    # Function to get number of input neurons each layer - Make this code clearner
-    def reg_get_neurons_1(self, dummy):
-        try: 
-            self.config["Regression"]["num_neurons"][0] = int(self.reg_neurons[0].get().strip())
-            print("Num of neurons layer 1 = ",  self.config["Regression"]["num_neurons"][0])
+                
+    # Function get number of neuron in each output layer
+    def __get_num_neuron(self, layer):
+        try:
+            get_input_text = self.reg_neurons[layer].get().strip()
+            self.config["Regression"]["num_neurons"][layer] = int(float(get_input_text))
+            print("Num of neurons layer " + str(layer + 1) + " = ", 
+                  self.config["Regression"]["num_neurons"][layer])
+            self.reg_neurons[layer].configure(fg_color = '#d3ffc7')
+            CTkToolTip(self.reg_neurons[layer], delay=0.1, bg_color = 'orange',
+                       text_color = 'black', anchor='w',  wraplength=250, justify = "left",
+                       message='Input the number of neurons of the ' + 
+                       str(layer + 1) + ' layer (please give an integer number)')
         except:
-            tk.messagebox.showinfo(title="Error", message="Input should be integer")
-    def reg_get_neurons_2(self, dummy):
-        try: 
-            self.config["Regression"]["num_neurons"][1] = int(self.reg_neurons[1].get().strip())
-            print("Num of neurons layer 2 = ", self.config["Regression"]["num_neurons"][1])
-        except:
-            tk.messagebox.showinfo(title="Error", message="Input should be integer")
-    def reg_get_neurons_3(self, dummy):
-        try: 
-            self.config["Regression"]["num_neurons"][2] = int(self.reg_neurons[2].get().strip())
-            print("Num of neurons layer 3 = ", self.config["Regression"]["num_neurons"][2])
-        except:
-            tk.messagebox.showinfo(title="Error", message="Input should be integer")
-    def reg_get_neurons_4(self, dummy):
-        try: 
-            self.config["Regression"]["num_neurons"][3] = int(self.reg_neurons[3].get().strip())
-            print("Num of neurons layer 4 = ",  self.config["Regression"]["num_neurons"][3])
-        except:
-            tk.messagebox.showinfo(title="Error", message="Input should be integer")
+            self.reg_neurons[layer].configure(fg_color = '#ffc7c7')
+
+    # Functions to get number of input neurons each layer - Make this code clearner
+    def __reg_get_neurons_1(self, dummy):
+        self.__get_num_neuron(0)
+
+    def __reg_get_neurons_2(self, dummy):
+        self.__get_num_neuron(1)
+
+    def __reg_get_neurons_3(self, dummy):
+        self.__get_num_neuron(2)
+        
+    def __reg_get_neurons_4(self, dummy):
+        self.__get_num_neuron(3)
     
     # Function to get activation function of each layer - Make this code clearner
-    def reg_get_acts_1(self, dummy):
+    def __reg_get_acts_1(self, dummy):
         self.config["Regression"]["activation_function"][0] = dummy
         print("Activation function of layer 1 = ", dummy)
-    def reg_get_acts_2(self, dummy):
+    def __reg_get_acts_2(self, dummy):
         self.config["Regression"]["activation_function"][1] = dummy
         print("Activation function of layer 2 = ", dummy)
-    def reg_get_acts_3(self, dummy):
+    def __reg_get_acts_3(self, dummy):
         self.config["Regression"]["activation_function"][2] = dummy
         print("Activation function of layer 3 = ", dummy)
-    def reg_get_acts_4(self, dummy):
+    def __reg_get_acts_4(self, dummy):
         self.config["Regression"]["activation_function"][3] = dummy
         print("Activation function of layer 4 = ", dummy)
-    def reg_get_acts_5(self, dummy):
+    def __reg_get_acts_5(self, dummy):
         self.config["Regression"]["activation_function"][5] = dummy
         print("Activation function of layer 5 = ", dummy)
