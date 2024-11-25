@@ -157,6 +157,11 @@ class Trainer():
         self.loss_epoch = self._create_train_loss_df(train_loss_epoch, 
                                                      valid_loss_epoch, 
                                                      check_point)
+        
+        #self.loss_epoch.to_csv(
+        #    Path(self.out_dir, str(np.random.randint(1, 1e9)) + ".txt"), 
+        #    sep='\t'
+        #    )
 
         return self.model
     

@@ -537,7 +537,7 @@ class VisualizeFrame(ctk.CTkScrollableFrame):
         try:
             # Data for plot
 
-            loss=self.globalData["trainer"].loss
+            loss=self.globalData["loss_epoch"]
 
             # Make plot window
             plot_window=ToplevelWindow(window_name="Plot window")

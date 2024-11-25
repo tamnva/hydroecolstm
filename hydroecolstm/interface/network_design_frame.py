@@ -40,6 +40,11 @@ class NetworkDesignFrame(ctk.CTkScrollableFrame):
         ctk.CTkButton(master=self,  anchor='w', fg_color='gray',
                       text="Show model head and classes",
                       command=self.show_model_head_class).pack(anchor="e", pady = 10)
+        
+        self.error_label = ctk.CTkLabel(master=self,  anchor='w', fg_color='transparent',
+                      text=" ", text_color = "red")
+        self.error_label.pack(anchor="w", padx = 10)
+        
         # ----------------------------------------------------------2. Model heads
         self.intro_label = ctk.CTkLabel(self.tabview.tab("2. Model head"), 
                                                    text="1. Select model head")
@@ -198,14 +203,18 @@ class NetworkDesignFrame(ctk.CTkScrollableFrame):
             self.config["hidden_size"] = int(float(get_input_text))
             print("hidden size = ", self.config["hidden_size"])
             self.hidden_size.configure(fg_color = '#d3ffc7')
+            self.error_label.configure(text=" ")
         except:
             try:
                 eval(get_input_text)
                 self.config["hidden_size"] = get_input_text
                 print("hidden size = ", self.config["hidden_size"])
                 self.hidden_size.configure(fg_color = '#d3ffc7')
+                self.error_label.configure(text=" ")
             except:
                 self.hidden_size.configure(fg_color = '#ffc7c7')
+                self.error_label.configure(text=self.message_text_tune("integer"), 
+                                           text_color = "red")
             
     # Get number of lstm layers
     def get_num_layers(self, nlayer: str):
@@ -216,11 +225,10 @@ class NetworkDesignFrame(ctk.CTkScrollableFrame):
             pass
         
     # Message box for error in input with tune search space 
-    def message_box_tune(self, data_type):
-        tk.messagebox.showinfo(
-            title="Error",
-            message="Input should be " + data_type + " or Tune Search Space API command: " +
+    def message_text_tune(self, data_type):
+        out_message=("Input should be " + data_type + " or Tune Search Space API command: " +
             "https://docs.ray.io/en/latest/tune/api/search_space.html")
+        return out_message
 
             
     # Get number of lstm layers

@@ -8,7 +8,7 @@ import numpy as np
 import pandas as pd
 from matplotlib.backends.backend_tkagg import (FigureCanvasTkAgg, 
                                                NavigationToolbar2Tk)
-
+#import matplotlib.pyplot as plt 
 
 # Plot loss
 def plot_train_valid_loss(loss, plot_window, xlabel, ylabel, title, 
@@ -24,7 +24,9 @@ def plot_train_valid_loss(loss, plot_window, xlabel, ylabel, title,
     toolbar.pack(side=tk.BOTTOM, fill=tk.X)
             
     axes = figure.add_subplot()
-    epoch = loss.query('best_model == True').iloc[-1,:].epoch
+    
+    # Plus 1 to best epoch number as the epoch index starts from 0
+    epoch = np.where(loss.best_model == True)[0][0] + 1
     
     # Default plot setting
     
@@ -40,26 +42,26 @@ def plot_train_valid_loss(loss, plot_window, xlabel, ylabel, title,
     if best_model_legend == "": best_model_legend = "Best model at epoch " + str(epoch)
     
     try:
-        axes.plot(loss["epoch"], 
+        axes.plot(loss.index + 1, 
                   loss["train_loss"], 
                   label = train_legend, 
                   linestyle = train_line_style,
                   color = train_color)
     except:
-        axes.plot(loss["epoch"], 
+        axes.plot(loss.index + 1, 
                   loss["train_loss"], 
                   label = train_legend, 
                   linestyle = "dashed",
                   color = "coral")
     try:    
-        axes.plot(loss["epoch"], 
-                  loss["validation_loss"], 
+        axes.plot(loss.index + 1, 
+                  loss["valid_loss"], 
                   label=valid_legend, 
                   linestyle = valid_line_style,
                   color = valid_color)
     except:
-        axes.plot(loss["epoch"], 
-                  loss["validation_loss"], 
+        axes.plot(loss.index + 1, 
+                  loss["valid_loss"], 
                   label=valid_legend, 
                   color = "blue")
     axes.axvline(x=epoch, 
