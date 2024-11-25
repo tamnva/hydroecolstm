@@ -10,6 +10,9 @@ In each example folder contains the following subfolders and files
   - model.pt is the best model state dicts
 - config.yml
   - The configuration file to run this example
+- best_config.yml
+  - Incase of optimization with ray, the model will try to find the best configuration in the config.yml file. The result (best configuration from optimization with ray was saved as best_config.yml)
+
 - main.py
   - The python script to run this example with the ./config file
 
