@@ -114,6 +114,7 @@ def config_to_search_space(config, x_train, y_train, x_valid, y_valid):
     
 # Run with input with Dict[str:torch.Tensor] and torch.no_grad()
 def forward_run(model, data):
+
     y_train_simulated_scale = model.evaluate(data['x_train_scale'])
     y_valid_simulated_scale = model.evaluate(data['x_valid_scale'])
     y_test_simulated_scale = model.evaluate(data['x_test_scale'])

@@ -1,0 +1,50 @@
+dynamic_data_file:
+  - C:/examples/2_streamflow_isotope_simulation/data/timeseries_data.csv
+static_data_file:
+  - C:/examples/2_streamflow_isotope_simulation/data/static_data.csv
+output_directory:
+  - C:/examples/2_streamflow_isotope_simulation/results
+input_static_features:
+  - area
+input_dynamic_features:
+  - precipitation
+  - oxygen_isotope_precipitation
+  - temperature
+target_features:
+  - streamflow
+  - oxygen_isotope_streamflow
+object_id:
+  - Erlenbach
+  - Alp
+train_period: 
+  - 2016-06-01 00:00
+  - 2018-05-31 00:00
+valid_period: 
+  - 2018-06-01 00:00
+  - 2019-05-31 00:00
+test_period: 
+  - 2015-06-01 00:00
+  - 2016-05-31 00:00
+model_class: LSTM
+Regression:
+  activation_function:
+    - Identity
+  num_neurons:
+    - None
+  num_layers: 1
+scaler_input_dynamic_features:
+  - Z-score
+scaler_input_static_features:
+  - None
+scaler_target_features:
+  - Z-score
+hidden_size: 29
+num_layers: 1
+n_epochs: 209
+learning_rate: 0.001
+dropout: 0.3
+warmup_length: 30
+loss_function: RMSE
+sequence_length: 100
+batch_size: 4
+patience: 50

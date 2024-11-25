@@ -237,7 +237,7 @@ class NetworkDesignFrame(ctk.CTkScrollableFrame):
         get_input_text = self.dropout.get().strip()
         
         try:
-            self.config["dropout"] = int(float(get_input_text))
+            self.config["dropout"] = float(get_input_text)
             print("drop out rate = ", self.config["dropout"])
             self.dropout.configure(fg_color = '#d3ffc7')
         except:

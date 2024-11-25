@@ -21,7 +21,7 @@ hydroecolstm.interface.show_gui()
 
 ### The GUI
 
-- After lanching the GUI, you should see the following window (the latest version could look different)
+- After lanching the GUI, you should see the following window (the latest version could look different).
 
 <p align="center">
   <img src="https://github.com/tamnva/hydroecolstm/blob/master/docs/images/intro_figure.gif" width=100% title="hover text">

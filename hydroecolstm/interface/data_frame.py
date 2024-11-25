@@ -178,7 +178,7 @@ class DataFrame(ctk.CTkScrollableFrame):
         self.select_date_train.grid(row=2, column=2, padx = 10, pady=(5,5), sticky="w")    
         self.start_train = tkc.DateEntry(self.tabview.tab("2. Filter data"), 
                                          date_pattern= 'yyyy-mm-dd', width = 25,
-                                         year=1800, month=1, day=1, font=ctk.CTkFont(size=14))
+                                         year=2000, month=1, day=1, font=ctk.CTkFont(size=14))
         self.start_train.grid(row= 3,column=2, padx=30, pady=10, sticky='e')
         self.end_train = tkc.DateEntry(self.tabview.tab("2. Filter data"), 
                                        date_pattern= 'yyyy-mm-dd', width = 25,
@@ -196,7 +196,7 @@ class DataFrame(ctk.CTkScrollableFrame):
         self.select_date_valid.grid(row=5, column=2, padx = 10, pady=(5,5), sticky="w")    
         self.start_valid = tkc.DateEntry(self.tabview.tab("2. Filter data"), 
                                          date_pattern= 'yyyy-mm-dd', width = 25,
-                                         year=1800, month=1, day=1, font=ctk.CTkFont(size=14))
+                                         year=2010, month=1, day=1, font=ctk.CTkFont(size=14))
         CTkToolTip(self.select_date_valid, delay=0.1, bg_color = 'orange',
                    text_color = 'black', anchor='w', 
                    message='Select starting date (upper calender box) and \n' + 
@@ -205,7 +205,7 @@ class DataFrame(ctk.CTkScrollableFrame):
         self.start_valid.grid(row= 6,column=2, padx=30, pady=10, sticky='e')
         self.end_valid = tkc.DateEntry(self.tabview.tab("2. Filter data"), 
                                        date_pattern= 'yyyy-mm-dd', width = 25,
-                                       year=2018, month=1, day=1, font=ctk.CTkFont(size=14))
+                                       year=2015, month=1, day=1, font=ctk.CTkFont(size=14))
         self.end_valid.grid(row= 7,column=2, padx=30, pady=10, sticky='e')   
         
         # start testing calander  
@@ -214,7 +214,7 @@ class DataFrame(ctk.CTkScrollableFrame):
         self.select_date_test.grid(row=8, column=2, padx = 10, pady=(5,5), sticky="w")    
         self.start_test = tkc.DateEntry(self.tabview.tab("2. Filter data"), 
                                          date_pattern= 'yyyy-mm-dd', width = 25,
-                                         year=1800, month=1, day=1, font=ctk.CTkFont(size=14))
+                                         year=2015, month=1, day=1, font=ctk.CTkFont(size=14))
         CTkToolTip(self.select_date_test, delay=0.1, bg_color = 'orange',
                    text_color = 'black', anchor='w', 
                    message='Select starting date (upper calender box) and \n' + 
@@ -223,7 +223,7 @@ class DataFrame(ctk.CTkScrollableFrame):
         self.start_test.grid(row= 9,column=2, padx=30, pady=10, sticky='e')
         self.end_test = tkc.DateEntry(self.tabview.tab("2. Filter data"), 
                                        date_pattern= 'yyyy-mm-dd', width = 25,
-                                       year=2018, month=1, day=1, font=ctk.CTkFont(size=14))
+                                       year=2020, month=1, day=1, font=ctk.CTkFont(size=14))
         self.end_test.grid(row= 10,column=2, padx=30, pady=10, sticky='e')   
                
         #-----------------------------------------------------3. Transform data
@@ -538,10 +538,9 @@ class DataFrame(ctk.CTkScrollableFrame):
         select_index = self.object_id.curselection()
         self.config['object_id'] = [all_items[i] for i in select_index]
         
-        # Test if reading data work, in the train_test_frame we will read 
-        # and save data to globalData
+        # Read data, split, and transform
         data = read_scale_data(self.config)
-        del data
+        self.globalData.update(data)
         
         # Show message box
         tk.messagebox.showinfo(
@@ -549,28 +548,29 @@ class DataFrame(ctk.CTkScrollableFrame):
             message="Done test read data split (train, valid, test) and transform")
         
     def get_first_tensor(self): 
-        
+
         x_train=self.globalData["x_train"].copy()
         x_train_scale=self.globalData["x_train_scale"].copy()
         
-        
+
         if "input_static_features" in self.config: 
             col_names = self.config["input_dynamic_features"] +\
                 self.config["input_static_features"]
         else:
             col_names = self.config["input_dynamic_features"]        
-        
+
         x_train = pd.DataFrame(x_train[next(iter(x_train))])
         x_train.columns = [name + "_origignal" for name in col_names]
 
         x_train_scale = pd.DataFrame(x_train_scale[next(iter(x_train_scale))])
         x_train_scale.columns = [name + "_transform" for name in col_names]
-              
+     
         x_train_scale_cat = pd.concat([x_train, x_train_scale], axis=1)
-        
+
         return x_train_scale_cat
         
     def display_orig_trans_data(self):
+        print(self.get_first_tensor())
         try:
             self.table = Table(tk.Toplevel(self), dataframe=self.get_first_tensor(), 
                                showtoolbar=True, showstatusbar=True)

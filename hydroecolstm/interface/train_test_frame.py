@@ -1,13 +1,13 @@
 import tkinter as tk
 import customtkinter as ctk
-from hydroecolstm.model_run import run_config, forward_run
+from hydroecolstm.model_run import run_config
 from hydroecolstm.data.read_data import read_scale_data
 from hydroecolstm.model.create_model import create_model
 from hydroecolstm.train.trainer import Trainer
 from hydroecolstm.model_run import config_to_search_space
 from CTkToolTip import CTkToolTip
 import torch
-from ray import tune
+from ray import tune    # is used within the eval function
 
 class TrainTestFrame(ctk.CTkScrollableFrame):
     def __init__(self, container=None, config=None, globalData=None):
@@ -414,9 +414,19 @@ class TrainTestFrame(ctk.CTkScrollableFrame):
             else:
                 model, data, best_config = run_config(self.config)
 
-            # Forward run
-            data = forward_run(model, data)
-                
+            # Evaluate the model and transform back to normal scale
+            data['y_train_simulated'] = data["y_scaler"].inverse(
+                model.evaluate(data["x_train_scale"])
+                )
+            
+            data['y_valid_simulated'] = data["y_scaler"].inverse(
+                model.evaluate(data["x_valid_scale"])
+                )
+            
+            data['y_test_simulated'] = data["y_scaler"].inverse(
+                model.evaluate(data["x_test_scale"])
+                )
+
             # Update global data
             self.globalData.update(data)
             self.globalData["model"] = model

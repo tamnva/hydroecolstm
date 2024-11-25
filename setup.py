@@ -32,7 +32,9 @@ setup(
                       'customtkinter>=5.2.1',
                       'CTkToolTip>=0.8',
                       'CTkMessagebox>=2.5',
-                      'CTkListbox>=0.10'
+                      'CTkListbox>=0.10',
+                      'matplotlib>=3.9.2',
+                      'ray>=2.39.0'
                       ],
 
     classifiers=[

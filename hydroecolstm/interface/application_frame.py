@@ -9,10 +9,8 @@ from CTkListbox import CTkListbox
 from CTkToolTip import CTkToolTip
 from pandastable import Table
 from hydroecolstm.data.read_config import read_config
-from hydroecolstm.model.lstm_linears import Lstm_Linears
-from hydroecolstm.model.ea_lstm import Ea_Lstm_Linears
-from hydroecolstm.interface.utility import (ToplevelWindow, 
-                                            plot_train_valid_loss,
+from hydroecolstm.model.create_model import create_model
+from hydroecolstm.interface.utility import (ToplevelWindow,
                                             plot_time_series,
                                             check_size,check_linestyle,
                                             check_alpha,check_line_plot,
@@ -68,7 +66,7 @@ class ApplicationFrame(ctk.CTkScrollableFrame):
 
         self.load_train_test_config = ctk.CTkButton(self.tabview.tab("1. Inputs"), 
                                                anchor='w', 
-                                               text="Select config file", 
+                                               text="Select best config file", 
                                                command=self.get_config_file)
         
         CTkToolTip(self.load_train_test_config, delay=0.1, bg_color = 'orange',
@@ -123,7 +121,7 @@ class ApplicationFrame(ctk.CTkScrollableFrame):
         
         self.load_scaler_button = ctk.CTkButton(self.tabview.tab("1. Inputs"), 
                                                anchor='w', 
-                                               text="Load scalers", 
+                                               text="Load x and y scalers", 
                                                command=self.load_scalers)
         self.load_scaler_button.grid(row=5, column=1, padx = 10, pady=(2,2), sticky="w") 
         self.load_scaler_label = ctk.CTkLabel(self.tabview.tab("1. Inputs"), 
@@ -439,17 +437,14 @@ class ApplicationFrame(ctk.CTkScrollableFrame):
             
     def load_model_state_dicts(self):
         try:
-            # Create the model
-            if self.config["model_class"] == "LSTM":
-                self.globalData["model"] = Lstm_Linears(self.config)
-            else:
-                self.globalData["model"] = Ea_Lstm_Linears(self.config)
                 
             # Load model state dicts
             file_name = ctk.filedialog.askopenfilename(title="Select model state dicts (.pt format)", 
                                                        filetypes=(('yml files', '*.pt'),
                                                                   ('All files', '*.*')))
-            self.globalData["model"].load_state_dict(torch.load(file_name))
+            
+            self.globalData["model"] = create_model(self.config, 
+                                                    torch.load(file_name))
             
             # Set model to eval mode (in this mode, dropout = 0, no normlization)
             self.globalData["model"].eval()
