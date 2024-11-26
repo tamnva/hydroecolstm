@@ -333,20 +333,25 @@ class NetworkDesignFrame(ctk.CTkScrollableFrame):
                 self.reg_activation_func.append(option_menu)
                 row_number += 1
                 
+                try:
+                    CTkToolTip(self.reg_neurons[i], delay=0.1, bg_color = 'orange',
+                               text_color = 'black', anchor='w',  wraplength=250, justify = "left",
+                               message='Input the number of neurons of the ' + 
+                               str(i + 1) + ' layer (please give an integer number)')
+                except:
+                    pass
+                
     # Function get number of neuron in each output layer
-    def __get_num_neuron(self, layer):
+    def __get_num_neuron(self, layer):    
         try:
             get_input_text = self.reg_neurons[layer].get().strip()
             self.config["Regression"]["num_neurons"][layer] = int(float(get_input_text))
             print("Num of neurons layer " + str(layer + 1) + " = ", 
                   self.config["Regression"]["num_neurons"][layer])
             self.reg_neurons[layer].configure(fg_color = '#d3ffc7')
-            CTkToolTip(self.reg_neurons[layer], delay=0.1, bg_color = 'orange',
-                       text_color = 'black', anchor='w',  wraplength=250, justify = "left",
-                       message='Input the number of neurons of the ' + 
-                       str(layer + 1) + ' layer (please give an integer number)')
         except:
             self.reg_neurons[layer].configure(fg_color = '#ffc7c7')
+
 
     # Functions to get number of input neurons each layer - Make this code clearner
     def __reg_get_neurons_1(self, dummy):

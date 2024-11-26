@@ -9,7 +9,6 @@ class Lstm_Linears(nn.Module):
         
         super(Lstm_Linears, self).__init__()
 
-        # Model structure parametery
         self.input_size = self.get_input_size(config)
         self.output_size = len(config["target_features"])
         self.hidden_size = config["hidden_size"]
