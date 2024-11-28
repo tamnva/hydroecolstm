@@ -139,7 +139,7 @@ class DataFrame(ctk.CTkScrollableFrame):
         self.select_input_feature_label.grid(row=0, column=0, padx = 10, pady=(5,5), sticky="w")
         self.select_input_feature = CTkListbox(master=self.tabview.tab("2. Filter data"), 
                                                multiple_selection=True, border_width=1.5,
-                                               text_color="black")
+                                               text_color="black", height=175, width = 175)
         self.select_input_feature.grid(row=1, column=0, padx = 10, pady=(5,5), sticky="w")    
         CTkToolTip(self.select_input_feature_label, delay=0.1, bg_color = 'orange',
                    text_color = 'black', anchor = 'w', 
@@ -156,7 +156,7 @@ class DataFrame(ctk.CTkScrollableFrame):
                        'You can select as many target features as you want')
         self.select_target_feature = CTkListbox(master=self.tabview.tab("2. Filter data"), 
                                                 multiple_selection=True, border_width=1.5,
-                                               text_color="black")
+                                               text_color="black", height=175, width = 175)
         self.select_target_feature.grid(row=1, column=2, padx = 10, pady=(5,5), sticky="w") 
         
         # Select object id
@@ -169,7 +169,7 @@ class DataFrame(ctk.CTkScrollableFrame):
                        'You can select as many object ids as you want')
         self.object_id = CTkListbox(master=self.tabview.tab("2. Filter data"), 
                                            multiple_selection=True, border_width=1.5,
-                                           text_color="black")
+                                           text_color="black", height=175, width = 175)
         self.object_id.grid(row=3, column=0, rowspan=7, padx = 10, pady=(5,5), sticky="w") 
         
         # Trainning period
