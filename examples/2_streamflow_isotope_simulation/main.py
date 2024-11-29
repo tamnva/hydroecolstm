@@ -59,13 +59,3 @@ model = create_model(config)
 model.load_state_dict(torch.load(Path(config["output_directory"][0], 
                                       "model_state_dict.pt")))
 data = torch.load(Path(config["output_directory"][0], "data.pt"))
-
-
-
-
-
-
-
-
-
-

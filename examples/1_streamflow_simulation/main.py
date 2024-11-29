@@ -3,6 +3,7 @@ from hydroecolstm.model_run import run_config
 from hydroecolstm.utility.plot import plot
 from hydroecolstm.data.read_config import read_config
 from hydroecolstm.model.create_model import create_model
+from hydroecolstm.interface.utility import write_yml_file
 from hydroecolstm.utility.evaluation_function import EvaluationFunction
 from hydroecolstm.data.read_data import read_forecast_data
 import matplotlib.pyplot as plt
@@ -72,7 +73,8 @@ objective(forecast_dataset['y_forecast'], y_forecast_simulated)
 torch.save(data, Path(config["output_directory"][0], "data.pt"))
 torch.save(model.state_dict(), 
            Path(config["output_directory"][0], "model_state_dict.pt"))
-
+write_yml_file(config = config, 
+               out_file=Path(config["output_directory"][0], "best_config.yml"))
 #-----------------------------------------------------------------------------#
 #                   Incase you close this file and open again,                #
 #                    you can load your data, model as follows                 #
