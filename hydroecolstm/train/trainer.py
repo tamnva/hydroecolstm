@@ -6,7 +6,7 @@ import os
 import copy
 import torch
 from torch.utils.data import DataLoader
-
+from pathlib import Path
 from hydroecolstm.train.custom_loss import CustomLoss
 from hydroecolstm.data.custom_dataset import CustomDataset
 
@@ -156,11 +156,11 @@ class Trainer():
         self.loss_epoch = self._create_train_loss_df(train_loss_epoch, 
                                                      valid_loss_epoch, 
                                                      check_point)
-        
+
+        # Save loss_epoch incase of automatic hyperparam optim with tune
         #self.loss_epoch.to_csv(
-        #    Path(self.out_dir, str(np.random.randint(1, 1e9)) + ".txt"), 
-        #    sep='\t'
-        #    )
+        #    Path(self.out_dir, str(np.random.randint(1, 1e9)) + ".txt"),
+        #    sep='\t')
 
         return self.model
     

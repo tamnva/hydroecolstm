@@ -77,6 +77,6 @@ sequence_length: 100
 #tune.grid_search([2, 4, 6, 8])
 batch_size: tune.grid_search([4, 6, 8])
 
-patience: 50
+patience: 20
 
 eval_function: NSE

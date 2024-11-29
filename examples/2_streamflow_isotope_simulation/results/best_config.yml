@@ -1,9 +1,9 @@
 dynamic_data_file:
-  - C:/examples/2_streamflow_isotope_simulation/data/timeseries_data.csv
+  - C:/hydroecolstm/examples/2_streamflow_isotope_simulation/data/timeseries_data.csv
 static_data_file:
-  - C:/examples/2_streamflow_isotope_simulation/data/static_data.csv
+  - C:/hydroecolstm/examples/2_streamflow_isotope_simulation/data/static_data.csv
 output_directory:
-  - C:/examples/2_streamflow_isotope_simulation/results
+  - C:/hydroecolstm/examples/2_streamflow_isotope_simulation/results
 input_static_features:
   - area
 input_dynamic_features:
@@ -38,13 +38,13 @@ scaler_input_static_features:
   - None
 scaler_target_features:
   - Z-score
-hidden_size: 29
+hidden_size: 14
 num_layers: 1
-n_epochs: 209
-learning_rate: 0.001
+n_epochs: 219
+learning_rate: 0.01
 dropout: 0.3
 warmup_length: 30
 loss_function: RMSE
 sequence_length: 100
 batch_size: 4
-patience: 50
+patience: 20
