@@ -31,7 +31,7 @@ The configuration file is named ``config.yml``
 
 * ``num_neurons``: [``list``] - number of neurons in each layers of the model head, use ``None`` for the last layer as the number of neurons in this layer is defined by the model, which is equals to the number of target features
 
-* ``num_layers``: [``int``] - number of layers of the model head.
+* ``num_layers``: [``int``] - number of layers of the model head. Input can also be  `tune search space command <https://docs.ray.io/en/latest/tune/api/search_space.html>`_, for example ``tune.grid_search([1, 2])``, ``tune.randint(1, 2)``, ``tune.choice([1, 2])``
 
 * ``scaler_input_dynamic_features``: [``list``] - name of the transformation technique for the input dynamic features, for example ``Z-score``, ``MinMaxScaler``, or ``None``
  
@@ -39,25 +39,25 @@ The configuration file is named ``config.yml``
 
 * ``scaler_target_features``: [``list``] - name of the transformation technique for the target features, for example ``Z-score``, ``MinMaxScaler``, or ``None`
 
-* ``hidden_size``: [``int``] - hidden size of the LSTM.
+* ``hidden_size``: [``int``] - hidden size of the LSTM. Input can also be  `tune search space command <https://docs.ray.io/en/latest/tune/api/search_space.html>`_.
 
-* ``num_layers``: [``int``] - number of layers of the LSTM.
+* ``num_layers``: [``int``] - number of layers of the LSTM. Input can also be  `tune search space command <https://docs.ray.io/en/latest/tune/api/search_space.html>`_.
 
-* ``n_epochs``: [``int``] - number of training epochs.
+* ``n_epochs``: [``int``] - number of training epochs. Input can also be  `tune search space command <https://docs.ray.io/en/latest/tune/api/search_space.html>`_.
 
-* ``learning_rate``: [``float``] - learning rate.
+* ``learning_rate``: [``float``] - learning rate. Input can also be  `tune search space command <https://docs.ray.io/en/latest/tune/api/search_space.html>`_.
 
-* ``dropout``: [``float``] - dropout rate, applied for the output of each LSTM layer (even there is only a single LSMT layer).
+* ``dropout``: [``float``] - dropout rate, applied for the output of each LSTM layer (even there is only a single LSMT layer). Input can also be  `tune search space command <https://docs.ray.io/en/latest/tune/api/search_space.html>`_.
 
-* ``warmup_length``: [``int``] - numer of warmup time steps, must be less than the ``sequence_length``. For example, if the ``sequence_length = 100`` and the ``warmup_length = 10``, only the last 90 values of the target features are used when calculating loss.
+* ``warmup_length``: [``int``] - numer of warmup time steps, must be less than the ``sequence_length``. For example, if the ``sequence_length = 100`` and the ``warmup_length = 10``, only the last 90 values of the target features are used when calculating loss. Input can also be  `tune search space command <https://docs.ray.io/en/latest/tune/api/search_space.html>`_.
 
 * ``loss_function``: [``str``] - name of the loss function used for model training, could be the root mean squared error ``RMSE``, mean absolute error ``MAE``, or mean squared error``MSE``.
 
-* ``sequence_length``: [``int``] - sequence length.
+* ``sequence_length``: [``int``] - sequence length. Input can also be  `tune search space command <https://docs.ray.io/en/latest/tune/api/search_space.html>`_.
 
-* ``batch_size``: [``int``] - batch size.
+* ``batch_size``: [``int``] - batch size. Input can also be  `tune search space command <https://docs.ray.io/en/latest/tune/api/search_space.html>`_.
 
-* ``patience``: [``int``] - number of epoch to wait to see if there is no improvements in the tranning loss then stop the traning, more detail, please see the description from `Bjarte Mehus Sunde  <https://github.com/Bjarten/early-stopping-pytorch>`_ .
+* ``patience``: [``int``] - number of epoch to wait to see if there is no improvements in the tranning loss then stop the traning, more detail, please see the description from `Bjarte Mehus Sunde  <https://github.com/Bjarten/early-stopping-pytorch>`_. Input can also be  `tune search space command <https://docs.ray.io/en/latest/tune/api/search_space.html>`_.
 
 * ``eval_function``: [``int``] - name of the function for calculate model performance, ``MSE``, ``RMSE``, Nash-SutCliffe efficiency ``NSE``, ``MAE`` (this is not used during model trainning), just in case you want to calculate some of the model performance statistics to shown in the report .
 
