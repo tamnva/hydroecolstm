@@ -108,7 +108,7 @@ dropout: 0.3
 # Warmup length
 warmup_length: 30
 
-# Loss function: RMSE, MSE, MAE
+# Loss function: RMSE, MSE, MAE, NSE_complement
 loss_function: RMSE
 
 # Sequence length

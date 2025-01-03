@@ -158,7 +158,8 @@ class TrainTestFrame(ctk.CTkScrollableFrame):
         self.loss = ctk.CTkOptionMenu(self.tabview.tab("2. Trainer"),
                                                    values=['Root Mean Square Error',
                                                            'Mean Absolute Error',
-                                                           'Mean Squared Error'],
+                                                           'Mean Squared Error',
+                                                           '1 - Nash Sutcliffe'],
                                                    command=self.loss_function) 
         self.loss.grid(row=5, column=2, sticky = "w")
         CTkToolTip(self.loss, delay=0.1, bg_color = 'orange', justify = "left",
@@ -320,7 +321,8 @@ class TrainTestFrame(ctk.CTkScrollableFrame):
     def loss_function(self, method: str):
         loss_fn = {'Root Mean Square Error': "RMSE",
                    'Mean Absolute Error': "MAE",
-                   'Mean Squared Error': "MSE"} 
+                   'Mean Squared Error': "MSE",
+                   '1 - Nash Sutcliffe': "NSE_complement"} 
                               
         self.config["loss_function"] = loss_fn[method]
         print(self.config["loss_function"])

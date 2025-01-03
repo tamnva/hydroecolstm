@@ -4,11 +4,12 @@ from torch import nn
 class CustomLoss(nn.Module):
     def __init__(self, loss_function:str):
         super(CustomLoss, self).__init__()
-        
+
         # Dict of all available loss functions
         loss_functions = {"MSE": self.MSE, 
                           "RMSE": self.RMSE,
-                          "MAE": self.MAE}
+                          "MAE": self.MAE,
+                          "NSE_complement": self.NSE_complement}
         
         # Use this loss function
 
@@ -30,8 +31,8 @@ class CustomLoss(nn.Module):
             mask:torch.Tensor)-> torch.Tensor: 
 
         # Mean square error
-        loss_fn = nn.MSELoss()
-        mse = loss_fn(y_true[mask], y_predict[mask])
+        loss = nn.MSELoss()
+        mse = loss(y_true[mask], y_predict[mask])
         
         # Return output
         return mse
@@ -41,8 +42,8 @@ class CustomLoss(nn.Module):
             mask:torch.Tensor)-> torch.Tensor: 
         
         # Mean absolute error
-        loss_fn = nn.L1Loss()
-        mae = loss_fn(y_true[mask], y_predict[mask])
+        loss = nn.L1Loss()
+        mae = loss(y_true[mask], y_predict[mask])
         return mae      
     
     # Root mean square error
@@ -52,3 +53,27 @@ class CustomLoss(nn.Module):
         # Root Mean Square Error
         rmse = self.MSE(y_true, y_predict, mask)**0.5
         return rmse
+
+    # Complement to 1 of the Nash-Sutcliffe (or 1- Nash sutcliffe)
+    def NSE_complement(self, y_true:torch.Tensor, y_predict:torch.Tensor,
+            mask:torch.Tensor)-> torch.Tensor: 
+        
+        # Sum Square Error
+        sse = torch.sum((y_true[mask] - y_predict[mask])**2)
+        
+        # Sum of Square Difference around mean
+        ssd = torch.sum((y_true[mask] - torch.mean(y_predict[mask]))**2)
+        
+        # Minimize loss, so output should be sse/ssd, which is 1 - NSE
+        return sse/ssd
+
+
+#x = CustomLoss(config["loss_function"])
+
+
+
+
+
+
+
+

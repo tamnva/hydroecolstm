@@ -51,7 +51,7 @@ The configuration file is named ``config.yml``
 
 * ``warmup_length``: [``int``] - numer of warmup time steps, must be less than the ``sequence_length``. For example, if the ``sequence_length = 100`` and the ``warmup_length = 10``, only the last 90 values of the target features are used when calculating loss. Input can also be  `tune search space command <https://docs.ray.io/en/latest/tune/api/search_space.html>`_.
 
-* ``loss_function``: [``str``] - name of the loss function used for model training, could be the root mean squared error ``RMSE``, mean absolute error ``MAE``, or mean squared error``MSE``.
+* ``loss_function``: [``str``] - name of the loss function used for model training, could be the root mean squared error ``RMSE``, mean absolute error ``MAE``, mean squared error``MSE``, or the complement to 1 of the Nash-Sutcliffe, which is 1 - NSE ``NSE_complement``.
 
 * ``sequence_length``: [``int``] - sequence length. Input can also be  `tune search space command <https://docs.ray.io/en/latest/tune/api/search_space.html>`_.
 
