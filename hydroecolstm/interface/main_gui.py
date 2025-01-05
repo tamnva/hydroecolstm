@@ -99,7 +99,8 @@ class MainGUI(ctk.CTk):
                                            globalData=globalData)
             
         # summary frame
-        self.summary_frame = ProjectSummaryFrame(container=self, config=config)
+        self.summary_frame = ProjectSummaryFrame(container=self, config=config,
+                                                 globalData=globalData)
         self.summary_frame.grid(row=0, column=3, rowspan=4, padx = 10,
                                 pady=(20, 20), sticky="nsew") 
             

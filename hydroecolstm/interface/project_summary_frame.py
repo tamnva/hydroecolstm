@@ -10,9 +10,10 @@ from hydroecolstm.interface.utility import config_to_text, sort_key
 from hydroecolstm.interface.utility import write_yml_file
 
 class ProjectSummaryFrame(ctk.CTkFrame):
-    def __init__(self, container=None, config=None):
+    def __init__(self, container=None, config=None, globalData=None):
         super().__init__(container)
         self.config = config
+        self.globalData = globalData
         # setup the grid layout manager
         self.columnconfigure(0, weight=1)
         self.rowconfigure((0), weight=0)
@@ -90,12 +91,13 @@ class ProjectSummaryFrame(ctk.CTkFrame):
             elif response == "Save all":
                 # Select dir to save      
                 output_directory = tk.filedialog.askdirectory()
-                
+
                 # Save config as .yml                 
                 write_yml_file(config=self.config, 
                                out_file=Path(output_directory, "config.yml"))
                 print("Saved project summary as config.yml file")
                 
+                print(self.globalData.keys())
                 if "best_config" in self.globalData.keys():
                     write_yml_file(config=self.config, 
                                    out_file=Path(output_directory, "config.yml"))
@@ -104,6 +106,7 @@ class ProjectSummaryFrame(ctk.CTkFrame):
                 # Save model_state_dicts to model_state_dict.pt file
                 torch.save(self.globalData["model"].state_dict(),
                            Path(output_directory, "model_state_dict.pt"))
+                
                 print("Model state_dict was saved as model_state_dict.pt")
                 
                 # Save global data
