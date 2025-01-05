@@ -8,6 +8,8 @@
 - Here is the [YouTube](https://www.youtube.com/channel/UCPJ5fv53XlV4CSTtnfrULRA) channel for tutorial videos on how to use HydroEcoLSTM with GUI.
 - If you have any questions or want to report any issues, you can either report it in [GitHub](https://github.com/tamnva/hydroecolstm/issues) or [HydroEcoLSTM Google group](https://groups.google.com/g/hydroecolstm).
 
+**Nguyen, T.V.**, Tran, V.N., Tran, H., Binh, D.V., Duong, T.D., Dang, T.D., Ebeling, P. (2025). *HydroEcoLSTM*: A Python package with graphical user interface for hydro-ecological modeling with long short-term memory neural network. Ecological Informatics, 102994. [10.1016/j.ecoinf.2025.102994](https://doi.org/10.1016/j.ecoinf.2025.102994).
+
 ### Quick start
 
 Installation with Anaconda using environment ([environment.yml](https://github.com/tamnva/hydroecolstm/tree/master/environments)) file, please see the [package documentation](https://hydroecolstm.readthedocs.io/en/latest/installation.html) for more detail.
