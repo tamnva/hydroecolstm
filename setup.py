@@ -8,7 +8,7 @@ with readme_file.open("r") as fp:
     
 setup(
     name='hydroecolstm',
-    version='0.3.3',    
+    version='0.3.4',    
     description='A python package for HydroEcological Modelling using LSTM',
     long_description=long_description,
     long_description_content_type='text/markdown',
