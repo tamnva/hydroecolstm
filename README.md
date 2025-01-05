@@ -4,7 +4,7 @@
 
 
 - HydroEcoLSTM is a Python package with a graphical user interface (GUI) for modeling hydro-ecological processes using Long short-term Memory (LSTM) neural network. 
-- Please check [package documentation](https://hydroecolstm.readthedocs.io/en/latest/) for more details, especially about how to use HydroEcoLSTM without the GUI
+- Please check [package documentation](https://hydroecolstm.readthedocs.io/en/latest/) for more details, especially about how to use HydroEcoLSTM without the GUI.
 - Here is the [YouTube](https://www.youtube.com/channel/UCPJ5fv53XlV4CSTtnfrULRA) channel for tutorial videos on how to use HydroEcoLSTM with GUI.
 - If you have any questions or want to report any issues, you can either report it in [GitHub](https://github.com/tamnva/hydroecolstm/issues) or [HydroEcoLSTM Google group](https://groups.google.com/g/hydroecolstm).
 
@@ -12,7 +12,7 @@
 
 ### Quick start
 
-Installation with Anaconda using environment ([environment.yml](https://github.com/tamnva/hydroecolstm/tree/master/environments)) file, please see the [package documentation](https://hydroecolstm.readthedocs.io/en/latest/installation.html) for more detail.
+Installation with Anaconda using environment ([environment.yml](https://github.com/tamnva/hydroecolstm/tree/master/environments)) file following the steps listed below. You can also see [my tutorial videos 1 and 7](https://www.youtube.com/watch?v=NPyr4HV2Ix4&list=PL7IsKPfYZuFvlz9ZYxM0wzNIdm-W-tP0q) for more detail on how to install Anaconda and create a virtual environment. 
 
 ```python
 # 1. Create the environment from environment.yml file (see link above)
@@ -32,7 +32,7 @@ hydroecolstm.interface.show_gui()
 
 ### The GUI
 
-- After lanching the GUI, you should see the following window (the latest version could look different).
+- After lanching the GUI, you should see the following window (the latest version could look different). There are two examples that were documented in [this files](https://ars.els-cdn.com/content/image/1-s2.0-S1574954125000032-mmc1.pdf) 
 
 <p align="center">
   <img src="https://github.com/tamnva/hydroecolstm/blob/master/docs/images/intro_figure.gif" width=100% title="hover text">
