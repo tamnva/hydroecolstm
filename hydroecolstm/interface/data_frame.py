@@ -115,9 +115,9 @@ class DataFrame(ctk.CTkScrollableFrame):
         self.show_data.grid(row=3, column=2, padx = 10, 
                                    pady=(5,5), sticky="w")
         CTkToolTip(self.show_data, delay=0.1, bg_color = 'orange',
-                   text_color = 'black', anchor = 'w', 
+                   text_color = 'black', anchor = 'w', wraplength=500,
                    message= 'Click here to have a look at the data (using pandastable)' +
-                   'here you can also visualize the data with differnt type of plots')
+                   'here you can also visualize the data with different type of plots')
         
         # check to load/unload
         self.check_static_data = ctk.IntVar(value=0)        
@@ -128,7 +128,7 @@ class DataFrame(ctk.CTkScrollableFrame):
         
         self.checkbox_static_data.grid(row=4, column=2, padx = 10, pady=(5,5), sticky="w")
         CTkToolTip(self.checkbox_static_data, delay=0.1, bg_color = 'orange',
-                   text_color = 'black', anchor = 'w', 
+                   text_color = 'black', anchor = 'w', wraplength=500,
                    message= 'If you check this box, data from the selected \n' +
                        'static data file will be used, uncheck means data will \n' +
                        'not be used')
@@ -142,7 +142,7 @@ class DataFrame(ctk.CTkScrollableFrame):
                                                text_color="black", height=175, width = 175)
         self.select_input_feature.grid(row=1, column=0, padx = 10, pady=(5,5), sticky="w")    
         CTkToolTip(self.select_input_feature_label, delay=0.1, bg_color = 'orange',
-                   text_color = 'black', anchor = 'w', 
+                   text_color = 'black', anchor = 'w', wraplength=500,
                    message= 'Select input features for the neural network. \n' +
                        'You can select as many input features as you want')
         
@@ -151,7 +151,7 @@ class DataFrame(ctk.CTkScrollableFrame):
                                                        text="3. Select target features")
         self.select_target_feature_label.grid(row=0, column=2, padx = 10, pady=(5,5), sticky="w")
         CTkToolTip(self.select_target_feature_label, delay=0.1, bg_color = 'orange',
-                   text_color = 'black', anchor = 'w', 
+                   text_color = 'black', anchor = 'w', wraplength=500,
                    message= 'Select target features (model outputs). \n' +
                        'You can select as many target features as you want')
         self.select_target_feature = CTkListbox(master=self.tabview.tab("2. Filter data"), 
@@ -164,7 +164,7 @@ class DataFrame(ctk.CTkScrollableFrame):
                                                    text="2. Select object id")
         self.object_id_label.grid(row=2, column=0, padx = 10, pady=(5,5), sticky="w")
         CTkToolTip(self.object_id_label, delay=0.1, bg_color = 'orange',
-                   text_color = 'black', anchor = 'w', 
+                   text_color = 'black', anchor = 'w', wraplength=500,
                    message= 'Select object id (basin id) that you want to put into the model. \n' +
                        'You can select as many object ids as you want')
         self.object_id = CTkListbox(master=self.tabview.tab("2. Filter data"), 
@@ -185,7 +185,7 @@ class DataFrame(ctk.CTkScrollableFrame):
                                        year=2010, month=1, day=1, font=ctk.CTkFont(size=14))
         self.end_train.grid(row= 4,column=2, padx=30, pady=10, sticky='e')   
         CTkToolTip(self.select_date_train, delay=0.1, bg_color = 'orange',
-                   text_color = 'black', anchor='w', 
+                   text_color = 'black', anchor='w', wraplength=500, 
                    message='Select starting date (upper calender box) and \n' + 
                    'ending date (lower calendar box) of the training period. \n'+
                    'Training data are used to fit model parameters.')
