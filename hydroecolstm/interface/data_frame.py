@@ -89,7 +89,7 @@ class DataFrame(ctk.CTkScrollableFrame):
         # select static data file
         self.select_static_file = ctk.CTkButton(self.tabview.tab("1. Load data"), 
                                               anchor='e', 
-                                              text="Select static data file", 
+                                              text="Select static data file (optional)", 
                                               command=self.get_static_file)
 
         self.select_static_file.grid(row=1, column=2, padx = 10, 

@@ -7,6 +7,8 @@ from hydroecolstm.train.trainer import Trainer
 from hydroecolstm.model_run import config_to_search_space
 from CTkToolTip import CTkToolTip
 import torch
+from PIL import Image
+from pathlib import Path
 from ray import tune    # is used within the eval function
 
 class TrainTestFrame(ctk.CTkScrollableFrame):
@@ -34,7 +36,10 @@ class TrainTestFrame(ctk.CTkScrollableFrame):
         self.ray_tooltip = ('Or input the tune Search Space API command, ' +
                             'e.g., tune.grid_search([20, 30]). Please see:' + 
                             'https://docs.ray.io/en/latest/tune/api/search_space.html')
-  
+
+        ctk.CTkButton(master=self,  anchor='w', fg_color='gray',
+                      text="Parameter explanation",
+                      command=self.__parameter_explanation).pack(anchor="e", pady = 10)
         # ---------------------------------------------Initial state dicts      
         # Load model state dict
         self.load_model_label = ctk.CTkLabel(self.tabview.tab("1. Initial state dicts"), 
@@ -42,7 +47,7 @@ class TrainTestFrame(ctk.CTkScrollableFrame):
         self.load_model_label.grid(row=0, column=0, sticky = "w")  
         self.load_model = ctk.CTkButton(self.tabview.tab("1. Initial state dicts"), anchor='w', 
                                          command=self.load_state_dict,
-                                         text="Load model")
+                                         text="Load model (optional)")
         self.load_model.grid(row=1, column=0, sticky = "w")
         CTkToolTip(self.load_model, delay=0.1, bg_color = 'orange', justify = "left",
                    text_color = 'black', anchor='w',  wraplength=250, 
@@ -206,6 +211,20 @@ class TrainTestFrame(ctk.CTkScrollableFrame):
         self.progressbar.configure(mode="determinate", progress_color="orange")
         self.progressbar.set(0)
         
+        
+    # Show parameter explanation
+    def __parameter_explanation(self):
+        
+        # Get link to the image
+        image = Path(__file__).parents[1]
+        button_image = ctk.CTkImage(Image.open( 
+            Path(image, "images/parameter_explanation.png")),
+            size=(800, 400))
+            
+        # Create new window 
+        self.new_window = ctk.CTkToplevel(self, fg_color = "white")
+        ctk.CTkLabel(master=self.new_window, image=button_image, text = "").pack()
+            
     # Get number of epochs
     def get_nepoch(self, dummy):
         # Get number of hidden layers
@@ -354,7 +373,7 @@ class TrainTestFrame(ctk.CTkScrollableFrame):
             self.globalData['init_state_dicts'] = True
             self.globalData['init_state_dicts_file'] = state_dict_file
         else:
-            self.load_model.configure(text = "Load model")
+            self.load_model.configure(text = "Load model (optional)")
             self.globalData['init_state_dicts'] = False
 
     # Message box for error in input with tune search space 
