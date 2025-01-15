@@ -20,7 +20,8 @@ class EvaluationFunction():
             eval_values[key] = self.eval_function(y_true[key][self.nskip:,],
                                                   y_predict[key][self.nskip:,])
 
-        avg_eval_values = sum(sum(eval_values.values()))/((len(eval_values))*eval_values[next(iter(eval_values))].shape[0])
+        avg_eval_values = sum(sum(eval_values.values()))/(
+            (len(eval_values))*eval_values[next(iter(eval_values))].shape[0])
             
         return eval_values, avg_eval_values
     
@@ -28,7 +29,8 @@ class EvaluationFunction():
         mask = ~torch.isnan(ytrue)
         mse = []
         for i in range(ytrue.shape[1]):
-            mse.append(torch.mean((ytrue[:,i][mask[:,i]] - ypredict[:,i][mask[:,i]])**2))
+            mse.append(torch.mean((ytrue[:,i][mask[:,i]] - 
+                                   ypredict[:,i][mask[:,i]])**2))
         mse = torch.stack(mse)
         return mse
 
@@ -38,7 +40,7 @@ class EvaluationFunction():
         rmse = mse**0.5
         return rmse
     
-    # 1 - Nash–Sutcliffe efficiency (NSE)
+    # Nash–Sutcliffe efficiency (NSE)
     def NSE(self, ytrue:torch.Tensor, ypredict:torch.Tensor):
         mask = ~torch.isnan(ytrue)
         
@@ -46,15 +48,12 @@ class EvaluationFunction():
         # Sum of Square Difference around mean (ssd) = sum((true-mean_true)^2)
         sse = []        
         ssd = []
+        
         for i in range(ytrue.shape[1]):
             sse.append(torch.sum((ytrue[:,i][mask[:,i]] - ypredict[:,i][mask[:,i]])**2))
             ssd.append(torch.sum((ytrue[:,i][mask[:,i]] - torch.nanmean(ytrue[:,i]))**2))
         
-        # get 1 - nse, here I call it as nse
         nse = 1.0 - torch.stack(sse)/torch.stack(ssd)
-        
-        if torch.isnan(nse).any():
-            raise ValueError("nan values found when calculating NSE - zero division")
             
         return nse
        
