@@ -1,4 +1,5 @@
 import torch
+import pandas as pd
 
 class EvaluationFunction():
     def __init__(self, function_name:str, nskip:int):
@@ -19,11 +20,13 @@ class EvaluationFunction():
         for key in y_true.keys():
             eval_values[key] = self.eval_function(y_true[key][self.nskip:,],
                                                   y_predict[key][self.nskip:,])
-
-        avg_eval_values = sum(sum(eval_values.values()))/(
-            (len(eval_values))*eval_values[next(iter(eval_values))].shape[0])
             
-        return eval_values, avg_eval_values
+        
+        df = pd.DataFrame(torch.stack(list(eval_values.values())).numpy())
+        df.index = eval_values.keys()
+        df.columns = ["objective_function_value"]
+        
+        return df
     
     def MSE(self, ytrue:torch.Tensor, ypredict:torch.Tensor):
         mask = ~torch.isnan(ytrue)
