@@ -341,9 +341,12 @@ def config_to_text(config):
                     elif key == "valid_period":
                         out_text.append("  - " + str(config["valid_period"][0])[:16] + "\n")
                         out_text.append("  - " + str(config["valid_period"][1])[:16] + "\n")
-                    else:
+                    elif key == "test_period":
                         out_text.append("  - " + str(config["test_period"][0])[:16] + "\n")
-                        out_text.append("  - " + str(config["test_period"][1])[:16] + "\n")                           
+                        out_text.append("  - " + str(config["test_period"][1])[:16] + "\n") 
+                    else:
+                        out_text.append("  - " + str(config["forecast_period"][0])[:16] + "\n")
+                        out_text.append("  - " + str(config["forecast_period"][1])[:16] + "\n")                           
             except:
                 # Non list object writte in 1 line
                 out_text.append(key +": " + str(config[key]) + "\n")

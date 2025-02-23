@@ -55,6 +55,7 @@ class CustomLoss(nn.Module):
         
         # Root Mean Square Error
         rmse = self.MSE(y_true, y_predict, mask)**0.5
+        
         return rmse
 
     def RMSE_normalize(self, y_true:torch.Tensor, y_predict:torch.Tensor,

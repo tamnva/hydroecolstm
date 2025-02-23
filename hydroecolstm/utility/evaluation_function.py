@@ -2,7 +2,7 @@ import torch
 import pandas as pd
 
 class EvaluationFunction():
-    def __init__(self, function_name:str, nskip:int):
+    def __init__(self, function_name:str, nskip:int, y_column_name:str):
         
         # Dict of all available evaluation functions
         evaluation_functions = {"MSE": self.MSE, "RMSE": self.RMSE,
@@ -11,6 +11,8 @@ class EvaluationFunction():
         # Selected evaluation function
         self.eval_function = evaluation_functions[function_name]
         self.nskip = nskip
+        self.function_name = function_name
+        self.y_column_name = y_column_name
         
     def __call__(self, y_true:torch.Tensor, y_predict:torch.Tensor) -> torch.Tensor:
         
@@ -24,7 +26,8 @@ class EvaluationFunction():
         
         df = pd.DataFrame(torch.stack(list(eval_values.values())).numpy())
         df.index = eval_values.keys()
-        df.columns = ["objective_function_value"]
+        df.columns = [self.function_name + "_" + name 
+                      for name in self.y_column_name]
         
         return df
     
