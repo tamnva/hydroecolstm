@@ -178,7 +178,7 @@ class Trainer():
                                                     valid_loss_epoch, 
                                                     check_point)
             
-            if ray.train._internal.session._get_session(): 
+            if ray.train._internal.session.get_session(): 
                 train.report({'loss': train_loss_epoch[-1],
                               'loss_epoch': loss_epoch},
                              checkpoint=checkpoint)
