@@ -1,12 +1,12 @@
 import numpy as np
 import pandas as pd
 from ray import train
+import ray
 import tempfile
 import os
 import copy
 import torch
 from torch.utils.data import DataLoader
-from pathlib import Path
 from hydroecolstm.train.custom_loss import CustomLoss
 from hydroecolstm.data.custom_dataset import CustomDataset
 
@@ -124,7 +124,7 @@ class Trainer():
             
             print(f"Epoch [{epoch+1}/{self.n_epochs}], ", 
                   f"average_train_loss = {train_loss_epoch[-1]:.8f}, ",
-                  f"avearge_valid_loss = {valid_loss_epoch[-1]:.8f}")
+                  f"average_valid_loss = {valid_loss_epoch[-1]:.8f}")
                 
             # Early stopping based on validation loss and make checkpoint
             flag = early_stopping(valid_loss_epoch[-1], self.model)
@@ -157,11 +157,6 @@ class Trainer():
                                                      valid_loss_epoch, 
                                                      check_point)
 
-        # Save loss_epoch incase of automatic hyperparam optim with tune
-        #self.loss_epoch.to_csv(
-        #    Path(self.out_dir, str(np.random.randint(1, 1e9)) + ".txt"),
-        #    sep='\t')
-
         return self.model
     
     # Save intermediate result at check points
@@ -183,9 +178,10 @@ class Trainer():
                                                     valid_loss_epoch, 
                                                     check_point)
             
-            train.report({'loss': train_loss_epoch[-1], 
-                          'loss_epoch': loss_epoch},
-                         checkpoint=checkpoint)
+            if ray.train._internal.session.get_session(): 
+                train.report({'loss': train_loss_epoch[-1],
+                              'loss_epoch': loss_epoch},
+                             checkpoint=checkpoint)
             
     # Create data frame of epoch number, train loss, valid loss
     def _create_train_loss_df(self, train_loss_epoch, valid_loss_epoch, 
