@@ -23,14 +23,30 @@ class Scaler:
         
         for i, method_name in zip(range(len(method)), method):
             if method_name == "MinMaxScaler":
+                
+                # If cannot scale by MinMaxScaler then do not scale
+                if torch.any(self.maxs[i] - self.mins[i] == 0.0):
+                    print("max-min is zero, cannot use MinMaxScaler, no transform")
+                    self.mins[self.maxs[i] - self.mins[i] == 0.0] = 0.0
+                    self.maxs[self.maxs[i] - self.mins[i] == 0.0] = 1.0
+                
                 scaler_a.append(self.mins[i])
                 scaler_b.append(self.maxs[i] - self.mins[i])
+                
             elif method_name=="Z-score":
+                
+                if torch.any(self.stds[i] == 0.0):
+                    print("standard deviation is zero, cannot use Z-score, no transform")
+                    self.means[self.stds[i] == 0.] = 0.0
+                    self.stds[self.stds[i] == 0.] = 1.0
+                
                 scaler_a.append(self.means[i])
                 scaler_b.append(self.stds[i])
+                
             elif method_name=="None":
                 scaler_a.append(0.0)
                 scaler_b.append(1.0)
+                
             else:
                 print("Error: unknown scaler")
                 SystemExit("Program stop, please change scaler")
@@ -38,22 +54,24 @@ class Scaler:
         scaler_ab = torch.cat((torch.tensor(scaler_a, dtype=torch.float32),
                                torch.tensor(scaler_b, dtype=torch.float32)), 0)
         
-        self.scaler_parameter = torch.reshape(scaler_ab, 
-                                              (2,len(scaler_a)))
+        self.scaler_parameter = torch.reshape(
+            scaler_ab,(2,len(scaler_a)))
  
-    def transform(self, x:dict[str:torch.tensor]=None) -> list: 
+    def transform(self, x:dict[str:torch.tensor]=None) -> list:
         x_scale = {}
         for object_id in x:
-            x_scale[object_id] =  torch.div(torch.sub(x[object_id], 
-                                                      self.scaler_parameter[0,:]), 
-                                            self.scaler_parameter[1,:])               
+            x_scale[object_id] =  torch.div(
+                torch.sub(x[object_id],self.scaler_parameter[0,:]),
+                self.scaler_parameter[1,:])               
         return x_scale
 
     def inverse(self, x:list=None) -> list:        
         x_inverse = {}
         for object_id in x:
-            x_inverse[object_id] =  torch.add(self.scaler_parameter[0,:],
-                                              x[object_id]*self.scaler_parameter[1,:])
+            x_inverse[object_id] =  torch.add(
+                self.scaler_parameter[0,:],
+                x[object_id]*self.scaler_parameter[1,:])
+
         return x_inverse
 
 def _column_mins(input_tensor: torch.tensor=None):
@@ -105,7 +123,8 @@ def get_scaler_name(config):
                 scaler_name_input.append(name)
         
     # scaler name target
-    scaler_name_target = config["scaler_target_features"]*len(config["target_features"])
+    scaler_name_target = config["scaler_target_features"]*len(
+        config["target_features"])
     
     return scaler_name_input, scaler_name_target
 
